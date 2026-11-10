@@ -18,4 +18,4 @@ if(!await check('http://127.0.0.1:9251/healthz'))await start('gateway',['--use-s
 for(let i=0;i<40;i++){if(await check('http://127.0.0.1:9251/healthz')&&await check('http://127.0.0.1:9250/workspace/connect'))break;await new Promise(r=>setTimeout(r,500))}
 await writeFile(join(runtime,'processes.json'),JSON.stringify({at:new Date().toISOString(),children},null,2)+'\n');
 if(!await check('http://127.0.0.1:9251/healthz'))throw new Error('HongThreads gateway did not start; check '+runtime);
-console.log(JSON.stringify({ready:true,url:'http://127.0.0.1:9251/dashboard/insights',workspace:'http://127.0.0.1:9251/workspace/benchmarks',logs:runtime}));
+console.log(JSON.stringify({ready:true,url:'http://127.0.0.1:9251/dashboard/insights',logs:runtime}));

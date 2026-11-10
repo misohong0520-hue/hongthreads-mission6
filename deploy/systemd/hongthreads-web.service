@@ -10,6 +10,7 @@ WorkingDirectory=/opt/hongthreads/current/web/.next/standalone
 Environment=NODE_ENV=production
 Environment=PORT=9250
 Environment=HOSTNAME=127.0.0.1
+Environment=PUBLIC_ORIGIN=https://hongthreads.hongsik.blog
 ExecStart=/opt/hongthreads/node24/bin/node server.js
 Restart=on-failure
 RestartSec=5

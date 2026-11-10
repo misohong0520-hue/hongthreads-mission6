@@ -31,6 +31,6 @@ for attempt in $(seq 1 40); do
   sleep 0.5
 done
 curl -fsS --max-time 5 http://127.0.0.1:9251/healthz | /opt/hongthreads/node24/bin/node -e 'let s="";process.stdin.on("data",b=>s+=b).on("end",()=>{const h=JSON.parse(s);if(!h.ready||h.storage!=="supabase"||!h.vertex)process.exit(1);console.log(JSON.stringify(h));});'
-curl -fsS --max-time 10 http://127.0.0.1:9251/workspace/connect >/dev/null
+curl -fsS --max-time 10 http://127.0.0.1:9251/dashboard/insights >/dev/null
 sudo systemctl is-active hongthreads-gateway.service hongthreads-web.service
 trap - EXIT

@@ -59,6 +59,9 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
   const decorate=async(wid,row)=>({...row,assets:await Promise.all(row.assets.map(a=>publicAsset(wid,a.id)))});
   const compatibility=createCompatibility({repository,secret,publicOrigin,publicAsset});
   const client=await readFile(join(root,'mission6/client.js'));
+  const setupPage=await readFile(join(root,'replay/session-setup.html'));
+  const setupScript=await readFile(join(root,'replay/session-setup.js'));
+  const workspaceDestinations={benchmarks:'/dashboard/benchmark',folders:'/dashboard/benchmark',drafts:'/dashboard/threads',personas:'/dashboard/personas',templates:'/multi-write',revenue:'/dashboard/revenue',sessions:'/multi-write',generations:'/write',connect:'/__live/'};
   const reply=async(res,response)=>{const headers={...response.headers,'cache-control':'no-store','x-content-type-options':'nosniff'};delete headers['set-cookie'];delete headers['content-encoding'];delete headers['transfer-encoding'];if(response.stream){res.writeHead(response.status,headers);await pipeline(Readable.fromWeb(response.stream),res);return}headers['content-length']=response.body.length;res.writeHead(response.status,headers).end(response.body)};
   const proxyNext=(req,res)=>new Promise(resolve=>{
     const target=new URL(req.url,nextUrl);const upstream=httpRequest(target,{method:req.method,headers:{...req.headers,host:target.host,'x-forwarded-host':origin.host,'x-forwarded-proto':origin.protocol.slice(0,-1)}},r=>{res.writeHead(r.statusCode,r.headers);r.pipe(res);r.once('end',resolve)});
@@ -71,7 +74,11 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
       if(path==='/healthz'){json(res,200,{app:'hongthreads',ready:true,storage:repository.backend,vertex:vertex.status().credentialReady});return}
       if(path==='/extensions/hongthreads.zip'&&['GET','HEAD'].includes(method)){const bytes=await readFile(join(root,'extension-cloud.zip'));res.writeHead(200,{'content-type':'application/zip','content-disposition':'attachment; filename="hongthreads-extension.zip"','content-length':bytes.length,'cache-control':'no-store'}).end(method==='HEAD'?undefined:bytes);return}
       if(/^\/(?:__shutdown|__desktop|__origin|__replay\/(?:coverage|misses)|__workflow\/resource|internal)(?:\/|$)/.test(path))throw new DataError('NOT_FOUND',404);
-      if(path.startsWith('/workspace')&&!path.startsWith('/workspace/api/')){if((req.headers.accept??'').includes('text/html'))await sessions.context(req,res);await proxyNext(req,res);return}
+      if((path==='/workspace'||path.startsWith('/workspace/'))&&!path.startsWith('/workspace/api/')){
+        if(!['GET','HEAD'].includes(method))throw new DataError('METHOD_NOT_ALLOWED',405);
+        const destination=workspaceDestinations[path.split('/')[2]]??'/dashboard/insights';
+        res.writeHead(302,{location:destination,'cache-control':'no-store'}).end();return;
+      }
       let asset=runtime.assets.get(path+url.search)??runtime.assets.get(path);
       if(!asset&&path==='/_next/image'){
         for(const [key,item]of runtime.assets)if(key.startsWith('/_next/image?')){const captured=new URL(key,publicOrigin);if(captured.searchParams.get('url')===url.searchParams.get('url')&&captured.searchParams.get('q')===url.searchParams.get('q')){asset=item;break}}
@@ -103,10 +110,12 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
           }
           if(method==='DELETE'){json(res,200,sessions.view(await sessions.disconnect(ctx,res)));return}throw new DataError('METHOD_NOT_ALLOWED',405);
         }
-        if(['/__live/','/__live','/auth/login'].includes(path)){res.writeHead(302,{location:'/workspace/connect','cache-control':'no-store'}).end();return}
-        if(path==='/__live/status'){json(res,200,{...ctx.bridge.status(),setupToken:ctx.csrfToken});return}
+        if(['/__live/','/__live'].includes(path)&&method==='GET'){res.writeHead(200,{'content-type':'text/html; charset=utf-8','content-length':setupPage.length,'cache-control':'no-store','referrer-policy':'no-referrer','x-frame-options':'DENY'}).end(setupPage);return}
+        if(path==='/__live/setup.js'&&method==='GET'){res.writeHead(200,{'content-type':'application/javascript; charset=utf-8','content-length':setupScript.length,'cache-control':'no-store'}).end(setupScript);return}
+        if(path==='/auth/login'){res.writeHead(302,{location:'/__live/','cache-control':'no-store'}).end();return}
+        if(path==='/__live/status'){json(res,200,{...ctx.bridge.status(),enabled:true,setupToken:ctx.csrfToken});return}
         if(path==='/api/auth/csrf'){json(res,200,{csrfToken:ctx.csrfToken});return}
-        if(path==='/api/auth/signout'&&method==='POST'){await sessions.disconnect(ctx,res);json(res,200,{url:origin.origin+'/workspace/connect'});return}
+        if(path==='/api/auth/signout'&&method==='POST'){await sessions.disconnect(ctx,res);json(res,200,{url:origin.origin+'/auth/login'});return}
         if(path==='/api/auth/session'&&method==='GET'){json(res,200,ctx.originalSession??sessions.guestProfile(ctx));return}
         if(path==='/__workflow/status'){json(res,200,{enabled:true,session:ctx.bridge.status(),vertex:vertexFacade.status(),benchmark:{mode:'supabase',workspace:ctx.workspace.id},storage:repository.backend});return}
         if(path==='/workspace/api/v1/uploads'&&method==='POST'){

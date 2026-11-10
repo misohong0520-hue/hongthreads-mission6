@@ -42,7 +42,9 @@ export function createCompatibility({repository,secret,publicOrigin,publicAsset}
     const attachments=await Promise.all(row.assets.map(async a=>{const asset=await repository.get('assets',row.workspace_id,a.id);return{url:mediaUrl(row.workspace_id,a.id),type:asset.metadata.mime_type?.startsWith('video/')?'video':'image'}}));
     const metadata=replaceMedia(row.metadata);let structure=metadata.content_structure??{};if(typeof structure==='string'){try{structure=replaceMedia(JSON.parse(structure))}catch{}}
     const items=metadata.media_items?.length?metadata.media_items:attachments;
-    return{...metadata,id:legacyId(row),original_url:row.source_url,raw_content:row.content,original_author:metadata.original_author??'',folder_id:row.folder_id?legacyId({id:row.folder_id}):null,media_items:items,content_structure:typeof structure==='string'?structure:JSON.stringify(structure),created_at:row.created_at,updated_at:row.updated_at};
+    if(!structure||typeof structure!=='object'||Array.isArray(structure))structure={};
+    const stabilized=purpose(row)==='STABILIZATION';
+    return{...metadata,id:legacyId(row),original_url:row.source_url||(metadata.original_url==='MANUAL_INPUT'?'MANUAL_INPUT':''),raw_content:row.content,extracted_content:row.content,excerpt:row.content,custom_guide:metadata.custom_guide??'',original_author:metadata.original_author??'',folder_id:row.folder_id?legacyId({id:row.folder_id}):null,media_items:items,content_structure:JSON.stringify({...structure,content:row.content,text:row.content,media_items:items,metrics:structure.metrics??{}}),scrap_purpose:metadata.scrap_purpose??'BENCHMARK',is_stabilization:stabilized,has_affiliate_link:!stabilized&&Boolean(metadata.affiliate_url),created_at:row.created_at,updated_at:row.updated_at};
   };
   const token=row=>{const header=encoded({alg:'HS256',typ:'JWT'}),payload=encoded({wid:row.workspace_id,jti:row.id,iat:row.metadata.iat,exp:row.metadata.exp,so_id:1});const data=header+'.'+payload;return data+'.'+createHmac('sha256',secret).update(data).digest('base64url')};
   const verify=async value=>{
@@ -60,6 +62,8 @@ export function createCompatibility({repository,secret,publicOrigin,publicAsset}
     },
     async handle(req,res,url,ctx){
       const path=url.pathname,method=req.method,wid=ctx.workspace.id;
+      let benchmarkUpload=false;try{const referer=new URL(req.headers.referer??'');benchmarkUpload=referer.origin===publicOrigin&&referer.pathname==='/dashboard/benchmark'}catch{}
+      const ownedUpload=ctx.extension||!ctx.bridge.status().configured||benchmarkUpload;
       if(path==='/api/keys/extension'&&method==='POST'){
         let row=(await repository.list('extension-keys',wid,{limit:100})).data.find(r=>r.status==='active'&&r.metadata.exp>Date.now()/1000);
         if(req.headers['x-rea-local-key-rotate']==='1'&&row){await repository.update('extension-keys',wid,row.id,{status:'revoked'});row=null}
@@ -103,14 +107,15 @@ export function createCompatibility({repository,secret,publicOrigin,publicAsset}
           const updated=[];for(const row of selected)updated.push(await repository.update('benchmarks',wid,row.id,{metadata:{...row.metadata,...patch}}));json(res,200,{success:true,updated:updated.length,...(updated.length===1?{id:legacyId(updated[0]),data:await view(updated[0])}:{})});return true;
         }
         if(method==='POST'){
-          const row=await repository.create('benchmarks',wid,{title:String(data.title??data.raw_content??'벤치마킹 자료').slice(0,200)||'벤치마킹 자료',content:data.raw_content??data.content??'',source_url:data.original_url??data.source_url??'',folder_id:await legacyFolder(wid,data.folder_id),assets:await mediaReferences(wid,data),metadata:clean(data)});json(res,201,{success:true,id:legacyId(row),data:await view(row)});return true;
+          const source=data.original_url??data.source_url??'';
+          const row=await repository.create('benchmarks',wid,{title:String(data.title??data.raw_content??'벤치마킹 자료').slice(0,200)||'벤치마킹 자료',content:data.raw_content??data.content??'',source_url:source==='MANUAL_INPUT'?'':source,folder_id:await legacyFolder(wid,data.folder_id),assets:await mediaReferences(wid,data),metadata:clean(data)});json(res,201,{success:true,id:legacyId(row),data:await view(row)});return true;
         }
         const ids=data.ids??(method==='DELETE'&&url.searchParams.has('ids')?url.searchParams.get('ids').split(','):[url.searchParams.get('id')??data.scrap_id??data.id]);
         if(!Array.isArray(ids)||!ids.length||ids.length>100)throw new DataError('INVALID_IDS');
         for(const id of ids){const row=await byId('benchmarks',wid,id);if(method==='DELETE'){await repository.remove('benchmarks',wid,row.id);continue}if(['PATCH','PUT'].includes(method))await repository.update('benchmarks',wid,row.id,{...(data.raw_content!==undefined?{content:data.raw_content}:{}),...(data.folder_id!==undefined?{folder_id:await legacyFolder(wid,data.folder_id)}:{}),metadata:{...row.metadata,...clean(data)}});else throw new DataError('METHOD_NOT_ALLOWED',405)}
         json(res,200,{success:true});return true;
       }
-      if(path==='/api/upload/presigned-url'&&method==='POST'&&(ctx.extension||!ctx.bridge.status().configured)){
+      if(path==='/api/upload/presigned-url'&&method==='POST'&&ownedUpload){
         for(const[id,ticket]of tickets)if(ticket.expires<Date.now())tickets.delete(id);
         if([...tickets.values()].filter(t=>t.workspaceId===wid&&!t.used).length>=30)throw new DataError('UPLOAD_LIMIT',429);
         const data=await readJson(req),id=randomUUID(),assetId=randomUUID(),mime=data.fileType??data.contentType;
@@ -126,7 +131,7 @@ export function createCompatibility({repository,secret,publicOrigin,publicAsset}
       if(path.startsWith('/__local_benchmark/media/')&&['GET','HEAD'].includes(method)){
         const asset=await repository.downloadAsset(wid,path.split('/').at(-1));res.writeHead(200,{'content-type':asset.row.metadata.mime_type,'content-length':asset.bytes.length,'cache-control':'private,no-store','x-content-type-options':'nosniff'}).end(method==='HEAD'?undefined:asset.bytes);return true;
       }
-      if(path==='/api/upload'&&method==='POST'&&(ctx.extension||!ctx.bridge.status().configured)){
+      if(path==='/api/upload'&&method==='POST'&&ownedUpload){
         const form=await multipart(req),file=form.get('file');if(!file?.arrayBuffer)throw new DataError('FILE_REQUIRED');
         const row=await repository.uploadAsset(wid,{filename:file.name,mimeType:file.type,bytes:Buffer.from(await file.arrayBuffer())}),link=mediaUrl(wid,row.id);json(res,200,{url:link,thumbnail_url:file.type.startsWith('image/')?link:null});return true;
       }
@@ -148,7 +153,7 @@ export function createCompatibility({repository,secret,publicOrigin,publicAsset}
         throw new DataError('METHOD_NOT_ALLOWED',405);
       }
       if(path==='/api/errors/scrap-media'&&method==='POST'){const data=clean(await readJson(req,1024*1024));await repository.create('sync_events',wid,{title:'스크랩 첨부 수집 오류',status:'failed',metadata:{type:'scrap_media',detail:data}});json(res,200,{ok:true});return true}
-      if(path==='/__local_benchmark/install'&&method==='GET'){res.writeHead(302,{location:'/workspace/connect','cache-control':'no-store'}).end();return true}
+      if(path==='/__local_benchmark/install'&&method==='GET'){res.writeHead(302,{location:'/extensions/hongthreads.zip','cache-control':'no-store'}).end();return true}
       return false;
     }
   };

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>원본 데이터 연결 · DReaThs 개발용</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f5f5; color: #171717; font: 15px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { width: min(680px, calc(100% - 32px)); margin: 56px auto; padding: 32px; background: white; border: 1px solid #e5e5e5; border-radius: 20px; }
+    h1 { margin: 0 0 10px; font-size: 26px; line-height: 1.35; }
+    p { margin: 0 0 20px; color: #606060; }
+    .eyebrow { margin: 0 0 8px; color: #5743d9; font-size: 12px; font-weight: 750; letter-spacing: .06em; }
+    .status { margin: 24px 0; padding: 18px; border: 1px solid #dedde9; border-radius: 12px; background: #f8f7ff; }
+    .status[data-state="connected"] { border-color: #b8dfc6; background: #f2faf4; }
+    .status[data-state="session-expired"], .status[data-state="access-denied"], .status[data-state="upstream-error"] { border-color: #ebcaca; background: #fff6f6; }
+    .status strong { display: block; font-size: 16px; }
+    .status p { margin: 5px 0 0; font-size: 14px; }
+    .status dl { display: grid; grid-template-columns: 110px 1fr; gap: 5px 8px; margin: 14px 0 0; font-size: 13px; }
+    .status dt { color: #666; }
+    .status dd { margin: 0; overflow-wrap: anywhere; }
+    label { display: block; margin: 18px 0 6px; font-weight: 700; }
+    input, select, button, .open-link { font: inherit; }
+    input, select { width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #d3d3d3; border-radius: 8px; background: white; color: #171717; }
+    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #b5aaff; outline-offset: 3px; }
+    input:disabled, select:disabled { background: #f5f5f5; }
+    .help { margin: 6px 0 0; font-size: 13px; color: #666; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    button, .open-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 17px; border: 1px solid #d4d4d4; border-radius: 8px; background: white; color: #171717; font-weight: 700; text-decoration: none; cursor: pointer; }
+    button[type="submit"] { border-color: #171717; background: #171717; color: white; }
+    button:disabled, .open-link[aria-disabled="true"] { opacity: .42; cursor: default; }
+    .open-link { margin-top: 22px; border-color: #5743d9; color: #5743d9; }
+    .message { min-height: 24px; margin: 12px 0 0; font-size: 14px; color: #a22323; }
+    .notice { margin: 26px 0 0; padding-top: 18px; border-top: 1px solid #eee; font-size: 13px; }
+    code { font-size: 13px; overflow-wrap: anywhere; }
+    @media (max-width: 520px) { main { margin: 20px auto; padding: 22px; } h1 { font-size: 23px; } .actions > * { flex: 1 1 auto; } }
+  </style>
+  <script src="/__live/setup.js" defer></script>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">DREATHS · 로컬 개발용</p>
+    <h1>원본 데이터 실시간 연결</h1>
+    <p>로그인한 원본 사이트의 세션 쿠키를 연결하면 데이터랩·구글 트렌드·쇼핑 트렌드·뉴스의 최신 응답을 조회합니다.</p>
+
+    <section class="status" id="connection-status" data-state="awaiting-session" aria-live="polite" aria-atomic="true">
+      <strong id="status-title">연결 상태 확인 중</strong>
+      <p id="status-description">로컬 서버의 상태를 확인하고 있습니다.</p>
+      <dl>
+        <dt>원본 서버</dt><dd>drt.agczero.com</dd>
+        <dt>마지막 수신</dt><dd id="last-success">아직 없음</dd>
+        <dt>갱신 간격</dt><dd id="refresh-interval">확인 중</dd>
+      </dl>
+    </section>
+
+    <form id="session-form" method="post" action="/__live/session" autocomplete="off">
+      <label for="cookie-name">세션 쿠키 이름</label>
+      <select id="cookie-name" name="cookie-name" disabled>
+        <option value="next-auth.session-token">next-auth.session-token</option>
+        <option value="__Secure-next-auth.session-token">__Secure-next-auth.session-token</option>
+      </select>
+
+      <label for="cookie-value">세션 쿠키 값</label>
+      <input id="cookie-value" name="session-value" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="32768" aria-describedby="cookie-help" disabled>
+      <p class="help" id="cookie-help">위에서 선택한 쿠키의 값만 입력하세요. 값은 채팅이나 스크린샷으로 공유하지 마세요.</p>
+
+      <div class="actions">
+        <button id="connect-button" type="submit" disabled>세션 연결</button>
+        <button id="disconnect-button" type="button" disabled>연결 해제</button>
+      </div>
+      <p class="message" id="form-message" role="status" aria-live="polite"></p>
+    </form>
+
+    <a class="open-link" id="open-insights" href="/dashboard/insights" aria-disabled="true">인사이트 열기 →</a>
+
+    <p class="notice">세션 값은 로컬 서버 메모리에만 보관합니다. 연결 해제 또는 서버 재시작 시 사라지며, 만료되면 원본 사이트에서 로그인한 뒤 새 값을 입력해야 합니다. 데이터 최신성은 원본 서버의 수집·갱신 주기에 따릅니다.</p>
+  </main>
+</body>
+</html>

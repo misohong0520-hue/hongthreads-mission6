@@ -1,2 +1,3 @@
-import { redirect } from 'next/navigation';
-export default function Home() { redirect('/benchmarks'); }
+import { redirectOriginal } from '@/lib/original-routes';
+export const dynamic = 'force-dynamic';
+export default function Home() { redirectOriginal('/dashboard/insights'); }

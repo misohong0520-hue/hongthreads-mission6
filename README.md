@@ -4,13 +4,13 @@
 
 ## 기능과 데이터
 
-- `/workspace/benchmarks`: 목록·검색·폴더·페이지·등록·상세·수정·삭제, 이미지·영상 첨부와 미리보기.
-- `/workspace/drafts`, `/personas`, `/templates`, `/revenue`, `/folders`: 공통 저장 계층의 자료 관리. 편집 세션과 AI 이력은 조회 전용입니다.
+- 사용자 화면은 원본 DRT 그대로입니다. `/dashboard/insights`, `/dashboard/benchmark`, 기존 에디터·원고·페르소나·분석·제휴·마이페이지를 사용합니다. 별도 대시보드·자료 관리 메뉴·연결 배너는 제거했습니다.
+- 이전 `/workspace` HTML 주소는 해당 원본 화면으로 돌아갑니다. `/workspace/api/`는 저장·세션 API 호환용으로 유지하며 제품 메뉴에 표시하지 않습니다.
 - 기존 13개 DRT 화면: 편집기·트렌드·계정 분석·아카이브·제휴·마이페이지 흐름을 유지합니다. 원본 조회와 처리 결과는 개인 workspace에 동기화합니다.
 - 원본 계정은 방문자마다 연결합니다. 연결 전에는 개인 브라우저의 guest 보관함을 사용합니다. 원본 계정 연결 시 검증된 사용자에게 속한 보관함으로 전환하며 체험 자료를 자동 혼합하지 않습니다.
 - 원본 서비스의 권한과 실제 게시·예약·상품 조회는 원본 API를 따릅니다. DB 사본으로 외부 처리 성공을 대신하지 않습니다.
 - 원본 ID가 있는 자료는 기존 화면에서 수정하며, 원본 응답 성공 후 사본을 갱신합니다. 서버 재시작 후에는 원본 계정을 재연결해야 합니다. 앱 쿠키에 연결된 보관함 자료는 유지됩니다.
-- `/workspace/connect`에서 확장 프로그램 ZIP과 개인 보관함 키를 받습니다. 새 `extension-cloud`는 기존 `extension-local`과 별도 설치됩니다. 키는 보관함 접근 권한이므로 원본 세션과 함께 공유하지 않습니다.
+- 세션은 기존 개발용 `/__live/`에서 연결하고 원본 화면에 새 메뉴를 붙이지 않습니다. 확장 키는 기존 벤치마킹의 ‘익스텐션 키’를 사용합니다. 새 `extension-cloud`는 기존 `extension-local`과 별도 설치됩니다.
 
 ## 구성
 
@@ -27,7 +27,7 @@ npm --prefix web run build
 node mission6/start.mjs
 ```
 
-기본 접속은 `http://127.0.0.1:9251/workspace/benchmarks`입니다. 기존 Windows 개발 서버 9248은 별도로 유지됩니다. 설정 파일은 `MISSION6_ENV_FILE`로 지정하거나 Windows의 `%LOCALAPPDATA%/HongThreads/secrets/mission6.env`에서 읽습니다.
+기본 접속은 `http://127.0.0.1:9251/dashboard/insights`입니다. 기존 Windows 개발 서버 9248은 별도로 유지됩니다. 설정 파일은 `MISSION6_ENV_FILE`로 지정하거나 Windows의 `%LOCALAPPDATA%/HongThreads/secrets/mission6.env`에서 읽습니다.
 
 필수 설정은 `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `SESSION_SIGNING_SECRET`입니다. AWS에서는 `PUBLIC_ORIGIN=https://hongthreads.hongsik.blog`, `VERTEX_TRANSPORT=local`, `VERTEX_NODE_PATH`, `VERTEX_WORKER_PATH`도 설정합니다. `deploy/runtime.env.example`을 참고하고 실제 비밀값은 GitHub나 클라이언트 코드에 넣지 않습니다.
 
@@ -54,6 +54,6 @@ GitHub 저장소에는 실제 원본 API 응답과 세션·키가 포함되지 �
 
 ## 현재 검증 범위
 
-원본 회귀와 새 검사 100개, Next 빌드·타입 검사, 실제 Supabase의 6개 자료 유형 CRUD, 브라우저 파일 업로드·새로고침·수정·삭제와 다른 브라우저 접근 차단을 확인했습니다. 본인 세션에서 원본 13개 화면, 검색 결과 18개, 게시글·멘션 탭 및 실제 WIF 생성·DB 이력을 확인했습니다. 확장 업로드 API의 실제 Storage 저장·삭제도 통과했습니다.
+원본 회귀와 새 검사 101개, Next 빌드·타입 검사, 실제 Supabase의 6개 자료 유형 CRUD·사용자 격리를 확인했습니다. 원본 UI 복구 후에는 기존 등록창에서 본문·파일을 저장하고 카드 표시·새로고침·작성 기준 수정·폴더 생성/수정/삭제·자료와 첨부 삭제까지 실제 클릭으로 확인했습니다. 현재 원본13개 화면 모두200, JavaScript 오류0, 추가 UI0입니다. 같은 계정의 기존 개발판과 사이드바 메뉴·폭도 일치합니다. 이전 검색·관리 탭·실제 WIF·확장 Storage 증거는 보존합니다.
 
 전체 기능 동일 검증은 아직 완료로 판정하지 않습니다. 실제 게시·예약·댓글·결제·외부 계정 변경, 확장의 실제 Chrome 설치 수집, 모든 제휴 조합과 영상 분석은 이번 종단 검증에서 실행하지 않았습니다. 원본 외부 미디어 전체를 Supabase로 복사하지 않았고, 동기화 대기 자동 재조정과 장기 미참조 파일 정리는 추가 운영 과제입니다. 현재 수정본의 Linux CI와 공개 도메인 재검증은 승인 후 진행합니다.

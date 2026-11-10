@@ -87,7 +87,7 @@ test('extension upload tickets work without cookies, are single use and produce 
 test('extension key rotation revokes the previous key and folders/categories stay isolated',async t=>{
   const f=await fixture(t),a=f.client(),b=f.client();await f.session(a);await f.session(b);
   const key=await(await f.write(a,'/api/keys/extension','POST')).json();const folder=await(await f.write(a,'/api/scraps/folders','POST',{folder_name:'Owned'})).json();
-  const scrap=await(await f.write(a,'/api/reference/scrap','POST',{raw_content:'Categorized',folder_id:folder.folder.id})).json();
+  const scrap=await(await f.write(a,'/api/reference/scrap','POST',{original_url:'MANUAL_INPUT',raw_content:'Categorized',folder_id:folder.folder.id})).json();assert.equal(scrap.data.original_url,'MANUAL_INPUT');assert.equal(JSON.parse(scrap.data.content_structure).content,'Categorized');assert.equal(scrap.data.extracted_content,'Categorized');
   assert.equal((await f.write(b,'/api/reference/scrap','POST',{raw_content:'Foreign folder',folder_id:folder.folder.id})).status,404);
   assert.equal((await f.write(a,'/api/reference/scrap','PUT',{action:'SAVE_STABILIZATION',scrap_id:scrap.id})).status,200);
   const filtered=await(await a.request('/api/reference/scrap?link_filter=STABILIZATION')).json();assert.equal(filtered.total,1);assert.equal(filtered.link_summary.unlinked,0);
@@ -118,4 +118,15 @@ test('an old concurrent request cannot overwrite a newly rotated browser session
   const f=await fixture(t),a=f.client();await f.session(a);const oldCookie=a.cookie;await f.write(a,'/workspace/api/connection','POST',{cookieValue:'fixture-a'});
   const stale=await fetch(f.base+'/workspace/api/session',{headers:{cookie:oldCookie}});assert.equal(stale.status,401);assert.equal(stale.headers.get('set-cookie'),null);assert.equal((await f.session(a)).connected,true);
   const key=await(await f.write(a,'/api/keys/extension','POST')).json();const extension=await fetch(f.base+'/api/scraps/folders',{headers:{Authorization:'Bearer '+key.token}});assert.equal(extension.status,200);assert.equal(extension.headers.get('set-cookie'),null);
+});
+
+test('retired workspace pages return to original DRT screens without adding a second product UI',async t=>{
+  const f=await fixture(t);
+  for(const [path,target]of Object.entries({'/workspace':'/dashboard/insights','/workspace/benchmarks':'/dashboard/benchmark','/workspace/benchmarks/new':'/dashboard/benchmark','/workspace/folders':'/dashboard/benchmark','/workspace/drafts/fixture/edit':'/dashboard/threads','/workspace/personas':'/dashboard/personas','/workspace/templates':'/multi-write','/workspace/sessions':'/multi-write','/workspace/revenue':'/dashboard/revenue','/workspace/generations':'/write','/workspace/connect':'/__live/'})){
+    const response=await fetch(f.base+path,{redirect:'manual'});assert.equal(response.status,302);assert.equal(response.headers.get('location'),target);
+  }
+  const script=await fetch(f.base+'/mission6/client.js').then(r=>r.text());assert.doesNotMatch(script,/hongthreads-workspace|hongthreads-connect-notice|document\.createElement/);
+  const setup=await fetch(f.base+'/__live/');assert.equal(setup.status,200);assert.match(await setup.text(),/id="session-form"/);
+  const status=await fetch(f.base+'/__live/status').then(r=>r.json());assert.equal(status.enabled,true);
+  assert.equal((await fetch(f.base+'/workspace/api/session')).status,200);
 });
