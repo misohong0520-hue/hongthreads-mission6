@@ -8,24 +8,29 @@ const logoImage = '<img src="/__replay/brand.png" alt="H 로고" width="64" heig
 const logoMarkup = '<span class="flex items-center gap-2 min-w-0">'+logoImage+'<span class="text-xl font-bold tracking-tight text-black whitespace-nowrap">HongThreads</span></span>';
 const logoScript = '(0,n.jsx)("img",{src:"/__replay/brand.png",alt:"H 로고",width:64,height:64,className:"h-16 w-16 object-contain shrink-0"})';
 const renameArchive = source => source.replaceAll('DREATHS 아카이브','Threads Archive').replaceAll('DreaThs Archive','Threads Archive');
+const renameLabels = source => renameArchive(source).replaceAll('마이페이지 관리','마이페이지관리').replaceAll('마이페이지 설정','마이페이지관리');
+const dashboardHeading = '("h2",{className:"text-lg md:text-2xl font-black uppercase tracking-widest text-black flex items-center gap-2 md:gap-3",children:';
 
 // Apply only the known branding literals after captured assets pass their digest
 // checks. Keep retained files and their source-bound manifests unchanged.
 export const patchDevelopmentScript = bytes => {
   const source=bytes.toString('utf8');
-  if(!source.includes(originalCopyright)&&!source.includes('children:'+logoScript)&&!source.includes('DREATHS 아카이브')&&!source.includes('DreaThs Archive')&&!source.includes('onClick:()=>$("revenue")'))return bytes;
-  return Buffer.from(renameArchive(source).replaceAll(originalCopyright,copyright).replaceAll('children:'+logoScript,
+  if(!source.includes(originalCopyright)&&!source.includes('children:'+logoScript)&&!source.includes('DREATHS 아카이브')&&!source.includes('DreaThs Archive')&&!source.includes('onClick:()=>$("revenue")')&&!source.includes('마이페이지 관리')&&!source.includes('마이페이지 설정'))return bytes;
+  // Only the captured dashboard layout owns the route variable x. Mypage has
+  // the same heading classes but no such binding, so it must keep its own JSX.
+  const dashboard=source.includes('90253:function(')&&source.includes('"videos"===x&&');
+  return Buffer.from(renameLabels(source).replaceAll(originalCopyright,copyright).replaceAll('children:'+logoScript,
     'children:(0,n.jsxs)("span",{className:"flex items-center gap-2 min-w-0",children:['+logoScript+',(0,n.jsx)("span",{className:"text-xl font-bold tracking-tight text-black whitespace-nowrap",children:"HongThreads"})]})')
     .replaceAll('("button",{onClick:()=>$("revenue"),','("button",{"data-hongthreads-hidden":"revenue-menu",onClick:()=>$("revenue"),')
     .replaceAll('("button",{onClick:()=>$("videos"),','("button",{"data-hongthreads-archive":"true",onClick:()=>$("videos"),')
-    .replaceAll('("h2",{className:"text-lg md:text-2xl font-black uppercase tracking-widest text-black flex items-center gap-2 md:gap-3",children:',
-      '("h2",{"data-hongthreads-archive":"videos"===x?"true":undefined,className:"text-lg md:text-2xl font-black uppercase tracking-widest text-black flex items-center gap-2 md:gap-3",children:'));
+    .replaceAll(dashboardHeading,dashboard?
+      '("h2",{"data-hongthreads-archive":"videos"===x?"true":undefined,className:"text-lg md:text-2xl font-black uppercase tracking-widest text-black flex items-center gap-2 md:gap-3",children:':dashboardHeading));
 };
 
 // Match the same SSR nodes changed in the captured sidebar client module.
 // Slice source ranges so unrelated markup and Next.js bootstrap scripts stay intact.
 export const patchDevelopmentMarkup = bytes => {
-  let source = renameArchive(bytes.toString('utf8')).replaceAll(originalCopyright,copyright);
+  let source = renameLabels(bytes.toString('utf8')).replaceAll(originalCopyright,copyright);
   const tree = parse(source, { sourceCodeLocationInfo: true });
   const asides = descendants(tree).filter(node => node.tagName === 'aside');
   // An unrecognised or absent sidebar must remain usable after an upstream

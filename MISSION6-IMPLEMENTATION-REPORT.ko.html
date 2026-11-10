@@ -19,6 +19,7 @@
 <tr><td>브랜딩·AWS 준비</td><td>H 로고, 하단 이름·아바타 미표시. 전용 Nginx·systemd·HTTPS·버전별 release 구성. CI는 검사와 Linux artifact 생성만 수행. 배포 검사 실패 시 직전 HongThreads release로 복구하도록 준비.</td></tr>
 </tbody></table></div>
 <h2>검증 결과</h2>
+<p>2026-11-11: 마이페이지 진입 오류를 수정했습니다. 이전 아카이브 제목 패치가 같은 제목 클래스를 가진 마이페이지 레이아웃에도 대시보드 전용 변수를 추가한 것이 원인이었습니다. 적용 범위를 대시보드로 제한하고 메뉴·제목을 마이페이지관리로 변경했습니다. 실제 캡처 레이아웃 실행 회귀 검사와 관련 검사42개가 통과했으며, 로컬9248·9251에서 메뉴 진입·설정 탭4개·새로고침·모바일 표시 유지와 JavaScript 오류0건을 확인했습니다. 근거: <code>mission6/verification/mypage-restored.json</code>. 배포본 검사에도 회귀 테스트를 추가했으며 공개 배포는 수행하지 않았습니다.</p>
 <p>추가 요청에 따라 모든 사용법 버튼, API 연동 말풍선·연결 상태 패널, 멤버십 구독 및 무료 오픈채팅 안내 카드를 공통 스타일로 숨겼습니다. 로컬9248·9251의 13개 페이지를 PC·모바일에서 총52회 검사했고, 사용법 버튼56개가 모두 숨겨졌으며 JavaScript 오류0건입니다. 마이페이지의 일반 계정 입력4개와 기존 연결 버튼은 표시됩니다. 근거: <code>mission6/verification/hidden-ui.json</code>. 표시 변경이며 실제 구독·계정 상태를 바꾸지 않았습니다.</p>
 <p>후속 표시 요청도 적용했습니다. 마이페이지의 연동 방법 보기와 접힌 사용법 보기를 숨기고, H 로고 옆에 HongThreads를 추가했으며 공통 저작권을 © 2026 HongThreads· ALL RIGHTS RESERVED로 교체했습니다. PC·모바일 및 화면 이동 뒤 표시를 확인했고, 상태/프로필 동기화는 유지됩니다. 로그인 전 원본 공통 CSS 누락도 보완했습니다. 원본 스타일은 SHA-256으로 검증하며 원본 캡처와 API는 변경하지 않았습니다. 근거: <code>mission6/verification/branding-ui.json</code>, 관련 테스트44개 통과. 로컬 적용이며 추가 배포는 승인 대기입니다.</p>
 <div class="table"><table><thead><tr><th>검사</th><th>결과와 근거</th></tr></thead><tbody>

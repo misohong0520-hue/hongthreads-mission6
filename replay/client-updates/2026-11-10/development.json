@@ -1,6 +1,6 @@
 {
   "schema": "rea-client-update-overlay-v1",
-  "source_manifest_sha256": "2b96c0416785e4f18a186db2252f15fdb5cf680b0f3ec1b8c2c5a46ac4c8d78a",
+  "source_manifest_sha256": "1e12a910138ec8661b015a4f8b21605230573302dc3ede53762ba3cfcdec83a8",
   "records": [
     {
       "path": "/_next/static/chunks/app/write/page-b5b4dd68880135cc.js",

@@ -18,7 +18,7 @@ await walk('extension-cloud',f=>/\.(?:js|json|html|png|md)$/.test(f));
 await copy('extension-cloud.zip');
 await walk('.github',f=>/\.ya?ml$/.test(f));
 await save('README.md',(await readFile(join(root,'mission6/README.md'),'utf8')).replaceAll('](../MISSION6-','](MISSION6-'));
-for(const file of ['MISSION6-FINAL-PLAN.ko.html','MISSION6-IMPLEMENTATION-REPORT.ko.html','development/patch-server-markup.mjs','development/branding/h-logo.png'])await copy(file);
+for(const file of ['MISSION6-FINAL-PLAN.ko.html','MISSION6-IMPLEMENTATION-REPORT.ko.html','development/patch-server-markup.mjs','development/patch-server-markup.test.mjs','development/branding/h-logo.png'])await copy(file);
 for(const item of await readdir(join(root,'replay'),{withFileTypes:true}))if(item.isFile()&&/\.(?:mjs|js)$/.test(item.name))await copy('replay/'+item.name);
 await copy('replay/session-setup.html');
 await copy('replay/ui-visibility.css');
@@ -52,7 +52,7 @@ for(const release of pointer.releases??[pointer]){
 await save('replay/client-updates/active.json',JSON.stringify(pointer,null,2)+'\n');
 const fonts=JSON.parse(await readFile(join(root,'replay/font-assets/manifest.json')));await copy('replay/font-assets/manifest.json');for(const font of fonts.records)await copy('replay/font-assets/'+font.file);
 const styles=JSON.parse(await readFile(join(root,'replay/style-assets/manifest.json')));await copy('replay/style-assets/manifest.json');for(const style of styles.records)await copy('replay/style-assets/'+style.file);
-await save('package.json',JSON.stringify({name:'hongthreads-runtime',version:'1.0.0',type:'module',private:true,scripts:{start:'node mission6/server.mjs',test:'node --test mission6/server.test.mjs mission6/mirror.test.mjs mission6/runtime/vertex-worker.test.mjs'},dependencies:{parse5:'8.1.0'}},null,2)+'\n');
+await save('package.json',JSON.stringify({name:'hongthreads-runtime',version:'1.0.0',type:'module',private:true,scripts:{start:'node mission6/server.mjs',test:'node --test development/patch-server-markup.test.mjs mission6/server.test.mjs mission6/mirror.test.mjs mission6/runtime/vertex-worker.test.mjs'},dependencies:{parse5:'8.1.0'}},null,2)+'\n');
 await save('.gitignore','node_modules/\nweb/node_modules/\nweb/.next/\n.env\n.env.*\n!.env.example\nmission6/runtime-data/\nmission6/verification/\n*.log\n');
 await copy('.gitattributes');
 await save('release.json',JSON.stringify({name:'HongThreads',domain:'hongthreads.hongsik.blog',createdAt:new Date().toISOString(),staticRecords:records.length,originalApiBodiesIncluded:false,originalSessionsIncluded:false,documentsSanitized:true,files:copied.size},null,2)+'\n');
