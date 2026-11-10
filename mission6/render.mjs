@@ -2,9 +2,10 @@ import {readFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {parse} from 'parse5';
-import {patchDevelopmentMarkup} from '../development/patch-server-markup.mjs';
+import {patchDevelopmentMarkup,patchDevelopmentScript} from '../development/patch-server-markup.mjs';
 import {loadClientUpdates} from '../replay/workflow-client-updates.mjs';
 import {loadWorkflowFonts} from '../replay/workflow-fonts.mjs';
+import {loadWorkflowStyles} from '../replay/workflow-styles.mjs';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const root=resolve(import.meta.dirname,'..');
 const ORIGIN='https://drt.agczero.com';
@@ -57,6 +58,7 @@ export async function loadRuntimeAssets(){
   for(const record of overlay.records.filter(r=>!/html/.test(r.media_type))){const bytes=await readFile(join(root,'replay/workflow-development',record.file));if(sha(bytes)!==record.development_sha256)throw new Error('Development asset digest mismatch');assets.set(record.path,{bytes,type:record.media_type});approved.add(record.path)}
   for(const {record,bytes}of await loadClientUpdates()){assets.set(record.path,{bytes,type:record.media_type});approved.add(record.path)}
   for(const {record,bytes}of await loadWorkflowFonts())assets.set(record.path,{bytes,type:record.media_type});
+  for(const {record,bytes}of await loadWorkflowStyles())assets.set(record.path,{bytes,type:record.media_type});
   for(const key of assets.keys())if(key.startsWith('/_next/static/chunks/app/')&&!approved.has(key))assets.delete(key);
   for(const record of overlay.records.filter(r=>/html/.test(r.media_type))){const bytes=await readFile(join(root,'replay/workflow-development',record.file));if(sha(bytes)!==record.development_sha256)throw new Error('Document digest mismatch');documents.set(new URL(record.path,ORIGIN).pathname,{bytes,type:record.media_type})}
   for(const release of ['2026-11-06','2026-11-10','2026-11-07-onboarding']){
@@ -69,6 +71,7 @@ export async function loadRuntimeAssets(){
   assets.set('/__workflow/benchmark-client.js',{bytes:code,type:'application/javascript'});
   assets.set('/__replay/brand.png',{bytes:await readFile(join(root,'development/branding/h-logo.png')),type:'image/png'});
   assets.set('/__replay/ui-visibility.css',{bytes:await readFile(join(root,'replay/ui-visibility.css')),type:'text/css; charset=utf-8'});
+  for(const asset of assets.values())if(/javascript|ecmascript/.test(asset.type))asset.bytes=patchDevelopmentScript(asset.bytes);
   return{manifest,assets,documents};
 }
 export function rewriteDocument(bytes,{ctx,profile,vertex}){

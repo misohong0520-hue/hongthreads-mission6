@@ -76,6 +76,8 @@ const developmentOverrides = new Map();
 let developmentManifestSha256 = null;
 const patchDevelopmentMarkup = development
   ? (await import('../development/patch-server-markup.mjs')).patchDevelopmentMarkup : null;
+const patchDevelopmentScript = development
+  ? (await import('../development/patch-server-markup.mjs')).patchDevelopmentScript : bytes=>bytes;
 if (development) {
   const developmentRoot = resolve(root, '../development');
   const filesRoot = resolve(developmentRoot, 'files');
@@ -298,13 +300,14 @@ server = createServer(async (req,res) => {
         message:liveTrends ? 'This request was not recorded. Only configured read-only trend routes can contact the original server.' : 'This request was not recorded by REA. No original server or proxy fallback is connected.'});
     }
     const original=objects.get(record.response.object_sha256);
-    const output=developmentOverrides.get(record.id)??derived.get(record.id)??original;
+    const baseOutput=developmentOverrides.get(record.id)??derived.get(record.id)??original;
+    const output=/javascript|ecmascript/.test(record.response.media_type??'')?patchDevelopmentScript(baseOutput):baseOutput;
     const exactBody=output.equals(original);
     const headers={
       'content-type':record.response.media_type??'application/octet-stream','content-length':output.length,
       'cache-control':'no-store','x-content-type-options':'nosniff','content-security-policy':csp,
       'x-rea-record-id':record.id,'x-rea-original-sha256':record.response.object_sha256,
-      'x-rea-body-representation':retainedImageVariant?'retained-static-image-width-variant':developmentOverrides.has(record.id)?'development-patched-script':derived.has(record.id)?'derived-document-or-css':'exact-retained-body',
+      'x-rea-body-representation':retainedImageVariant?'retained-static-image-width-variant':developmentOverrides.has(record.id)||!output.equals(baseOutput)?'development-patched-script':derived.has(record.id)?'derived-document-or-css':'exact-retained-body',
       'x-rea-served-sha256':hash(output)
     };
     if(record.response.headers['content-language']) headers['content-language']=record.response.headers['content-language'];

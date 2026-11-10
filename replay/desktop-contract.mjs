@@ -14,6 +14,7 @@ export const RUNTIME_IDENTITY_FILES=Object.freeze([
   'replay/vertex-wif-bridge.mjs','replay/session-routes.mjs',
   'replay/session-setup.html','replay/session-setup.js',
   'development/patch-server-markup.mjs',
+  'replay/workflow-styles.mjs','replay/style-assets/manifest.json',
   'replay/manifest.json','replay/workflow-capture/manifest.json',
   'replay/workflow-capture/client-inventory.json',
   'replay/workflow-development/manifest.json','development/patch-manifest.json'

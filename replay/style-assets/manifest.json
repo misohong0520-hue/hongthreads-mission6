@@ -1,0 +1,14 @@
+{
+  "schema": "rea-original-styles-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-10T14:54:22.127Z",
+  "records": [
+    {
+      "path": "/_next/static/css/8efd17712e15569c.css",
+      "media_type": "text/css; charset=UTF-8",
+      "source_sha256": "7d36401b7128bacef7402df0f46c4ef847e07356b87ff488e9a122ce7d5450e9",
+      "bytes": 163359,
+      "file": "8efd17712e15569c.css"
+    }
+  ]
+}

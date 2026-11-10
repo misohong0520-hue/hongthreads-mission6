@@ -7,7 +7,9 @@ import {matchesWorkflowRequest,workflowPolicySource,affiliateKeyPath,affiliateKe
 import {benchmarkEvent} from './benchmark-events.mjs';
 import {loadClientUpdates} from './workflow-client-updates.mjs';
 import {loadWorkflowFonts} from './workflow-fonts.mjs';
+import {loadWorkflowStyles} from './workflow-styles.mjs';
 import {VERTEX_MAX_BYTES} from './vertex-wif-bridge.mjs';
+import {patchDevelopmentScript} from '../development/patch-server-markup.mjs';
 
 const pages=new Set(['/write','/multi-write','/smart-multi-write','/mypage','/onboarding/coupang','/onboarding/toss',
   ...['insights','benchmark','threads','personas','threads-manage','videos','revenue'].map(page=>'/dashboard/'+page)]);
@@ -61,6 +63,12 @@ export async function createWorkflowRoutes({bridge,vertex,nonce,csp,rewriteDocum
   }
   for(const asset of await loadClientUpdates(clientUpdatesRoot))assets.set(asset.record.path,asset);
   for(const asset of await loadWorkflowFonts())assets.set(asset.record.path,asset);
+  for(const asset of await loadWorkflowStyles())assets.set(asset.record.path,asset);
+  for(const asset of assets.values())if(/javascript|ecmascript/.test(asset.record.media_type??'')){
+    const bytes=patchDevelopmentScript(asset.bytes);
+    if(!bytes.equals(asset.bytes))asset.record={...asset.record,changed:true,development_sha256:sha(bytes)};
+    asset.bytes=bytes;
+  }
   const applicationAssets=new Set([...assets.keys()].map(path=>new URL(path,'https://drt.agczero.com').pathname));
   const incompatibleClient=bytes=>{
     const references=bytes.toString('utf8').match(/(?:\/_next\/)?static\/chunks\/app\/[^"'\s<>\\]+\.js/g)??[];

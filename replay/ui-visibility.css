@@ -1,6 +1,10 @@
 /* Requested presentation changes shared by the local DRT runtimes. */
 button[title*="사용법"],
 button[aria-label*="사용법"],
+button[title*="연동 방법"],
+button[aria-label*="연동 방법"],
+button[title*="연동방법"],
+button[aria-label*="연동방법"],
 button[title*="how to use" i],
 button[title*="tutorial" i],
 aside div[class~="absolute"]:has(> div[class~="animate-bounce"][class~="cursor-pointer"]),

@@ -15,6 +15,8 @@
 
 ## 구성
 
+추가 표시 변경: 마이페이지 AI·쓰레드·쿠팡·토스의 ‘연동 방법 보기’(접힌 상태의 ‘사용법 보기’ 포함)를 숨깁니다. H 로고 옆 HongThreads 이름과 `© 2026 HongThreads· ALL RIGHTS RESERVED` 저작권 문구는 서버 HTML과 클라이언트 렌더링에 함께 적용합니다. 원본 캡처 파일은 변경하지 않습니다. 로그인 전에도 원본 디자인을 표시하도록 누락된 원본 공통 CSS를 해시 검증 후 제공합니다. 로컬9248·9251의 PC·모바일 확인 결과와 화면은 `mission6/verification/branding-ui.json` 및 `branding-*.png`, 관련 테스트44개 통과 기록은 `branding-regression.tap`에 있습니다.
+
 Next.js 16.4.6와 React 19.3.1, Node.js 24, 서버 REST 접근의 Supabase 저장 계층을 사용합니다. Next.js는 `/workspace` basePath와 9250 포트, 연결 서버는 9251 포트입니다. 모든 DB 작업은 서버에서 workspace 소유권을 검사합니다. DB·Storage의 익명 직접 접근은 닫혀 있습니다.
 
 AI는 기존 EC2 WIF worker와 `gemini-3.8-flash`를 사용합니다. Windows는 기존 SSH 경로를, AWS는 기존 worker를 로컬 subprocess로 호출합니다. 원본 세션은 연결 서버 메모리에만 있고 업무 DB에는 원본 세션·제휴 비밀키를 저장하지 않습니다.
