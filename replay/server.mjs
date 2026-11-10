@@ -13,6 +13,7 @@ await mkdir(runtimeRoot,{recursive:true});
 const host = '127.0.0.1';
 const development = process.argv.includes('--dev');
 const brandingLogo=development?await readFile(join(root,'../development/branding/h-logo.png')):null;
+const uiVisibilityCss=development?await readFile(join(root,'ui-visibility.css')):null;
 const liveTrends = process.argv.includes('--live-trends');
 const originalWorkflows = process.argv.includes('--original-workflows');
 const vertexWif = process.argv.includes('--vertex-wif');
@@ -118,7 +119,7 @@ const rewriteDocument = bytes => {
     (all, name, quote, value) => name + '=' + quote + (name.toLowerCase() === 'srcset' ? localSrcset(value) : localReference(value)) + quote);
   const config = JSON.stringify({ primaryOrigin: manifest.primary_origin, manifestSha256: hash(manifestBytes),liveTrends,
     originalWorkflows,desktop:process.env.DREATHS_DESKTOP==='1',...(originalWorkflows?{workflowToken,developmentDraftView:true,developmentArchiveImport:development,benchmarkLive:true,benchmarkLocal:localBenchmarkEnabled,threadsAuthFixture}:{}),...(vertexBridge?{vertex:vertexBridge.status()}:{} ) }).replace(/</g, '\\u003c');
-  const injection = '<script>window.__REA_REPLAY__=' + config + ';</script><script src="/__replay/relocate.js"></script>' + (originalWorkflows?'<script src="/__workflow/benchmark-client.js"></script>':'') + (liveTrends ? '<script src="/__live/client.js" defer></script>' : '');
+  const injection = (development?'<link rel="stylesheet" href="/__replay/ui-visibility.css">':'') + '<script>window.__REA_REPLAY__=' + config + ';</script><script src="/__replay/relocate.js"></script>' + (originalWorkflows?'<script src="/__workflow/benchmark-client.js"></script>':'') + (liveTrends ? '<script src="/__live/client.js" defer></script>' : '');
   if (/<head(?:\s[^>]*)?>/i.test(text)) text = text.replace(/<head(?:\s[^>]*)?>/i, match => match + injection);
   else text = injection + text;
   return Buffer.from(text, 'utf8');
@@ -224,6 +225,10 @@ server = createServer(async (req,res) => {
       return res.end(bytes);
     }
     if(workflowRoutes&&await workflowRoutes(req,res,local))return;
+    if (uiVisibilityCss&&local.pathname==='/__replay/ui-visibility.css'&&['GET','HEAD'].includes(req.method)) {
+      res.writeHead(200,{'content-type':'text/css; charset=utf-8','content-length':uiVisibilityCss.length,'cache-control':'no-store'});
+      return res.end(req.method==='HEAD'?undefined:uiVisibilityCss);
+    }
     if (brandingLogo&&local.pathname==='/__replay/brand.png'&&['GET','HEAD'].includes(req.method)) {
       res.writeHead(200,{'content-type':'image/png','content-length':brandingLogo.length,'cache-control':'no-store','x-content-type-options':'nosniff'});
       return res.end(req.method==='HEAD'?undefined:brandingLogo);

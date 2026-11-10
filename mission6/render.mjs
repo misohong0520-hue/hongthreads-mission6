@@ -68,12 +68,13 @@ export async function loadRuntimeAssets(){
   assets.set('/__replay/relocate.js',{bytes:client,type:'application/javascript'});
   assets.set('/__workflow/benchmark-client.js',{bytes:code,type:'application/javascript'});
   assets.set('/__replay/brand.png',{bytes:await readFile(join(root,'development/branding/h-logo.png')),type:'image/png'});
+  assets.set('/__replay/ui-visibility.css',{bytes:await readFile(join(root,'replay/ui-visibility.css')),type:'text/css; charset=utf-8'});
   return{manifest,assets,documents};
 }
 export function rewriteDocument(bytes,{ctx,profile,vertex}){
   const config={primaryOrigin:ORIGIN,originalWorkflows:true,liveTrends:true,developmentDraftView:true,developmentArchiveImport:true,benchmarkLive:true,benchmarkLocal:true,threadsAuthFixture:false,workflowToken:ctx.csrfToken,vertex,mission6:{connected:ctx.bridge.status().configured}};
   let text=sanitizeDocument(bytes,profile).toString();
   text=text.replace(/\b(src|href|action|poster)=(['"])(https:\/\/drt\.agczero\.com[^'"]*)\2/g,(_,name,quote,value)=>name+'='+quote+value.slice(ORIGIN.length)+quote);
-  const injection='<script>window.__REA_REPLAY__='+JSON.stringify(config).replace(/</g,'\\u003c')+';</script><script src="/__replay/relocate.js"></script><script src="/__workflow/benchmark-client.js"></script><script src="/mission6/client.js" defer></script>';
+  const injection='<link rel="stylesheet" href="/__replay/ui-visibility.css"><script>window.__REA_REPLAY__='+JSON.stringify(config).replace(/</g,'\\u003c')+';</script><script src="/__replay/relocate.js"></script><script src="/__workflow/benchmark-client.js"></script><script src="/mission6/client.js" defer></script>';
   return Buffer.from(text.replace(/<head(?:\s[^>]*)?>/i,tag=>tag+injection));
 }

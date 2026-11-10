@@ -1,0 +1,11 @@
+/* Requested presentation changes shared by the local DRT runtimes. */
+button[title*="사용법"],
+button[aria-label*="사용법"],
+button[title*="how to use" i],
+button[title*="tutorial" i],
+aside div[class~="absolute"]:has(> div[class~="animate-bounce"][class~="cursor-pointer"]),
+[aria-label="원본 데이터 연결 상태"],
+section:has(h2):has(a[href^="https://open.kakao.com/"]),
+.fixed:has(iframe[title="DReaThs Guide Video"]) {
+  display: none !important;
+}

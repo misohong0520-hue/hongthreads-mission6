@@ -8,7 +8,7 @@ export const DESKTOP_PROTOCOL=2;
 export const RUNTIME_IDENTITY_FILES=Object.freeze([
   'replay/server.mjs','replay/desktop-contract.mjs','replay/workflow-routes.mjs','replay/workflow-client-updates.mjs',
   'replay/workflow-policy.mjs','replay/live-trends-bridge.mjs','replay/relocate.js',
-  'replay/live-client.js','replay/benchmark-client.js','replay/benchmark-events.mjs',
+  'replay/live-client.js','replay/benchmark-client.js','replay/benchmark-events.mjs','replay/ui-visibility.css',
   'replay/desktop-collect.html','replay/desktop-collect.js',
   'replay/local-benchmark-service.mjs','replay/local-benchmark-store.mjs',
   'replay/vertex-wif-bridge.mjs','replay/session-routes.mjs',

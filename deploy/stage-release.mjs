@@ -21,6 +21,7 @@ await save('README.md',(await readFile(join(root,'mission6/README.md'),'utf8')).
 for(const file of ['MISSION6-FINAL-PLAN.ko.html','MISSION6-IMPLEMENTATION-REPORT.ko.html','development/patch-server-markup.mjs','development/branding/h-logo.png'])await copy(file);
 for(const item of await readdir(join(root,'replay'),{withFileTypes:true}))if(item.isFile()&&/\.(?:mjs|js)$/.test(item.name))await copy('replay/'+item.name);
 await copy('replay/session-setup.html');
+await copy('replay/ui-visibility.css');
 const original=JSON.parse(await readFile(join(root,'replay/manifest.json')));
 const records=original.records.filter(r=>r.replayable&&r.method==='GET'&&!r.pathname?.startsWith('/api/')&&!/json|html|x-component/.test(r.response.media_type??'')&&/javascript|css|image\/|font\/|woff|octet-stream/.test(r.response.media_type??''));
 for(const record of records)await copy('replay/objects/'+record.response.object_sha256);
