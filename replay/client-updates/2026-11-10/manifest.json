@@ -1,0 +1,60 @@
+{
+  "schema": "rea-current-client-source-capture-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-10T07:18:35.207Z",
+  "method": "existing private resource bridge, original response bytes",
+  "records": [
+    {
+      "path": "/write",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 27414,
+      "object_sha256": "29b38eaec3cf16481064bcb68880d553ef11a20678cdab5b55337b8674d37620",
+      "file": "objects/29b38eaec3cf16481064bcb68880d553ef11a20678cdab5b55337b8674d37620",
+      "original_source_sha256": "5e6bc427b09fe820de9a31d52b27010454eca370f2b9b90fef30ade14c290eb4",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/mypage",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 37639,
+      "object_sha256": "1fd67848db21d8f5b2ffe17ac7e7ac86c6eb841b7b17a1e5946c3e5b0faa7133",
+      "file": "objects/1fd67848db21d8f5b2ffe17ac7e7ac86c6eb841b7b17a1e5946c3e5b0faa7133",
+      "original_source_sha256": "aa3acbc22dbc2a6bab5eb368482526d48f75e76e7fe98f3c672e59dbecad0604",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/_next/static/chunks/app/write/page-b5b4dd68880135cc.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 461087,
+      "object_sha256": "34b9a840d22c8a43eeb441deae99f61463259869e12b6a40e9e27272acc84748",
+      "file": "objects/34b9a840d22c8a43eeb441deae99f61463259869e12b6a40e9e27272acc84748"
+    },
+    {
+      "path": "/_next/static/chunks/app/mypage/page-19a4345a28ba44fd.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 141428,
+      "object_sha256": "1973cec5724802b5d83f06a65aab8a96f2a47c0af6b35b430cef2de22f7a785b",
+      "file": "objects/1973cec5724802b5d83f06a65aab8a96f2a47c0af6b35b430cef2de22f7a785b"
+    },
+    {
+      "path": "/_next/static/chunks/webpack-3646dcd87e8ef153.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 4109,
+      "object_sha256": "c67d88b26c059d20aff0cc7c973550cc621875efa72b7a63c9587883fb31e409",
+      "file": "objects/c67d88b26c059d20aff0cc7c973550cc621875efa72b7a63c9587883fb31e409"
+    },
+    {
+      "path": "/_next/static/chunks/5281-a0b9813b3e91c253.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 8790,
+      "object_sha256": "220a0d574c21906ecac15905ffcd724cc6ad76217b32f1d7b2416b9d902c9224",
+      "file": "objects/220a0d574c21906ecac15905ffcd724cc6ad76217b32f1d7b2416b9d902c9224"
+    }
+  ]
+}

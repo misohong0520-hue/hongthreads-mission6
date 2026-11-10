@@ -1,0 +1,35 @@
+{
+  "schema": "rea-client-update-pointer-v1",
+  "releases": [
+    {
+      "schema": "rea-client-update-pointer-v1",
+      "release": "2026-11-06",
+      "source_manifest_sha256": "f65248fbdca21d7c0f9cbb95f934c15580797a671fbdc52e1a000c6ba2a798c2",
+      "development_manifest_sha256": "1de7bf4efd356465b3a9a925f7ba8c6a1b72918b37e7b30916eeda52971aa407"
+    },
+    {
+      "schema": "rea-client-update-pointer-v1",
+      "release": "2026-11-06-settings",
+      "source_manifest_sha256": "3ed934a8ae1e93f6c3c24c85d32638258a9818dc9271187beaf8e157a88495b5",
+      "development_manifest_sha256": "949d876bc2e87fdb059650c3d97bb4833122828e2e11b1afd10c50efbe1cfed3"
+    },
+    {
+      "schema": "rea-client-update-pointer-v1",
+      "release": "2026-11-06-localui",
+      "source_manifest_sha256": "441e979f247124801d482858c02b15e592c09209b753dec7d6c93ead60384772",
+      "development_manifest_sha256": "c723a9c2e32e016dcca28c418a154d825fdaac741da29444d32b019a36dc9c22"
+    },
+    {
+      "schema": "rea-client-update-pointer-v1",
+      "release": "2026-11-07-onboarding",
+      "source_manifest_sha256": "d71d43b96152c300d6eb93d56f87184a041298a7c07f6c5641cc13f3f7722476",
+      "development_manifest_sha256": "dd020fd25cc62efb7328198c6381e1901147ac3e6f00438251240852fc519267"
+    },
+    {
+      "schema": "rea-client-update-pointer-v1",
+      "release": "2026-11-10",
+      "source_manifest_sha256": "e0346bc48fa7cdbd9fd1c3cda708f3b362fd93e065e734acec63c5cfb9af096b",
+      "development_manifest_sha256": "fa791949561edb1f12b936616536f458eaaf60e50648df89bcce2d382be0606e"
+    }
+  ]
+}

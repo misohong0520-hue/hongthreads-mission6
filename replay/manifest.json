@@ -1,0 +1,769 @@
+{
+  "schema": "rea-http-replay-manifest-v1",
+  "primary_origin": "https://drt.agczero.com",
+  "summary": {
+    "staticOnly": true,
+    "records": 69
+  },
+  "records": [
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/282e90f3314ebed1-s.p.ttf",
+      "pathname": "/_next/static/media/282e90f3314ebed1-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "e488e243654b2b6c982e1e3493810829683cf534c5de5622f2e399142c732e41",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/6738d14735e7b678-s.p.ttf",
+      "pathname": "/_next/static/media/6738d14735e7b678-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "12cb9656820dfd6bbaa415af1440613dcb178e92cdae7a7041dfd09385e41cb3",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/7f2442e631c5ae5b-s.p.ttf",
+      "pathname": "/_next/static/media/7f2442e631c5ae5b-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "bfd5e26c2a32b1c0b4a12fb69cfdb78509bbd057a1c71ece4cb0bc899b27f11a",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/8d90859d6baf1eec-s.p.ttf",
+      "pathname": "/_next/static/media/8d90859d6baf1eec-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "bf577fe04d00ee9cddec3f1995e724546ef6824bd8a146a21bcadb82c8a7c720",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/97727a6d97dfc774-s.p.ttf",
+      "pathname": "/_next/static/media/97727a6d97dfc774-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "a652ea0a3c4bf8658845f044b5d6f40c39ecf03207e43f325c1451127528402b",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/abe3bcb50d3d6364-s.p.ttf",
+      "pathname": "/_next/static/media/abe3bcb50d3d6364-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "0ab8f4045a0c5ac30eee01da33f75998c0a8f6f3d65b0952be8dc9ece63bde29",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/d5479f7580d61d01-s.p.ttf",
+      "pathname": "/_next/static/media/d5479f7580d61d01-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "a9c5ffb4dadce253d8748b18019954a8af19b7cfcc3b586fce64ef1f6bd71492",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/e9df2c09a9259eec-s.p.ttf",
+      "pathname": "/_next/static/media/e9df2c09a9259eec-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "f44eec027992b99dc25de0229c5726fe209a6cb80761aaef98d050cdc0bc6cfe",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.9df40720.png&w=384&q=75",
+      "pathname": "/_next/image",
+      "search": "?url=%2F_next%2Fstatic%2Fmedia%2Flogo.9df40720.png&w=384&q=75",
+      "response": {
+        "object_sha256": "378061443e84ec5797272f743682137a777b945813563fe0fb508cddc122f014",
+        "media_type": "image/webp"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/css/626bc12615e717b2.css",
+      "pathname": "/_next/static/css/626bc12615e717b2.css",
+      "search": "",
+      "response": {
+        "object_sha256": "ab59030fd299aeb6b7dea2001504429fea0df221ce0db635fab7b557a7ec6bad",
+        "media_type": "text/css; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/css/dc97b16f582193ea.css",
+      "pathname": "/_next/static/css/dc97b16f582193ea.css",
+      "search": "",
+      "response": {
+        "object_sha256": "f28960c2de8e943b74360f21407ca99bec3424219a0c26ce8abd87d3e73dae55",
+        "media_type": "text/css; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/webpack-1b59c9e41127a74a.js",
+      "pathname": "/_next/static/chunks/webpack-1b59c9e41127a74a.js",
+      "search": "",
+      "response": {
+        "object_sha256": "49e1ac82b1181217adea201d209d4e6dc1eab856d3ac3df5cda66684f2cc4d69",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+      "pathname": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+      "search": "",
+      "response": {
+        "object_sha256": "1c894d24c1db6c08f9334f88d33a4023386ef43fb9227c4d7c144c2d72645b40",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/8069-e887fb38096cd463.js",
+      "pathname": "/_next/static/chunks/8069-e887fb38096cd463.js",
+      "search": "",
+      "response": {
+        "object_sha256": "202d4d4918fc12729be961ae9a5421679e7537c5d18b43d30668ec63a8fee0f3",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+      "pathname": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+      "search": "",
+      "response": {
+        "object_sha256": "8ba67277429d2503cbe8235e2bf55bc296b2269f3ade2497324c083d6041af6b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+      "pathname": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+      "search": "",
+      "response": {
+        "object_sha256": "bc27c7670e95afb8377f8d609300cf9dc018e3d0e1e93c4be41f438cb36fb56c",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/3838-0ac8a13324c57770.js",
+      "pathname": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+      "search": "",
+      "response": {
+        "object_sha256": "b9932beeaf712c41bd9727c0854ccbd18ac58819fed4bb21765a2a7543e4d756",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/dashboard/insights/page-964698273be5bdec.js",
+      "pathname": "/_next/static/chunks/app/dashboard/insights/page-964698273be5bdec.js",
+      "search": "",
+      "response": {
+        "object_sha256": "05897f4c208cb648ca6d251f6508da49bc88cdb90cb491f645273635588fa228",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/error-e472ff41c0f48850.js",
+      "pathname": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+      "search": "",
+      "response": {
+        "object_sha256": "f6fca79e066a950b56bb55e14c9547a6f9edbccb9e1d930a0045af4cffb45fbf",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+      "pathname": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+      "search": "",
+      "response": {
+        "object_sha256": "cfcf191547eef9080df590170ff8976a0468116b6a952f0a4f601c4d7168142b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/5250-7bce399804dfb7f4.js",
+      "pathname": "/_next/static/chunks/5250-7bce399804dfb7f4.js",
+      "search": "",
+      "response": {
+        "object_sha256": "5ba4a6bb7fbbd7ae318350d081c2892d44cebbe2a3d81848fd7efab6c55ddccc",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+      "pathname": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+      "search": "",
+      "response": {
+        "object_sha256": "d0b83bf9716078b99fda5eb47214d30d25580c2d01921aed97f264dc21390f7b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/8371-62008fadf4b6d276.js",
+      "pathname": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+      "search": "",
+      "response": {
+        "object_sha256": "b8f5f6432ac9b8d890776fd9dfe3d694bae87daff6166548bb7895c3e08e9be1",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/5935-9421001ccc79370a.js",
+      "pathname": "/_next/static/chunks/5935-9421001ccc79370a.js",
+      "search": "",
+      "response": {
+        "object_sha256": "9eb1d925631f851b343bcf0fef4fdb23f8babecc98b83a5e36f976320e12442d",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/1771-73d828bc556c11f6.js",
+      "pathname": "/_next/static/chunks/1771-73d828bc556c11f6.js",
+      "search": "",
+      "response": {
+        "object_sha256": "01f86404ec914b8635b64cd51864f275fb39e42062a5076a114c4a6d6c9baa3d",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/8988-a6816206542002c3.js",
+      "pathname": "/_next/static/chunks/8988-a6816206542002c3.js",
+      "search": "",
+      "response": {
+        "object_sha256": "abee3bd97a30e6e419d13c647e359fe9af092bb55f660f11cf5fb1e3eee5ad9b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/1441-8b7f896123fa0f27.js",
+      "pathname": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+      "search": "",
+      "response": {
+        "object_sha256": "994e2fa43de0156ea932e89c3205ce26e96cf5f2f192e470ae78cbdb37c9e425",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/dashboard/layout-6998fe03e6e96fae.js",
+      "pathname": "/_next/static/chunks/app/dashboard/layout-6998fe03e6e96fae.js",
+      "search": "",
+      "response": {
+        "object_sha256": "ce4d9479ffd08b2bc904c049af6b39be07c6e8c5777e1523eebd2e9e04ec2337",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://www.googletagmanager.com/gtag/js?id=G-63ZRDPNEQJ",
+      "pathname": "/gtag/js",
+      "search": "?id=G-63ZRDPNEQJ",
+      "response": {
+        "object_sha256": "a71782e3a0a20bf135c3aba89e9411c7aaa3817dceb11f20129ffe22597c4b30",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-web.js",
+      "pathname": "/plugin/ch-plugin-web.js",
+      "search": "",
+      "response": {
+        "object_sha256": "d070cf3a4c1e592d1cd1d8e2b9f26f1018e020a5e6004310273cfd19e677e596",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/font/pretendard/Pretendard-Regular.ttf",
+      "pathname": "/font/pretendard/Pretendard-Regular.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "f32952893c3348ecceb1b5975e953caa136fba107ed400317fe8659a8fb4c506",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-core.5a1c2d7b.vendor.js",
+      "pathname": "/plugin/ch-plugin-core.5a1c2d7b.vendor.js",
+      "search": "",
+      "response": {
+        "object_sha256": "cd4c0630e9012912cc8327e76fffffacae5bafff3a4cd8bf57cac0e5a3d911a9",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-core-20261027180120.js",
+      "pathname": "/plugin/ch-plugin-core-20261027180120.js",
+      "search": "",
+      "response": {
+        "object_sha256": "4994b93f83215943836acff2dbbb1d9a005a0a50ec8beb801c13f7dde473c644",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-core.660424bb.vendor-datadog.js",
+      "pathname": "/plugin/ch-plugin-core.660424bb.vendor-datadog.js",
+      "search": "",
+      "response": {
+        "object_sha256": "0beaf58800c75a9a21df4b89b753ee84609fc49989e3eee963d7d6cb9704cdd1",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cf.channel.io/avatar/emoji/boat.f392e0.png",
+      "pathname": "/avatar/emoji/boat.f392e0.png",
+      "search": "",
+      "response": {
+        "object_sha256": "c1dddeb1b0af075a322d7c9bfdd5bde996c1c6462ef7e7a1bb9321c716030e88",
+        "media_type": "image/png"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/282e90f3314ebed1-s.p.ttf",
+      "pathname": "/_next/static/media/282e90f3314ebed1-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "e488e243654b2b6c982e1e3493810829683cf534c5de5622f2e399142c732e41",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/6738d14735e7b678-s.p.ttf",
+      "pathname": "/_next/static/media/6738d14735e7b678-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "12cb9656820dfd6bbaa415af1440613dcb178e92cdae7a7041dfd09385e41cb3",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/7f2442e631c5ae5b-s.p.ttf",
+      "pathname": "/_next/static/media/7f2442e631c5ae5b-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "bfd5e26c2a32b1c0b4a12fb69cfdb78509bbd057a1c71ece4cb0bc899b27f11a",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/8d90859d6baf1eec-s.p.ttf",
+      "pathname": "/_next/static/media/8d90859d6baf1eec-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "bf577fe04d00ee9cddec3f1995e724546ef6824bd8a146a21bcadb82c8a7c720",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/97727a6d97dfc774-s.p.ttf",
+      "pathname": "/_next/static/media/97727a6d97dfc774-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "a652ea0a3c4bf8658845f044b5d6f40c39ecf03207e43f325c1451127528402b",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/abe3bcb50d3d6364-s.p.ttf",
+      "pathname": "/_next/static/media/abe3bcb50d3d6364-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "0ab8f4045a0c5ac30eee01da33f75998c0a8f6f3d65b0952be8dc9ece63bde29",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/d5479f7580d61d01-s.p.ttf",
+      "pathname": "/_next/static/media/d5479f7580d61d01-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "a9c5ffb4dadce253d8748b18019954a8af19b7cfcc3b586fce64ef1f6bd71492",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/media/e9df2c09a9259eec-s.p.ttf",
+      "pathname": "/_next/static/media/e9df2c09a9259eec-s.p.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "f44eec027992b99dc25de0229c5726fe209a6cb80761aaef98d050cdc0bc6cfe",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/css/626bc12615e717b2.css",
+      "pathname": "/_next/static/css/626bc12615e717b2.css",
+      "search": "",
+      "response": {
+        "object_sha256": "ab59030fd299aeb6b7dea2001504429fea0df221ce0db635fab7b557a7ec6bad",
+        "media_type": "text/css; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/css/3a52d0d13b47d683.css",
+      "pathname": "/_next/static/css/3a52d0d13b47d683.css",
+      "search": "",
+      "response": {
+        "object_sha256": "45f08653fc999894b49093bc5d3228c155dc6c8cd2f10b4f97421d49bfe9e6ca",
+        "media_type": "text/css; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/webpack-1b59c9e41127a74a.js",
+      "pathname": "/_next/static/chunks/webpack-1b59c9e41127a74a.js",
+      "search": "",
+      "response": {
+        "object_sha256": "49e1ac82b1181217adea201d209d4e6dc1eab856d3ac3df5cda66684f2cc4d69",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+      "pathname": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+      "search": "",
+      "response": {
+        "object_sha256": "1c894d24c1db6c08f9334f88d33a4023386ef43fb9227c4d7c144c2d72645b40",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/8069-e887fb38096cd463.js",
+      "pathname": "/_next/static/chunks/8069-e887fb38096cd463.js",
+      "search": "",
+      "response": {
+        "object_sha256": "202d4d4918fc12729be961ae9a5421679e7537c5d18b43d30668ec63a8fee0f3",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+      "pathname": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+      "search": "",
+      "response": {
+        "object_sha256": "8ba67277429d2503cbe8235e2bf55bc296b2269f3ade2497324c083d6041af6b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+      "pathname": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+      "search": "",
+      "response": {
+        "object_sha256": "bc27c7670e95afb8377f8d609300cf9dc018e3d0e1e93c4be41f438cb36fb56c",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/(main)/purchaseMonth/%5Bid%5D/page-e3d743ff4b9d8042.js",
+      "pathname": "/_next/static/chunks/app/(main)/purchaseMonth/%5Bid%5D/page-e3d743ff4b9d8042.js",
+      "search": "",
+      "response": {
+        "object_sha256": "c54783a6fee66b1325aa4d66c470c0c9ac1657883006bf39fa417db657ed019f",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/error-e472ff41c0f48850.js",
+      "pathname": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+      "search": "",
+      "response": {
+        "object_sha256": "f6fca79e066a950b56bb55e14c9547a6f9edbccb9e1d930a0045af4cffb45fbf",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+      "pathname": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+      "search": "",
+      "response": {
+        "object_sha256": "cfcf191547eef9080df590170ff8976a0468116b6a952f0a4f601c4d7168142b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/8371-62008fadf4b6d276.js",
+      "pathname": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+      "search": "",
+      "response": {
+        "object_sha256": "b8f5f6432ac9b8d890776fd9dfe3d694bae87daff6166548bb7895c3e08e9be1",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/5935-9421001ccc79370a.js",
+      "pathname": "/_next/static/chunks/5935-9421001ccc79370a.js",
+      "search": "",
+      "response": {
+        "object_sha256": "9eb1d925631f851b343bcf0fef4fdb23f8babecc98b83a5e36f976320e12442d",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/3312-5ecef81027fe7b07.js",
+      "pathname": "/_next/static/chunks/3312-5ecef81027fe7b07.js",
+      "search": "",
+      "response": {
+        "object_sha256": "18f6b97754fbd7921e76d1c9b947011be3d1071095c8b5f90e312fdf7ea8662a",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/8988-a6816206542002c3.js",
+      "pathname": "/_next/static/chunks/8988-a6816206542002c3.js",
+      "search": "",
+      "response": {
+        "object_sha256": "abee3bd97a30e6e419d13c647e359fe9af092bb55f660f11cf5fb1e3eee5ad9b",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/(main)/layout-a4182a23746548ab.js",
+      "pathname": "/_next/static/chunks/app/(main)/layout-a4182a23746548ab.js",
+      "search": "",
+      "response": {
+        "object_sha256": "df83a1cd607cf580f4208363f4a37fee74f49e1c57b5ea9cd3f8ee1748e38d39",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/(main)/error-5c38804687b7a8d5.js",
+      "pathname": "/_next/static/chunks/app/(main)/error-5c38804687b7a8d5.js",
+      "search": "",
+      "response": {
+        "object_sha256": "3b6058c57e829396b9b309fa5915e328566f1bbcabbae29d8ff019e374044011",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/5250-7bce399804dfb7f4.js",
+      "pathname": "/_next/static/chunks/5250-7bce399804dfb7f4.js",
+      "search": "",
+      "response": {
+        "object_sha256": "5ba4a6bb7fbbd7ae318350d081c2892d44cebbe2a3d81848fd7efab6c55ddccc",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/_next/static/chunks/app/(main)/not-found-2c9e4913f096a543.js",
+      "pathname": "/_next/static/chunks/app/(main)/not-found-2c9e4913f096a543.js",
+      "search": "",
+      "response": {
+        "object_sha256": "83745444af7348da5147c26941ce824ccf19a85b34aca046957c5556bc6cd2cb",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://www.googletagmanager.com/gtag/js?id=G-63ZRDPNEQJ",
+      "pathname": "/gtag/js",
+      "search": "?id=G-63ZRDPNEQJ",
+      "response": {
+        "object_sha256": "a71782e3a0a20bf135c3aba89e9411c7aaa3817dceb11f20129ffe22597c4b30",
+        "media_type": "application/javascript; charset=UTF-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-web.js",
+      "pathname": "/plugin/ch-plugin-web.js",
+      "search": "",
+      "response": {
+        "object_sha256": "d070cf3a4c1e592d1cd1d8e2b9f26f1018e020a5e6004310273cfd19e677e596",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://drt.agczero.com/font/pretendard/Pretendard-Regular.ttf",
+      "pathname": "/font/pretendard/Pretendard-Regular.ttf",
+      "search": "",
+      "response": {
+        "object_sha256": "f32952893c3348ecceb1b5975e953caa136fba107ed400317fe8659a8fb4c506",
+        "media_type": "font/ttf"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://js.tosspayments.com/v2/standard",
+      "pathname": "/v2/standard",
+      "search": "",
+      "response": {
+        "object_sha256": "bd04c20142ff78d76405405697bda3470219dc7d3295c6aeddfcb9f08f484441",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-core.5a1c2d7b.vendor.js",
+      "pathname": "/plugin/ch-plugin-core.5a1c2d7b.vendor.js",
+      "search": "",
+      "response": {
+        "object_sha256": "cd4c0630e9012912cc8327e76fffffacae5bafff3a4cd8bf57cac0e5a3d911a9",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-core-20261027180120.js",
+      "pathname": "/plugin/ch-plugin-core-20261027180120.js",
+      "search": "",
+      "response": {
+        "object_sha256": "4994b93f83215943836acff2dbbb1d9a005a0a50ec8beb801c13f7dde473c644",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cdn.channel.io/plugin/ch-plugin-core.660424bb.vendor-datadog.js",
+      "pathname": "/plugin/ch-plugin-core.660424bb.vendor-datadog.js",
+      "search": "",
+      "response": {
+        "object_sha256": "0beaf58800c75a9a21df4b89b753ee84609fc49989e3eee963d7d6cb9704cdd1",
+        "media_type": "text/javascript; charset=utf-8"
+      }
+    },
+    {
+      "replayable": true,
+      "method": "GET",
+      "original_url": "https://cf.channel.io/avatar/emoji/boat.f392e0.png",
+      "pathname": "/avatar/emoji/boat.f392e0.png",
+      "search": "",
+      "response": {
+        "object_sha256": "c1dddeb1b0af075a322d7c9bfdd5bde996c1c6462ef7e7a1bb9321c716030e88",
+        "media_type": "image/png"
+      }
+    }
+  ]
+}

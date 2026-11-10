@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="ko" class="__variable_e14ee5"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/_next/static/media/282e90f3314ebed1-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/6738d14735e7b678-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/7f2442e631c5ae5b-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/8d90859d6baf1eec-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/97727a6d97dfc774-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/abe3bcb50d3d6364-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/d5479f7580d61d01-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="preload" href="/_next/static/media/e9df2c09a9259eec-s.p.ttf" as="font" crossorigin="" type="font/ttf"/><link rel="stylesheet" href="/_next/static/css/d4dd19e25a332040.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/css/dc97b16f582193ea.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-35063ac0ca832062.js"/><script src="/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js" async=""></script><script src="/_next/static/chunks/8069-e887fb38096cd463.js" async=""></script><script src="/_next/static/chunks/main-app-10eb23f0b8ec9a95.js" async=""></script><script src="/_next/static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js" async=""></script><script src="/_next/static/chunks/app/error-e472ff41c0f48850.js" async=""></script><script src="/_next/static/chunks/app/global-error-fdcc7f287f902b56.js" async=""></script><script src="/_next/static/chunks/3267-60d5a7fc86c240b8.js" async=""></script><script src="/_next/static/chunks/5935-9421001ccc79370a.js" async=""></script><script src="/_next/static/chunks/8988-a6816206542002c3.js" async=""></script><script src="/_next/static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js" async=""></script><link rel="preload" href="https://www.googletagmanager.com/gtag/js?id=G-63ZRDPNEQJ" as="script"/><title>Onboarding - DReaThs</title><meta name="description" content="Welcome to DReaThs."/><meta name="robots" content="noindex, nofollow"/><link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16"/><meta name="next-size-adjust"/><script src="/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js" noModule=""></script></head><body><script id="next-chunk-error-listener">
+(function() {
+  if (typeof window === 'undefined' || window.__chunkErrorHandlerAttached) return;
+  window.__chunkErrorHandlerAttached = true;
+  var KEY = '__next_chunk_reload_ts__';
+  var COOLDOWN = 15000;
+
+  function reloadOnce() {
+    try {
+      var now = Date.now();
+      var last = parseInt(sessionStorage.getItem(KEY) || '0', 10);
+      if (!last || (now - last) > COOLDOWN) {
+        sessionStorage.setItem(KEY, String(now));
+        window.location.reload();
+      }
+    } catch (e) {
+      window.location.reload();
+    }
+  }
+
+  function isChunkMessage(msg) {
+    if (!msg) return false;
+    var s = String(msg).toLowerCase();
+    return (
+      s.indexOf('chunkloaderror') !== -1 ||
+      s.indexOf('loading chunk') !== -1 ||
+      s.indexOf('loading css chunk') !== -1 ||
+      s.indexOf('failed to fetch dynamically imported module') !== -1 ||
+      s.indexOf('importing a module script failed') !== -1 ||
+      s.indexOf('/_next/static/chunks/') !== -1
+    );
+  }
+
+  window.addEventListener('error', function(event) {
+    var target = event && event.target;
+    if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+      var url = target.src || target.href || '';
+      if (url.indexOf('/_next/static/') !== -1) {
+        reloadOnce();
+        return;
+      }
+    }
+    var errMsg = (event && event.message) || (event && event.error && (event.error.name + ' ' + event.error.message)) || '';
+    if (isChunkMessage(errMsg)) {
+      reloadOnce();
+    }
+  }, true);
+
+  window.addEventListener('unhandledrejection', function(event) {
+    var reason = event && event.reason;
+    var msg = reason ? ((reason.name || '') + ' ' + (reason.message || String(reason))) : '';
+    if (isChunkMessage(msg)) {
+      reloadOnce();
+    }
+  });
+})();
+</script><div class="min-h-screen flex items-center justify-center bg-black text-white"><div class="animate-pulse tracking-widest uppercase text-xs">보안 볼트 조회 중...</div></div><script id="next-chunk-error-listener">
+(function() {
+  if (typeof window === 'undefined' || window.__chunkErrorHandlerAttached) return;
+  window.__chunkErrorHandlerAttached = true;
+  var KEY = '__next_chunk_reload_ts__';
+  var COOLDOWN = 15000;
+
+  function reloadOnce() {
+    try {
+      var now = Date.now();
+      var last = parseInt(sessionStorage.getItem(KEY) || '0', 10);
+      if (!last || (now - last) > COOLDOWN) {
+        sessionStorage.setItem(KEY, String(now));
+        window.location.reload();
+      }
+    } catch (e) {
+      window.location.reload();
+    }
+  }
+
+  function isChunkMessage(msg) {
+    if (!msg) return false;
+    var s = String(msg).toLowerCase();
+    return (
+      s.indexOf('chunkloaderror') !== -1 ||
+      s.indexOf('loading chunk') !== -1 ||
+      s.indexOf('loading css chunk') !== -1 ||
+      s.indexOf('failed to fetch dynamically imported module') !== -1 ||
+      s.indexOf('importing a module script failed') !== -1 ||
+      s.indexOf('/_next/static/chunks/') !== -1
+    );
+  }
+
+  window.addEventListener('error', function(event) {
+    var target = event && event.target;
+    if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+      var url = target.src || target.href || '';
+      if (url.indexOf('/_next/static/') !== -1) {
+        reloadOnce();
+        return;
+      }
+    }
+    var errMsg = (event && event.message) || (event && event.error && (event.error.name + ' ' + event.error.message)) || '';
+    if (isChunkMessage(errMsg)) {
+      reloadOnce();
+    }
+  }, true);
+
+  window.addEventListener('unhandledrejection', function(event) {
+    var reason = event && event.reason;
+    var msg = reason ? ((reason.name || '') + ' ' + (reason.message || String(reason))) : '';
+    if (isChunkMessage(msg)) {
+      reloadOnce();
+    }
+  });
+})();
+</script><script src="/_next/static/chunks/webpack-35063ac0ca832062.js" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([2,null])</script><script>self.__next_f.push([1,"0:\"$L1\"\n"])</script><script>self.__next_f.push([1,"2:HL[\"/_next/static/media/282e90f3314ebed1-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n3:HL[\"/_next/static/media/6738d14735e7b678-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n4:HL[\"/_next/static/media/7f2442e631c5ae5b-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n5:HL[\"/_next/static/media/8d90859d6baf1eec-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n6:HL[\"/_next/static/media/97727a6d97dfc774-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n7:HL[\"/_next/static/media/a"])</script><script>self.__next_f.push([1,"be3bcb50d3d6364-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n8:HL[\"/_next/static/media/d5479f7580d61d01-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\n9:HL[\"/_next/static/media/e9df2c09a9259eec-s.p.ttf\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/ttf\"}]\na:HL[\"/_next/static/css/d4dd19e25a332040.css\",\"style\"]\nb:HL[\"/_next/static/css/dc97b16f582193ea.css\",\"style\"]\n"])</script><script>self.__next_f.push([1,"c:I[47690,[],\"\"]\ne:I[77831,[],\"\"]\nf:I[70219,[\"8858\",\"static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js\"],\"\"]\n10:I[5613,[],\"\"]\n11:I[31778,[],\"\"]\n13:I[92293,[\"7601\",\"static/chunks/app/error-e472ff41c0f48850.js\"],\"\"]\n15:I[75383,[\"6470\",\"static/chunks/app/global-error-fdcc7f287f902b56.js\"],\"\"]\n16:[]\n"])</script><script>self.__next_f.push([1,"1:[null,[\"$\",\"$Lc\",null,{\"buildId\":\"YlL78MXiuIDM4NnLk6JoO\",\"assetPrefix\":\"\",\"initialCanonicalUrl\":\"/onboarding/coupang\",\"initialTree\":[\"\",{\"children\":[\"onboarding\",{\"children\":[\"coupang\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",true]}],\"initialSeedData\":[\"\",{\"children\":[\"onboarding\",{\"children\":[\"coupang\",{\"children\":[\"__PAGE__\",{},[\"$Ld\",[\"$\",\"$Le\",null,{\"propsForComponent\":{\"params\":{},\"searchParams\":{}},\"Component\":\"$f\",\"isStaticGeneration\":false}],null]]},[\"$\",\"$L10\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"onboarding\",\"children\",\"coupang\",\"children\"],\"loading\":\"$undefined\",\"loadingStyles\":\"$undefined\",\"loadingScripts\":\"$undefined\",\"hasLoading\":false,\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L11\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"notFoundStyles\":\"$undefined\",\"styles\":null}]]},[null,\"$L12\",null]]},[\"$\",\"$L10\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\"],\"loading\":\"$undefined\",\"loadingStyles\":\"$undefined\",\"loadingScripts\":\"$undefined\",\"hasLoading\":false,\"error\":\"$13\",\"errorStyles\":[],\"errorScripts\":[],\"template\":[\"$\",\"$L11\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":\"404\"}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],\"notFoundStyles\":[],\"styles\":[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/css/d4dd19e25a332040.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/css/dc97b16f582193ea.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\"}]]}]],\"initialHead\":[false,\"$L14\"],\"globalErrorComponent\":\"$15\",\"missingSlots\":\"$W16\"}]]\n"])</script><script>self.__next_f.push([1,"14:[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}],[\"$\",\"meta\",\"1\",{\"charSet\":\"utf-8\"}],[\"$\",\"title\",\"2\",{\"children\":\"Onboarding - DReaThs\"}],[\"$\",\"meta\",\"3\",{\"name\":\"description\",\"content\":\"Welcome to DReaThs.\"}],[\"$\",\"meta\",\"4\",{\"name\":\"robots\",\"content\":\"noindex, nofollow\"}],[\"$\",\"link\",\"5\",{\"rel\":\"icon\",\"href\":\"/favicon.ico\",\"type\":\"image/x-icon\",\"sizes\":\"16x16\"}],[\"$\",\"meta\",\"6\",{\"name\":\"next-size-adjust\"}]]\nd:null\n"])</script><script>self.__next_f.push([1,"17:I[9137,[\"3267\",\"static/chunks/3267-60d5a7fc86c240b8.js\",\"5935\",\"static/chunks/5935-9421001ccc79370a.js\",\"8988\",\"static/chunks/8988-a6816206542002c3.js\",\"6697\",\"static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js\"],\"\"]\n18:I[51846,[\"3267\",\"static/chunks/3267-60d5a7fc86c240b8.js\",\"5935\",\"static/chunks/5935-9421001ccc79370a.js\",\"8988\",\"static/chunks/8988-a6816206542002c3.js\",\"6697\",\"static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js\"],\"\"]\n19:I[85935,[\"3267\",\"static/chunks/3267-60d5a7fc86c240b8.js\",\""])</script><script>self.__next_f.push([1,"5935\",\"static/chunks/5935-9421001ccc79370a.js\",\"8988\",\"static/chunks/8988-a6816206542002c3.js\",\"6697\",\"static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js\"],\"\"]\n1a:I[19387,[\"3267\",\"static/chunks/3267-60d5a7fc86c240b8.js\",\"5935\",\"static/chunks/5935-9421001ccc79370a.js\",\"8988\",\"static/chunks/8988-a6816206542002c3.js\",\"6697\",\"static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js\"],\"\"]\n1b:I[95897,[\"3267\",\"static/chunks/3267-60d5a7fc86c240b8.js\",\"5935\",\"static/chunks/5935-9421001ccc79370a.js\",\"8988\",\"stati"])</script><script>self.__next_f.push([1,"c/chunks/8988-a6816206542002c3.js\",\"6697\",\"static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js\"],\"\"]\n"])</script><script>self.__next_f.push([1,"12:[\"$\",\"html\",null,{\"lang\":\"ko\",\"className\":\"__variable_e14ee5\",\"children\":[\"$\",\"body\",null,{\"children\":[[\"$\",\"$L17\",null,{\"session\":{\"user\":{\"id\":\"public-shell\",\"name\":\"체험 사용자\",\"email\":null,\"image\":null,\"soId\":0,\"authId\":\"\",\"role\":\"GUEST\"},\"expires\":\"2030-01-01T00:00:00Z\"},\"children\":[\"$\",\"$L10\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"onboarding\",\"children\"],\"loading\":\"$undefined\",\"loadingStyles\":\"$undefined\",\"loadingScripts\":\"$undefined\",\"hasLoading\":false,\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L11\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"notFoundStyles\":\"$undefined\",\"styles\":null}]}],[[\"$\",\"$L18\",null,{}],[\"$\",\"$L19\",null,{\"strategy\":\"afterInteractive\",\"src\":\"https://www.googletagmanager.com/gtag/js?id=G-63ZRDPNEQJ\"}],[\"$\",\"$L19\",null,{\"id\":\"google-analytics\",\"strategy\":\"afterInteractive\",\"dangerouslySetInnerHTML\":{\"__html\":\"\\n\\t\\twindow.dataLayer = window.dataLayer || [];\\n\\t\\tfunction gtag(){dataLayer.push(arguments);}\\n\\t\\tgtag('js', new Date());\\n\\n\\t\\tgtag('config', 'G-63ZRDPNEQJ');\\n\\t\\t\"}}],[\"$\",\"$L1a\",null,{\"gaId\":\"G-63ZRDPNEQJ\"}]],[\"$\",\"$L1b\",null,{}]]}]}]\n"])</script><script>self.__next_f.push([1,""])</script></body></html>

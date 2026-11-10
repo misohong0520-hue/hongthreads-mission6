@@ -1,0 +1,214 @@
+{
+  "schema": "rea-client-update-overlay-v1",
+  "release": "2026-11-06",
+  "source_manifest_sha256": "f65248fbdca21d7c0f9cbb95f934c15580797a671fbdc52e1a000c6ba2a798c2",
+  "provider": "VERTEX_WIF",
+  "patch_count": 16,
+  "editor_patch_count": 3,
+  "transport_patch_count": 13,
+  "original_sources_untouched": true,
+  "patch_provenance": "Same AST-asserted Vertex alternatives as replay/patch-workflow-vertex.mjs; original methods and content retained",
+  "records": [
+    {
+      "path": "/_next/static/chunks/app/write/page-a35ccae2d90b3383.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "8399f00bd8cf3aedc90ef9bc94f0ac1dbd8e89d87de6757a94066782e7c3c7a8",
+      "development_sha256": "eeda9438038785624fc7443f655d4a5d89433c145a8c25f1d0c5ba61d4d28526",
+      "file": "development/objects/eeda9438038785624fc7443f655d4a5d89433c145a8c25f1d0c5ba61d4d28526",
+      "patches": [
+        {
+          "id": "wif-smart-editor-credential-status",
+          "start_utf16": 310980,
+          "end_utf16": 310988,
+          "replacement": "(e.hasKey||(e.provider===\"VERTEX_WIF\"&&e.credentialReady))",
+          "original_sha256": "ec75ff167bb5df873a9ed57ee856be938a3779256ff41ac1b14a27215d460e55"
+        }
+      ],
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/write/page-a35ccae2d90b3383.js",
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/app/write/page-0856925e888d3a31.js",
+        "source_sha256": "8399f00bd8cf3aedc90ef9bc94f0ac1dbd8e89d87de6757a94066782e7c3c7a8",
+        "development_sha256": "eeda9438038785624fc7443f655d4a5d89433c145a8c25f1d0c5ba61d4d28526",
+        "source_bytes_equal": true,
+        "development_bytes_equal": true
+      }
+    },
+    {
+      "path": "/_next/static/chunks/app/smart-multi-write/page-84063b65db89b79a.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "597036d497baaacff19a776c5168beb3f96fb20617cf19ded3c0a9aa4fa76186",
+      "development_sha256": "96b73e260e5911db34d25c7a98b265c8fdfaaeb44e52ce6728c775172a0a75a6",
+      "file": "development/objects/96b73e260e5911db34d25c7a98b265c8fdfaaeb44e52ce6728c775172a0a75a6",
+      "patches": [
+        {
+          "id": "wif-smart-multi-credential-pool",
+          "start_utf16": 375533,
+          "end_utf16": 375636,
+          "replacement": "((typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady)&&b.provider===\"VERTEX_WIF\"&&b.credentialReady?b.credentials:b.keys&&b.keys.length>0?b.keys:g?[{id:\"primary\",key:g,accountName:b.accountName||\"기본 키\",provider:f}]:[])",
+          "original_sha256": "ed531fcf0a52c9f0f8ca5e64d594f271e0a21290a4b8ee48d6bb0147cbe65bbc"
+        }
+      ],
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/smart-multi-write/page-84063b65db89b79a.js",
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/app/smart-multi-write/page-7d79b8c9c0ede28b.js",
+        "source_sha256": "5e8c22bfbb8da0d0572756c33671e4f8a994a6659fb5433bcac4fa768e4d0813",
+        "development_sha256": "5b6462a5ce95fca83e3fff9e6addb04044eecae33aabfe28b30dd94c5b64f559",
+        "source_bytes_equal": false,
+        "development_bytes_equal": false
+      }
+    },
+    {
+      "path": "/_next/static/chunks/app/multi-write/page-66b087839f12347f.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "eab89ae391a9aa5178c05a9543ddee834057ddf6cb964a17feada0b46a20d40c",
+      "development_sha256": "166b5b3f97d5b7ac23e0359d4189dcb137d2ce42fc4cfae81e7de8824fbf2800",
+      "file": "development/objects/166b5b3f97d5b7ac23e0359d4189dcb137d2ce42fc4cfae81e7de8824fbf2800",
+      "patches": [
+        {
+          "id": "wif-key-alternative-v",
+          "start_utf16": 54008,
+          "end_utf16": 54010,
+          "replacement": "(!v&&!(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "070a60085b9980c0c8eddebf09796c3b505f3fc5db58d41b8f3b3d1487a95c8e"
+        }
+      ],
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/multi-write/page-66b087839f12347f.js",
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/app/multi-write/page-831cd4a0041a4719.js",
+        "source_sha256": "eab89ae391a9aa5178c05a9543ddee834057ddf6cb964a17feada0b46a20d40c",
+        "development_sha256": "166b5b3f97d5b7ac23e0359d4189dcb137d2ce42fc4cfae81e7de8824fbf2800",
+        "source_bytes_equal": true,
+        "development_bytes_equal": true
+      }
+    },
+    {
+      "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "60dd14052b289da28c864bc33a826af5704864c2b5e4390c8a1057d04b32359b",
+      "development_sha256": "3c564eca17f6593e67146f63f569c5a2f37d339f9345d7781cc1bc4538b58c3b",
+      "file": "development/objects/3c564eca17f6593e67146f63f569c5a2f37d339f9345d7781cc1bc4538b58c3b",
+      "patches": [
+        {
+          "id": "wif-key-alternative-C",
+          "start_utf16": 44226,
+          "end_utf16": 44228,
+          "replacement": "(!C&&!(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "992accb9917efeb56837bcf8194fd82da11a32bee150de6b9cf503bb9c0f7357"
+        },
+        {
+          "id": "wif-key-alternative-O",
+          "start_utf16": 45066,
+          "end_utf16": 45068,
+          "replacement": "(!O&&!(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "5e6d9e8eec888bfb3851326d9494ab7757fd7385330d902177a7807254303a47"
+        },
+        {
+          "id": "wif-model",
+          "start_utf16": 45129,
+          "end_utf16": 45155,
+          "replacement": "((typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady)?window.__REA_REPLAY__.vertex.model:A||\"gemini-3.5-flash-lite\")",
+          "original_sha256": "e0a6232200949f5535a9d3f09e30b73291174956ceeaa0955b81fe7f63b6f947"
+        },
+        {
+          "id": "wif-destination",
+          "start_utf16": 45284,
+          "end_utf16": 45406,
+          "replacement": "((typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady)?\"/__vertex/generate\":\"https://generativelanguage.googleapis.com/v1beta/models/\".concat(R,\":generateContent?key=\").concat(encodeURIComponent(O)))",
+          "original_sha256": "46509ca031e18d8f5e9e8aeb54ed822cd6a4c4e2eafdd24afab8e8c9720054da"
+        },
+        {
+          "id": "wif-auxiliary-0",
+          "start_utf16": 1040,
+          "end_utf16": 1055,
+          "replacement": "((\"GEMINI\"===s&&o)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "04002a7c8764eeea761d492e470f5930d6f1f6be4818a9da68812adb6d11c9c7"
+        },
+        {
+          "id": "wif-auxiliary-1",
+          "start_utf16": 2147,
+          "end_utf16": 2162,
+          "replacement": "((\"GEMINI\"===l&&s)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "277eddc273cc2eafeb1f60a968c307dd30ab623ee477ccf85c8fec6ce65b56cc"
+        },
+        {
+          "id": "wif-auxiliary-2",
+          "start_utf16": 3532,
+          "end_utf16": 3547,
+          "replacement": "((\"GEMINI\"===s&&o)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "04002a7c8764eeea761d492e470f5930d6f1f6be4818a9da68812adb6d11c9c7"
+        },
+        {
+          "id": "wif-auxiliary-3",
+          "start_utf16": 4457,
+          "end_utf16": 4472,
+          "replacement": "((\"GEMINI\"===r&&i)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "859695fe07eb8832a3c81c5cb0ae9f6c0fa497afe78fcb95b31574b242bf71b3"
+        },
+        {
+          "id": "wif-auxiliary-4",
+          "start_utf16": 5841,
+          "end_utf16": 5856,
+          "replacement": "((\"GEMINI\"===i&&t)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "9d13d8326db53f21b89855c4279134990fbba1b3ecc5ca1f15832401ed9bebf3"
+        },
+        {
+          "id": "wif-auxiliary-5",
+          "start_utf16": 7784,
+          "end_utf16": 7799,
+          "replacement": "((\"GEMINI\"===o&&i)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "8e75e4518cb3e2ec1c2bbcee8ec8eda7801896f9094f7bcc026c0cdbb6bd7fe4"
+        },
+        {
+          "id": "wif-auxiliary-6",
+          "start_utf16": 8550,
+          "end_utf16": 8565,
+          "replacement": "((\"GEMINI\"===r&&i)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "859695fe07eb8832a3c81c5cb0ae9f6c0fa497afe78fcb95b31574b242bf71b3"
+        },
+        {
+          "id": "wif-auxiliary-7",
+          "start_utf16": 9597,
+          "end_utf16": 9612,
+          "replacement": "((\"GEMINI\"===r&&i)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "859695fe07eb8832a3c81c5cb0ae9f6c0fa497afe78fcb95b31574b242bf71b3"
+        },
+        {
+          "id": "wif-auxiliary-8",
+          "start_utf16": 10489,
+          "end_utf16": 10504,
+          "replacement": "((\"GEMINI\"===i&&t)||(typeof window!==\"undefined\"&&window.__REA_REPLAY__?.vertex?.provider===\"VERTEX_WIF\"&&window.__REA_REPLAY__.vertex.credentialReady))",
+          "original_sha256": "9d13d8326db53f21b89855c4279134990fbba1b3ecc5ca1f15832401ed9bebf3"
+        }
+      ],
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/9465-371471d4184fa9ad.js",
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/9465-7e4b5afa9614460c.js",
+        "source_sha256": "dddc6d8dac1c976f324eafe145e007e8fd9afdb41aaa52c1f26e2a03012d9b2e",
+        "development_sha256": "c8f84eaa720e652eda91e27f1e706ddb0890c9c0503e7078377b3ab26da084aa",
+        "source_bytes_equal": false,
+        "development_bytes_equal": false
+      }
+    },
+    {
+      "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "bffd4e996500a342fd59e6a38a05dc1984c2381a6138120da52e2cb8b5704bb2",
+      "development_sha256": "bffd4e996500a342fd59e6a38a05dc1984c2381a6138120da52e2cb8b5704bb2",
+      "file": "development/objects/bffd4e996500a342fd59e6a38a05dc1984c2381a6138120da52e2cb8b5704bb2",
+      "patches": [],
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/webpack-35063ac0ca832062.js",
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/webpack-1b59c9e41127a74a.js",
+        "source_sha256": "49e1ac82b1181217adea201d209d4e6dc1eab856d3ac3df5cda66684f2cc4d69",
+        "development_sha256": "49e1ac82b1181217adea201d209d4e6dc1eab856d3ac3df5cda66684f2cc4d69",
+        "source_bytes_equal": false,
+        "development_bytes_equal": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "rea-original-fonts-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-10T07:18:00.230Z",
+  "records": [
+    {
+      "path": "/font/lexend/Lexend-Black.ttf",
+      "status": 200,
+      "media_type": "font/ttf",
+      "bytes": 78496,
+      "source_sha256": "24f3536b4c5342f57b4370620fe5b2e3099d87c6cca8f4a071eed590ae4a05b5",
+      "file": "objects/24f3536b4c5342f57b4370620fe5b2e3099d87c6cca8f4a071eed590ae4a05b5"
+    },
+    {
+      "path": "/font/lexend/Lexend-SemiBold.ttf",
+      "status": 200,
+      "media_type": "font/ttf",
+      "bytes": 78744,
+      "source_sha256": "b7bbc0e77d85d03aea413a1b8ea571f9d82ca49994d9c62ba53e64fe7a755e05",
+      "file": "objects/b7bbc0e77d85d03aea413a1b8ea571f9d82ca49994d9c62ba53e64fe7a755e05"
+    },
+    {
+      "path": "/font/lexend/Lexend-Regular.ttf",
+      "status": 200,
+      "media_type": "font/ttf",
+      "bytes": 78360,
+      "source_sha256": "542046d84e641bfdcda744bd435010cb3ff9aa8c5428068ce64666de41fe6bf0",
+      "file": "objects/542046d84e641bfdcda744bd435010cb3ff9aa8c5428068ce64666de41fe6bf0"
+    },
+    {
+      "path": "/font/pretendard/Pretendard-SemiBold.ttf",
+      "status": 200,
+      "media_type": "font/ttf",
+      "bytes": 2675980,
+      "source_sha256": "05d771ea20cf0e82c2ddeeb7ec7a10ee74aeb10baa2603acb407d5b2a5a55bb7",
+      "file": "objects/05d771ea20cf0e82c2ddeeb7ec7a10ee74aeb10baa2603acb407d5b2a5a55bb7"
+    }
+  ]
+}

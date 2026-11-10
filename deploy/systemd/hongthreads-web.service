@@ -1,0 +1,21 @@
+[Unit]
+Description=HongThreads Next.js workspace
+After=network-online.target hongthreads-gateway.service
+Wants=network-online.target
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/hongthreads/current/web/.next/standalone
+Environment=NODE_ENV=production
+Environment=PORT=9250
+Environment=HOSTNAME=127.0.0.1
+ExecStart=/opt/hongthreads/node24/bin/node server.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+LimitNOFILE=8192
+[Install]
+WantedBy=multi-user.target

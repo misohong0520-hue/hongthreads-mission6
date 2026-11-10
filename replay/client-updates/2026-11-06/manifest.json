@@ -1,0 +1,395 @@
+{
+  "schema": "rea-current-editor-source-capture-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-05T23:23:01.277Z",
+  "method": "GET through existing private local workflow resource bridge",
+  "original_snapshots_untouched": true,
+  "records": [
+    {
+      "path": "/write",
+      "source_uri": "https://drt.agczero.com/write",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 27414,
+      "object_sha256": "b2a52b79cb473ba3c192755ae37fb9fcecc9ae0775c82dc74ae1285c82138d68",
+      "file": "objects/b2a52b79cb473ba3c192755ae37fb9fcecc9ae0775c82dc74ae1285c82138d68",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5708-1994dcbda4b4aac0.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1767-a146c7a9f207a4a9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/8757-0dda30a6f2c6ecb8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1179-698ea59f3ee4dc6a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/6548-52cbf177130e4bef.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/write/page-a35ccae2d90b3383.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/4879-9f592174c6af9634.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/write/layout-a2b4646d203a0aa0.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": false
+        }
+      ],
+      "new_shared_script_paths": [
+        "/_next/static/chunks/9465-371471d4184fa9ad.js",
+        "/_next/static/chunks/webpack-35063ac0ca832062.js"
+      ],
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "original_source_sha256": "6b4a727c0aa91de4e2422f92a30ee38396e72e38a9408e02fad70509e260208e",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/smart-multi-write",
+      "source_uri": "https://drt.agczero.com/smart-multi-write",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 51944,
+      "object_sha256": "0ef9574f3a14efb268f6e3b8cc4a5eb9098e14a87f34a47fe3842dd04a5312ed",
+      "file": "objects/0ef9574f3a14efb268f6e3b8cc4a5eb9098e14a87f34a47fe3842dd04a5312ed",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9990-b5b93d9df26af7b4.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1767-a146c7a9f207a4a9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/8757-0dda30a6f2c6ecb8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1179-698ea59f3ee4dc6a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/6548-52cbf177130e4bef.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/smart-multi-write/page-84063b65db89b79a.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/2720-cadb57ba4d4ac982.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/smart-multi-write/layout-68f625e8d311e9ee.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": false
+        }
+      ],
+      "new_shared_script_paths": [
+        "/_next/static/chunks/9465-371471d4184fa9ad.js",
+        "/_next/static/chunks/webpack-35063ac0ca832062.js"
+      ],
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "original_source_sha256": "7c34b34b24038f0786b90dad2f0816f8cb70da975597415ebc642161ba8fbbb8",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/multi-write",
+      "source_uri": "https://drt.agczero.com/multi-write",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 40511,
+      "object_sha256": "e33d559c069fd4433ffa7c4e23f2d6c464dc25f6f149ef5469b183f7e1aeaf05",
+      "file": "objects/e33d559c069fd4433ffa7c4e23f2d6c464dc25f6f149ef5469b183f7e1aeaf05",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1767-a146c7a9f207a4a9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/8757-0dda30a6f2c6ecb8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1179-698ea59f3ee4dc6a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/6548-52cbf177130e4bef.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/multi-write/page-66b087839f12347f.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/958-fd0575fbef3bfdc9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/multi-write/layout-50ff75d36869022e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": false
+        }
+      ],
+      "new_shared_script_paths": [
+        "/_next/static/chunks/9465-371471d4184fa9ad.js",
+        "/_next/static/chunks/webpack-35063ac0ca832062.js"
+      ],
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+      "original_source_sha256": "e5104e96643304e04ae09080355abfddb9621e0d85943d196e2cefeda72e1eb0",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/_next/static/chunks/app/write/page-a35ccae2d90b3383.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/write/page-a35ccae2d90b3383.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 456733,
+      "object_sha256": "8399f00bd8cf3aedc90ef9bc94f0ac1dbd8e89d87de6757a94066782e7c3c7a8",
+      "file": "objects/8399f00bd8cf3aedc90ef9bc94f0ac1dbd8e89d87de6757a94066782e7c3c7a8",
+      "authentication_value_scan_passed": true,
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41"
+    },
+    {
+      "path": "/_next/static/chunks/app/smart-multi-write/page-84063b65db89b79a.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/smart-multi-write/page-84063b65db89b79a.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 435203,
+      "object_sha256": "597036d497baaacff19a776c5168beb3f96fb20617cf19ded3c0a9aa4fa76186",
+      "file": "objects/597036d497baaacff19a776c5168beb3f96fb20617cf19ded3c0a9aa4fa76186",
+      "authentication_value_scan_passed": true,
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41"
+    },
+    {
+      "path": "/_next/static/chunks/app/multi-write/page-66b087839f12347f.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/multi-write/page-66b087839f12347f.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 274051,
+      "object_sha256": "eab89ae391a9aa5178c05a9543ddee834057ddf6cb964a17feada0b46a20d40c",
+      "file": "objects/eab89ae391a9aa5178c05a9543ddee834057ddf6cb964a17feada0b46a20d40c",
+      "authentication_value_scan_passed": true,
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41"
+    },
+    {
+      "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/9465-371471d4184fa9ad.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 89945,
+      "object_sha256": "60dd14052b289da28c864bc33a826af5704864c2b5e4390c8a1057d04b32359b",
+      "file": "objects/60dd14052b289da28c864bc33a826af5704864c2b5e4390c8a1057d04b32359b",
+      "authentication_value_scan_passed": true,
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41"
+    },
+    {
+      "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/webpack-35063ac0ca832062.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 4109,
+      "object_sha256": "bffd4e996500a342fd59e6a38a05dc1984c2381a6138120da52e2cb8b5704bb2",
+      "file": "objects/bffd4e996500a342fd59e6a38a05dc1984c2381a6138120da52e2cb8b5704bb2",
+      "authentication_value_scan_passed": true,
+      "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41"
+    }
+  ],
+  "evidence_id": "ev_0f4d783c8795bcbfca07be5b6826a1c3048d15cf00d5c8a7214346684e1dff41",
+  "evidence_operation": "capture_process_scenario"
+}

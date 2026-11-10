@@ -1,0 +1,9 @@
+node_modules/
+web/node_modules/
+web/.next/
+.env
+.env.*
+!.env.example
+mission6/runtime-data/
+mission6/verification/
+*.log

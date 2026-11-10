@@ -1,0 +1,13 @@
+{
+  "name": "hongthreads-runtime",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node mission6/server.mjs",
+    "test": "node --test mission6/server.test.mjs mission6/runtime/vertex-worker.test.mjs"
+  },
+  "dependencies": {
+    "parse5": "8.1.0"
+  }
+}

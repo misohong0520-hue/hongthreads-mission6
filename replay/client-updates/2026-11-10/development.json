@@ -1,0 +1,46 @@
+{
+  "schema": "rea-client-update-overlay-v1",
+  "source_manifest_sha256": "e0346bc48fa7cdbd9fd1c3cda708f3b362fd93e065e734acec63c5cfb9af096b",
+  "records": [
+    {
+      "path": "/_next/static/chunks/app/write/page-b5b4dd68880135cc.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "34b9a840d22c8a43eeb441deae99f61463259869e12b6a40e9e27272acc84748",
+      "development_sha256": "f15527bedee2fb92421f797d09a7521cbb8a5cf7116f1c8816833593e7efbb31",
+      "file": "development/objects/f15527bedee2fb92421f797d09a7521cbb8a5cf7116f1c8816833593e7efbb31",
+      "patches": [
+        {
+          "id": "wif-smart-editor-credential-status",
+          "start_utf16": 311234,
+          "end_utf16": 311242,
+          "original_sha256": "ec75ff167bb5df873a9ed57ee856be938a3779256ff41ac1b14a27215d460e55",
+          "replacement": "(e.hasKey||(e.provider===\"VERTEX_WIF\"&&e.credentialReady))"
+        }
+      ]
+    },
+    {
+      "path": "/_next/static/chunks/app/mypage/page-19a4345a28ba44fd.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "1973cec5724802b5d83f06a65aab8a96f2a47c0af6b35b430cef2de22f7a785b",
+      "development_sha256": "1973cec5724802b5d83f06a65aab8a96f2a47c0af6b35b430cef2de22f7a785b",
+      "file": "objects/1973cec5724802b5d83f06a65aab8a96f2a47c0af6b35b430cef2de22f7a785b",
+      "patches": []
+    },
+    {
+      "path": "/_next/static/chunks/webpack-3646dcd87e8ef153.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "c67d88b26c059d20aff0cc7c973550cc621875efa72b7a63c9587883fb31e409",
+      "development_sha256": "c67d88b26c059d20aff0cc7c973550cc621875efa72b7a63c9587883fb31e409",
+      "file": "objects/c67d88b26c059d20aff0cc7c973550cc621875efa72b7a63c9587883fb31e409",
+      "patches": []
+    },
+    {
+      "path": "/_next/static/chunks/5281-a0b9813b3e91c253.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "220a0d574c21906ecac15905ffcd724cc6ad76217b32f1d7b2416b9d902c9224",
+      "development_sha256": "220a0d574c21906ecac15905ffcd724cc6ad76217b32f1d7b2416b9d902c9224",
+      "file": "objects/220a0d574c21906ecac15905ffcd724cc6ad76217b32f1d7b2416b9d902c9224",
+      "patches": []
+    }
+  ]
+}

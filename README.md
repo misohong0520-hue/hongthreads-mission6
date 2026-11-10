@@ -1,0 +1,51 @@
+# HongThreads — 미션 6
+
+현재 DRT 화면과 원본 서비스 연결을 유지하면서 Next.js App Router, Supabase Database·Storage, 사용자별 연결을 추가한 웹 서비스입니다. 공개 주소는 **https://hongthreads.hongsik.blog**입니다. 실제 공개 전 검증 상태는 구현 보고서의 상태를 따릅니다.
+
+## 기능과 데이터
+
+- `/workspace/benchmarks`: 목록·검색·폴더·페이지·등록·상세·수정·삭제, 이미지·영상 첨부와 미리보기.
+- `/workspace/drafts`, `/personas`, `/templates`, `/revenue`, `/folders`: 공통 저장 계층의 자료 관리. 편집 세션과 AI 이력은 조회 전용입니다.
+- 기존 13개 DRT 화면: 편집기·트렌드·계정 분석·아카이브·제휴·마이페이지 흐름을 유지합니다. 원본 조회와 처리 결과는 개인 workspace에 동기화합니다.
+- 원본 계정은 방문자마다 연결합니다. 연결 전에는 개인 브라우저의 guest 보관함을 사용합니다. 원본 계정 연결 시 검증된 사용자에게 속한 보관함으로 전환하며 체험 자료를 자동 혼합하지 않습니다.
+- 원본 서비스의 권한과 실제 게시·예약·상품 조회는 원본 API를 따릅니다. DB 사본으로 외부 처리 성공을 대신하지 않습니다.
+
+## 구성
+
+Next.js 16.4.6와 React 19.3.1, Node.js 24, 서버 REST 접근의 Supabase 저장 계층을 사용합니다. Next.js는 `/workspace` basePath와 9250 포트, 연결 서버는 9251 포트입니다. 모든 DB 작업은 서버에서 workspace 소유권을 검사합니다. DB·Storage의 익명 직접 접근은 닫혀 있습니다.
+
+AI는 기존 EC2 WIF worker와 `gemini-3.8-flash`를 사용합니다. Windows는 기존 SSH 경로를, AWS는 기존 worker를 로컬 subprocess로 호출합니다. 원본 세션은 연결 서버 메모리에만 있고 업무 DB에는 원본 세션·제휴 비밀키를 저장하지 않습니다.
+
+## 로컬 실행
+
+```powershell
+npm ci --omit=dev --ignore-scripts
+npm --prefix web ci
+npm --prefix web run build
+node mission6/start.mjs
+```
+
+기본 접속은 `http://127.0.0.1:9251/workspace/benchmarks`입니다. 기존 Windows 개발 서버 9248은 별도로 유지됩니다. 설정 파일은 `MISSION6_ENV_FILE`로 지정하거나 Windows의 `%LOCALAPPDATA%/HongThreads/secrets/mission6.env`에서 읽습니다.
+
+필수 설정은 `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `SESSION_SIGNING_SECRET`입니다. AWS에서는 `PUBLIC_ORIGIN=https://hongthreads.hongsik.blog`, `VERTEX_TRANSPORT=local`, `VERTEX_NODE_PATH`, `VERTEX_WORKER_PATH`도 설정합니다. `deploy/runtime.env.example`을 참고하고 실제 비밀값은 GitHub나 클라이언트 코드에 넣지 않습니다.
+
+## 데이터·migration
+
+`supabase/migrations/`는 테이블, RLS, 서버 전용 함수·권한 및 비공개 `drt-assets` 버킷을 정의합니다. 관리 테이블은 workspace, 앱 세션 해시, 원고, 세션, 페르소나, 댓글 양식, 폴더·스크랩, 첨부, 분석 스냅샷, 제휴 데이터, 발행·수익·AI·동기화 이력입니다. 폴더와 자료는 외래키로 연결되며 변경 버전으로 충돌을 검사합니다.
+
+임시 로컬 파일 드라이버는 독립 테스트용입니다. 프로덕션에서는 `DATA_BACKEND=supabase`를 사용합니다.
+
+## 검증
+
+```powershell
+node --test mission6/server.test.mjs mission6/runtime/vertex-worker.test.mjs
+npm --prefix web run build
+```
+
+필수 수동 QA는 빈 입력/잘못된 URL, 등록→목록→상세→수정→새로고침 유지→삭제, 파일 업로드·미리보기·삭제, 존재하지 않는 상세, A/B 브라우저의 자료 격리, 원본 연결·전환·만료, PC/모바일 및 배포 URL에서의 실제 저장입니다. 실제 원본 게시·예약·댓글은 지정 테스트 계정과 승인된 내용으로 확인합니다.
+
+## AWS 배포와 복구
+
+GitHub Actions는 Linux 빌드·격리 테스트 후 standalone 릴리스 artifact를 생성합니다. 기존 EC2에 release 디렉터리로 설치하고 `current` 링크로 전환합니다. Nginx vhost와 두 systemd 서비스는 `deploy/`에 있습니다. 기존 WordPress·DB·WIF worker는 교체하지 않습니다. 실패하면 직전 release로 `current`를 되돌리고 서비스만 재시작합니다. Supabase 자료를 삭제해 롤백하지 않습니다.
+
+GitHub 저장소에는 실제 원본 API 응답과 세션·키가 포함되지 않으며, 서버용 HTML shell의 이전 계정 SessionProvider 값은 guest 값으로 정리한 배포 사본만 포함합니다.

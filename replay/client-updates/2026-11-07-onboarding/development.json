@@ -1,0 +1,30 @@
+{
+  "schema": "rea-client-update-overlay-v1",
+  "source_manifest_sha256": "d71d43b96152c300d6eb93d56f87184a041298a7c07f6c5641cc13f3f7722476",
+  "records": [
+    {
+      "path": "/_next/static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "0bf52ed3e5a5dbfbada2ea9f2fc02789425e0b02281d001adc4cbd72106d429c",
+      "development_sha256": "0bf52ed3e5a5dbfbada2ea9f2fc02789425e0b02281d001adc4cbd72106d429c",
+      "file": "objects/0bf52ed3e5a5dbfbada2ea9f2fc02789425e0b02281d001adc4cbd72106d429c",
+      "patches": []
+    },
+    {
+      "path": "/_next/static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "1846b07abc1bab8828401198477f34d40ad40e04a151a159bf76134ec43baf2b",
+      "development_sha256": "1846b07abc1bab8828401198477f34d40ad40e04a151a159bf76134ec43baf2b",
+      "file": "objects/1846b07abc1bab8828401198477f34d40ad40e04a151a159bf76134ec43baf2b",
+      "patches": []
+    },
+    {
+      "path": "/_next/static/chunks/app/onboarding/toss/page-4f3f79b56566ed34.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "e516e0fd09ace94d0adcc81c02b1dfb6945f8a013bdf8388e27f4e8e7ec761e4",
+      "development_sha256": "e516e0fd09ace94d0adcc81c02b1dfb6945f8a013bdf8388e27f4e8e7ec761e4",
+      "file": "objects/e516e0fd09ace94d0adcc81c02b1dfb6945f8a013bdf8388e27f4e8e7ec761e4",
+      "patches": []
+    }
+  ]
+}

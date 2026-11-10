@@ -1,0 +1,403 @@
+{
+  "schema": "rea-current-editor-source-capture-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-05T23:40:25.694Z",
+  "method": "GET through existing private local workflow resource bridge",
+  "original_snapshots_untouched": true,
+  "known_sources": [
+    "workflow-development/manifest.json",
+    "client-updates/2026-11-06/development.json"
+  ],
+  "records": [
+    {
+      "path": "/mypage",
+      "source_uri": "https://drt.agczero.com/mypage",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 37639,
+      "object_sha256": "4841b0dde15d37cce23b7075c23070d08dc6dacc953359884841770761b5be56",
+      "file": "objects/4841b0dde15d37cce23b7075c23070d08dc6dacc953359884841770761b5be56",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5250-7bce399804dfb7f4.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/6974-93b3e053f1ca0588.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1767-a146c7a9f207a4a9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/mypage/page-793b540f1ffdee08.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1771-73d828bc556c11f6.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/mypage/layout-12dbde3666791d3c.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": true
+        }
+      ],
+      "new_shared_script_paths": [],
+      "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+      "original_source_sha256": "8c728b689111611f4cadcc4567414d95c7d2f5b64d13029af6a5abc3b5d28151",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/dashboard/personas",
+      "source_uri": "https://drt.agczero.com/dashboard/personas",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 38638,
+      "object_sha256": "f7707694aec78f63d34c84279d3d77ff8c28faa0d80bb906a4654c51cfa5f63e",
+      "file": "objects/f7707694aec78f63d34c84279d3d77ff8c28faa0d80bb906a4654c51cfa5f63e",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1767-a146c7a9f207a4a9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/dashboard/personas/page-bc2b4af74a8565ac.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5250-7bce399804dfb7f4.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1771-73d828bc556c11f6.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/dashboard/layout-6998fe03e6e96fae.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": true
+        }
+      ],
+      "new_shared_script_paths": [],
+      "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+      "original_source_sha256": "e8c28004ce257875f9fcf6618dadeb49cf4b8ad7e70e06461f45224a114e2191",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/dashboard/threads-manage",
+      "source_uri": "https://drt.agczero.com/dashboard/threads-manage",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 33357,
+      "object_sha256": "57a971386706a4557d29208254a49d305c7729d171c18edc61998509b5d39c92",
+      "file": "objects/57a971386706a4557d29208254a49d305c7729d171c18edc61998509b5d39c92",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5419-0e011f3fbded4b42.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1767-a146c7a9f207a4a9.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/9465-371471d4184fa9ad.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/dashboard/threads-manage/page-f08cb0a421b3234f.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5250-7bce399804dfb7f4.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1749-6fb770712e5bbc6e.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8371-62008fadf4b6d276.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1771-73d828bc556c11f6.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/1441-8b7f896123fa0f27.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/dashboard/layout-6998fe03e6e96fae.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": true
+        }
+      ],
+      "new_shared_script_paths": [],
+      "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+      "original_source_sha256": "be1567822322f565d9963b918d5bb702424c27365b9b9418b201291847cc0f5a",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/_next/static/chunks/app/mypage/page-793b540f1ffdee08.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/mypage/page-793b540f1ffdee08.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 139850,
+      "object_sha256": "7cf991d380c0d079774574761ea994d194951cc78629dac6204dfff00d2c966f",
+      "file": "objects/7cf991d380c0d079774574761ea994d194951cc78629dac6204dfff00d2c966f",
+      "authentication_value_scan_passed": true,
+      "baseline_same_source_paths": [],
+      "baseline_patched_same_source_paths": [],
+      "static_indicators": {
+        "active_decrypted_read": false,
+        "original_generate_endpoint": false,
+        "google_ai_transport": false,
+        "has_key_flag": false,
+        "wif_alternative": false
+      },
+      "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/app/mypage/page-478ca60fcaa9a215.js",
+        "source_sha256": "50df7d22093d49fc93f9f30126fd78fb8814522f08b021f1adbd3f955c7fa893",
+        "development_sha256": "50df7d22093d49fc93f9f30126fd78fb8814522f08b021f1adbd3f955c7fa893",
+        "source_bytes_equal": false,
+        "baseline_had_patches": false
+      }
+    },
+    {
+      "path": "/_next/static/chunks/app/dashboard/personas/page-bc2b4af74a8565ac.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/dashboard/personas/page-bc2b4af74a8565ac.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 94056,
+      "object_sha256": "a4df8da37604bdb3e669d7f5f50517e980d990de6410b0c5f8db772b5ade1dbe",
+      "file": "objects/a4df8da37604bdb3e669d7f5f50517e980d990de6410b0c5f8db772b5ade1dbe",
+      "authentication_value_scan_passed": true,
+      "baseline_same_source_paths": [
+        "/_next/static/chunks/app/dashboard/personas/page-124f6ad762b44e97.js"
+      ],
+      "baseline_patched_same_source_paths": [],
+      "static_indicators": {
+        "active_decrypted_read": false,
+        "original_generate_endpoint": false,
+        "google_ai_transport": false,
+        "has_key_flag": false,
+        "wif_alternative": false
+      },
+      "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/app/dashboard/personas/page-124f6ad762b44e97.js",
+        "source_sha256": "a4df8da37604bdb3e669d7f5f50517e980d990de6410b0c5f8db772b5ade1dbe",
+        "development_sha256": "a4df8da37604bdb3e669d7f5f50517e980d990de6410b0c5f8db772b5ade1dbe",
+        "source_bytes_equal": true,
+        "baseline_had_patches": false
+      }
+    },
+    {
+      "path": "/_next/static/chunks/app/dashboard/threads-manage/page-f08cb0a421b3234f.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/dashboard/threads-manage/page-f08cb0a421b3234f.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 77099,
+      "object_sha256": "a03ece8dea90f47f6b274bb090f567c8ada7fa86b37eb29f335281a7d07b0c80",
+      "file": "objects/a03ece8dea90f47f6b274bb090f567c8ada7fa86b37eb29f335281a7d07b0c80",
+      "authentication_value_scan_passed": true,
+      "baseline_same_source_paths": [
+        "/_next/static/chunks/app/dashboard/threads-manage/page-eda5cd90d7d57804.js"
+      ],
+      "baseline_patched_same_source_paths": [],
+      "static_indicators": {
+        "active_decrypted_read": false,
+        "original_generate_endpoint": false,
+        "google_ai_transport": false,
+        "has_key_flag": false,
+        "wif_alternative": false
+      },
+      "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+      "baseline_comparison": {
+        "path": "/_next/static/chunks/app/dashboard/threads-manage/page-eda5cd90d7d57804.js",
+        "source_sha256": "a03ece8dea90f47f6b274bb090f567c8ada7fa86b37eb29f335281a7d07b0c80",
+        "development_sha256": "a03ece8dea90f47f6b274bb090f567c8ada7fa86b37eb29f335281a7d07b0c80",
+        "source_bytes_equal": true,
+        "baseline_had_patches": false
+      }
+    }
+  ],
+  "immutable_input_hashes": {
+    "../../workflow-development/manifest.json": "4a0eee0de71a8e4ab48360e8d76365333f18dbc7b6ec5cd236ffdb8f9e261d66",
+    "../active.json": "22c33d9349d1376dec8cee14b00771bc487262c39c0579d982c22f97d2a11bcf",
+    "../2026-11-06/manifest.json": "c682e787d623032b03eb5109470f9c914d7553da52f5a4bd72a2c80004634b0a",
+    "../2026-11-06/development.json": "eade6d8780ee88888869d9278afcdaaa4b696c1387f686836647aad2f350d594",
+    "../../workflow-capture/manifest.json": "521c624ede2fb8684b7351b4ab8281b7ddc22800611ca6b04e818485690f2879"
+  },
+  "evidence_id": "ev_1aeac21a04c1cd2a28d2eec0f178e3e291cb3033911d0f47a4c32e0dbf49783c",
+  "evidence_operation": "capture_process_scenario"
+}

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>미션 6 최종 구현 계획서 — H DRT 개발판</title>
+<style>
+:root{color-scheme:light;--green:#00c85a;--ink:#18251e;--line:#dce7df}*{box-sizing:border-box}body{margin:0;background:#f3f7f4;color:var(--ink);font:16px/1.75 system-ui,"맑은 고딕",sans-serif}main{max-width:1120px;margin:36px auto;padding:44px;background:#fff;border:1px solid var(--line);border-radius:20px}header{border-bottom:2px solid var(--ink);padding-bottom:25px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:15px}.brand img{width:68px;height:68px}h1{font-size:30px;line-height:1.4;margin:4px 0 12px}h2{font-size:23px;margin:36px 0 15px;padding-top:10px;border-top:1px solid var(--line)}h3{font-size:18px;margin:24px 0 9px}p{margin:9px 0 14px}.meta{color:#5c6b62;font-size:14px}.lead{font-size:18px}.tag{display:inline-block;padding:3px 10px;background:#e4f8ec;border-radius:20px;font-size:13px;color:#126439}.note{padding:17px 20px;background:#eff8f2;border-left:4px solid var(--green);border-radius:7px;margin:18px 0}.pending{background:#fff7e7;border-left-color:#ce9b35}.table{overflow-x:auto}table{width:100%;border-collapse:collapse;margin:12px 0 20px;min-width:660px}th,td{padding:12px 14px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#f0f6f2;font-weight:700}td:first-child{font-weight:600}ul,ol{padding-left:24px}li{margin:7px 0}code{font-family:ui-monospace,Consolas,monospace;font-size:.88em;background:#eef2ef;border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}a{color:#176c44;text-underline-offset:3px}.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:22px;background:#f4f8f5;border-radius:12px}.flow b{border:1px solid #bdd7c5;background:white;padding:12px 16px;border-radius:9px}.check{color:#176c44;font-weight:700}.small{font-size:14px}.toc{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}footer{border-top:1px solid var(--line);padding-top:20px;margin-top:36px;font-size:14px;color:#58665d}@media(max-width:720px){main{margin:0;padding:22px;border:0;border-radius:0}h1{font-size:25px}h2{font-size:21px}.brand img{width:54px;height:54px}.flow{justify-content:flex-start}}@media print{body{background:white;font-size:11pt}main{margin:0;padding:0;border:0;max-width:none}.toc{display:none}h2,h3{break-after:avoid}tr,.note,.flow{break-inside:avoid}a{color:inherit}table{min-width:0}th,td{padding:8px}code{background:none}}
+th:first-child,td:first-child{min-width:132px;width:18%}
+</style>
+</head>
+<body><main>
+<header>
+<div class="brand"><img src="development/branding/h-logo.png" alt="H 로고"><div><span class="tag">최종 구현 계획 · 2026-11-10</span><h1>미션 6 — H DRT 개발판</h1></div></div>
+<p class="lead">기존 DRT 기능과 사용 흐름을 유지하면서 전체 기능의 데이터를 Supabase에 통합하고, Next.js CRUD와 파일 업로드를 구현해 기존 AWS EC2에 공개 배포한다.</p>
+<p class="meta">대상: 현재 <code>drt-agczero-insights-local</code> 개발판. 이 문서는 구현 명세이며, Next.js·Supabase 통합과 AWS 웹 배포가 완료됐다는 보고서가 아니다.</p>
+</header>
+<nav class="toc"><a href="#decisions">확정 사항</a><a href="#architecture">구조</a><a href="#data">데이터와 기능</a><a href="#crud">CRUD·파일</a><a href="#access">공개·세션</a><a href="#delivery">구현·배포</a><a href="#qa">검증·제출</a></nav>
+
+<section id="decisions"><h2>1. 확정 사항과 현재 기준선</h2>
+<div class="table"><table><thead><tr><th>항목</th><th>확정 내용</th></tr></thead><tbody>
+<tr><td>서비스 대상</td><td>새로운 별도 서비스가 아닌 현재 DRT 로컬 개발판을 확장한다. 원본 화면·편집기·프롬프트·결과 선택·저장·재열기 흐름을 유지한다.</td></tr>
+<tr><td>저장소</td><td>Supabase를 벤치마킹 한 기능에만 한정하지 않는다. 모든 기능의 영속 데이터·첨부파일·작업 이력·동기화 상태에 적용한다. 외부 서비스의 실제 업무 처리는 해당 API를 계속 이용한다.</td></tr>
+<tr><td>공개 범위</td><td>모든 화면은 공개한다. 원본 계정은 방문자마다 각자 연결한다. 현재 사용자의 세션을 공용 세션으로 배포하지 않는다.</td></tr>
+<tr><td>기존 연결</td><td>현재 소유자의 원본 세션과 연결된 쿠팡 파트너스를 유지한다. AI는 현재 EC2의 Vertex AI WIF와 <code>gemini-3.8-flash</code>를 사용한다.</td></tr>
+<tr><td>제휴 기능</td><td>현재 계정에 보이는 쿠팡·토스·브랜드커넥트를 기준으로 검증한다. 워드로브는 원본의 제한된 표시 조건을 유지하며, 일반 사용 기능의 미해결 오류로 계산하지 않는다.</td></tr>
+<tr><td>브랜딩</td><td>제공된 초록색 H 로고를 사용한다. 사이드바 하단의 프로필 이름·아바타 표시를 제거하고 마이페이지·로그아웃 기능은 유지한다.</td></tr>
+<tr><td>배포</td><td>Vercel 대신 기존 <code>wordpress-hongsik-blog</code> EC2, <code>i-0e587c84b3642e794</code>, <code>3.35.8.24</code>를 사용한다. 기존 WordPress와 Vertex worker는 계속 운영한다.</td></tr>
+</tbody></table></div>
+<p><span class="check">현재 완료:</span> 화면 13개, 메뉴 이동 12개, 화면 조작 19개, 자동 테스트 82개 통과. 일반 에디터 실제 WIF 생성과 결과 표시를 확인했다. 409·검색·관리 탭·글꼴·벤치마킹 새로고침 오류 5개를 수정했다. H 로고와 하단 이름·아바타 제거도 PC 3개 화면 및 모바일 메뉴에서 확인했다.</p>
+<p><span class="check">아직 구현할 부분:</span> 독립적인 Next.js App Router 소스, 전체 기능의 Supabase 저장 계층, 사용자별 세션 분리, Linux 실행 어댑터, 공개 HTTPS 배포, 저장·업로드·실제 외부 업무까지 이어지는 종단 검증.</p>
+<div class="note pending">원본 배포 JavaScript와 API 응답을 확보한 상태이며, 원본 서버 소스·DB·서비스 권한을 복제한 상태는 아니다. 네트워크 응답은 요청·응답 계약을 확인하는 근거로 사용한다. 파싱만으로 Threads 게시 서버, 상품 공급 API 또는 원본 권한을 독립 재구현할 수 있다고 가정하지 않는다.</div>
+</section>
+
+<section id="architecture"><h2>2. 구현 구조</h2>
+<div class="flow"><b>공개 브라우저</b><span>→</span><b>Nginx · HTTPS</b><span>→</span><b>Next.js + DRT 연결 서버</b><span>→</span><b>Supabase / 원본 API / Vertex WIF</b></div>
+<h3>원본 클라이언트와 Next.js 공존</h3>
+<ul>
+<li>기존 프로젝트 내부 <code>web/</code>에 Next.js 16.4.6 App Router·TypeScript 앱을 추가한다. 의존성은 lockfile로 고정하고, 프로젝트 전용 Node.js 24 실행 환경을 사용한다.</li>
+<li>검증된 원본 실행 자산과 현재 13개 페이지를 유지한다. 새 Next.js 영역은 <code>/workspace</code>를 basePath로 사용해 기존 원본 <code>/_next/</code> 자산과 충돌하지 않게 한다. 영역 간 이동은 일반 링크의 문서 이동으로 처리한다. 이 분리는 여러 앱의 자산 경로 충돌을 방지하는 <a href="https://nextjs.org/docs/app/guides/multi-zones">Next.js 다중 영역 구성</a> 원칙을 적용한 설계다.</li>
+<li>Next.js는 공통 데이터 서비스, Route Handlers, 폼 검증, 상세·등록·수정 페이지를 담당한다. 기존 화면의 API 경로·본문·응답 형식은 호환 어댑터에서 유지한다. 저장 기능 전환 때문에 원본 편집기를 새 편집기로 교체하지 않는다.</li>
+<li>미션 6의 등록 → 목록 → 상세 → 수정 → 삭제 흐름은 Next.js 벤치마킹 관리 화면으로 명확히 시연한다. 기존 벤치마킹 메뉴 안에 ‘자료 관리’ 진입점을 연결하며, 기존 보관함·폴더·확장 수집 흐름도 유지한다. 이는 전체 데이터 통합의 첫 검증 흐름이며, 저장소 적용 범위를 벤치마킹으로 제한하는 결정이 아니다.</li>
+<li>현재 Windows 실행은 계속 지원한다. <code>DATA_BACKEND=local|supabase</code>, <code>VERTEX_TRANSPORT=ssh|local</code>로 저장소·실행 환경을 명시적으로 선택한다. AWS에서는 Supabase와 로컬 worker 호출만 사용한다.</li>
+</ul>
+<h3>서비스 역할과 내부 연결</h3>
+<p>Next.js는 <code>127.0.0.1:9250</code>, DRT 연결 서버는 <code>127.0.0.1:9251</code>에서 실행한다. 두 포트는 확인 시점에 비어 있다. 연결 서버가 사용자 세션과 원본 API·WIF 전송을 관리하고, Next.js가 Supabase 접근을 담당한다. 내부 호출은 공유 서버 비밀값으로 인증하며, 공개 Nginx에서 내부 경로를 차단한다. 브라우저가 보낸 사용자 ID나 workspace ID를 신뢰하지 않는다.</p>
+<p>원본 자산은 원본 보존본과 개발용 변경본을 분리하고 해시 검증을 유지한다. 원본 배포 버전 변경 시 새 자산을 수집·검증·패치·회귀 검사한 뒤 활성화한다. 미확인 새 파일을 자동 허용하거나 구버전 데이터로 오류를 감추지 않는다.</p>
+</section>
+
+<section id="data"><h2>3. 전체 기능의 Supabase 적용</h2>
+<div class="table"><table><thead><tr><th>기능</th><th>Supabase에 저장할 데이터</th><th>실제 처리 및 보존 기준</th></tr></thead><tbody>
+<tr><td>인사이트·트렌드</td><td>조회 스냅샷, 수집 시각, 필터, 검색 기록, API 상태</td><td>현재 원본의 트렌드·인기 글 검색을 계속 호출한다. 최근 스냅샷과 실시간 결과를 구분한다.</td></tr>
+<tr><td>일반·멀티·스마트 멀티 에디터</td><td>원고, 타래, 입력 리소스, 생성 옵션, 편집 세션, 결과 선택, 자동 저장 상태</td><td>기존 편집기와 프롬프트를 유지한다. 원고 생성은 WIF, 다시 열기는 실제 저장 데이터로 검증한다.</td></tr>
+<tr><td>내 원고·게시물 보관함</td><td>초안, 수정 이력, 첨부 관계, 상태, 원본 레코드 ID</td><td>Supabase 작성 자료와 원본 게시물을 구분한다. 원본 게시물의 변경·삭제는 실제 원본 API 성공을 확인한다.</td></tr>
+<tr><td>벤치마킹</td><td>폴더, 스크랩, 원문·메모, 링크, 미디어, 정렬, 수집 작업</td><td>현재 로컬 보관함은 Supabase로 이전한다. 확장 수집·수동 등록·새로고침을 유지한다. 원본 공용 보관함은 권한이 있을 때 원본 조회 경로를 사용한다.</td></tr>
+<tr><td>페르소나·댓글 양식</td><td>프로필, 프롬프트, 기본값, 양식, 계정별 연결 관계</td><td>원본에 이미 있는 항목은 최초 연결 시 읽어 가져오고 원본 ID를 유지한다. 수정·삭제 시 원본 반영이 필요한 계약을 유지한다.</td></tr>
+<tr><td>계정 인사이트·게시글·멘션</td><td>조회 결과, 기간별 스냅샷, 분석 결과, 응답 시각</td><td>계정별 실제 API를 사용한다. 기록이 없는 기간은 데이터 없음으로 표시하고 수치를 생성하지 않는다.</td></tr>
+<tr><td>영상·이미지 아카이브</td><td>Storage 파일, 미디어 메타데이터, 카테고리, 첨부 관계</td><td>목록·선택·재생·다운로드·에디터 첨부·AI 분석을 연결한다. 기존 외부 영상은 출처 URL을 보존하며 무조건 재업로드하지 않는다.</td></tr>
+<tr><td>쿠팡·토스·브랜드커넥트</td><td>선택 상품, 출처·상품 ID, 링크 메타데이터, 작성 원고와의 관계</td><td>상품 조회와 실제 제휴 링크 생성은 원본 연동 계약을 유지한다. 등록된 쿠팡 연결을 임의로 재설정하지 않는다.</td></tr>
+<tr><td>수익 인증 라운지</td><td>입력 내용, 증빙 파일, 원본 참조, 변경·공개 상태</td><td>원본에 공개되는 등록·수정은 외부 응답 확인 후 반영하며 비공개 초안과 구분한다.</td></tr>
+<tr><td>발행·예약·댓글 작업</td><td>요청 이력, 원본 작업 ID, 상태, 결과, 실패 사유</td><td>실제 처리는 원본 서비스에 위임한다. 동일 요청을 재시도할 때 중복 발행하지 않도록 작업 ID와 상태를 확인한다.</td></tr>
+<tr><td>마이페이지·계정 연결</td><td>사용자별 설정, 연결된 계정의 식별 참조·상태·확인 시각</td><td>원본 세션·제휴 비밀키·Google 자격값은 업무 테이블에 저장하지 않는다. 구독·결제 상태는 원본 판정을 따른다.</td></tr>
+<tr><td>AI 및 오류 이력</td><td>사용자별 입력·출력·선택 결과, 모델, 작업 상태, 비밀값을 제거한 오류</td><td>현재 Vertex 프로젝트·WIF·모델을 유지한다. 결과 형식은 원본 클라이언트가 처리하는 계약으로 반환한다.</td></tr>
+</tbody></table></div>
+<h3>데이터 모델과 정합성</h3>
+<ul>
+<li>기본 테이블은 <code>workspaces</code>, <code>app_sessions</code>, <code>accounts</code>, <code>drafts</code>, <code>editor_sessions</code>, <code>personas</code>, <code>comment_templates</code>, <code>scrap_folders</code>, <code>scraps</code>, <code>assets</code>, <code>insight_snapshots</code>, <code>affiliate_items</code>, <code>affiliate_links</code>, <code>publish_jobs</code>, <code>revenue_entries</code>, <code>generation_jobs</code>, <code>sync_events</code>로 구성한다. 공개성이 확인된 공통 트렌드 캐시는 별도 테이블로 둔다.</li>
+<li>개인 자료는 UUID 기본키, 필수 <code>workspace_id</code>, 생성·수정 시각을 공통으로 가진다. 원본 ID는 별도 <code>upstream_id</code>로 유지한다. 폴더·스크랩·첨부 관계는 외래키로 연결하고, 표시·검색 필드는 타입이 있는 컬럼으로 관리한다. 복잡한 원본 콘텐츠 구조만 JSONB로 보존한다.</li>
+<li>신규 앱 자료와 기존 로컬 벤치마킹은 Supabase가 주 저장소다. 원본에 실재하는 원고·계정·게시물·설정은 해당 원본 ID를 보존하며, 원본 변경 요청 성공 뒤 Supabase에 반영한다. 원본이 관리하는 정보의 진실값을 DB 사본으로 덮어쓰지 않는다.</li>
+<li>외부 처리와 DB 저장은 단일 트랜잭션이 아니므로 동기화 상태를 별도 기록한다. 원본 성공·DB 실패는 ‘원본 반영 완료, 보관함 동기화 대기’로 처리해 원본 작업을 재실행하지 않는다. DB 작성 자료를 외부로 보낼 때는 작업 ID로 중복을 막고 원본 실패를 성공으로 표시하지 않는다.</li>
+<li>변경 요청에는 행 버전 또는 마지막 수정 시각을 사용한다. 오래 열린 화면의 덮어쓰기는 충돌 안내 후 새 데이터를 다시 읽는다. 일반 CRUD는 실제 DB에서 삭제하고, 원본이 제공하는 보관 처리와 외부 게시물 삭제는 각각의 의미를 유지한다.</li>
+</ul>
+</section>
+
+<section id="crud"><h2>4. 미션 6 CRUD·파일 구현 명세</h2>
+<h3>대표 사용자 흐름</h3>
+<p><strong>벤치마킹 자료 관리 → 새 자료 등록 → 이미지 또는 파일 첨부 → 목록 확인 → 상세 URL로 직접 접근 → 수정 → 새로고침 후 확인 → 삭제 확인 → 목록 및 상세에서 삭제 확인.</strong> 같은 저장 계층을 나머지 기능에도 적용한다.</p>
+<div class="table"><table><thead><tr><th>화면·인터페이스</th><th>구현 계약</th></tr></thead><tbody>
+<tr><td>목록</td><td><code>/workspace/benchmarks</code>. 검색·폴더·정렬·페이지를 URL 쿼리로 관리한다. 기본 15개 단위, 최신 수정순. 페이지 새로고침과 뒤로 가기 후 조건을 유지한다.</td></tr>
+<tr><td>등록·상세·수정</td><td><code>/workspace/benchmarks/new</code>, <code>/workspace/benchmarks/[id]</code>, <code>/workspace/benchmarks/[id]/edit</code>. 같은 폼 컴포넌트를 등록·수정에 재사용한다. 없는 항목과 다른 사용자의 항목은 404로 처리한다.</td></tr>
+<tr><td>CRUD API</td><td><code>/workspace/api/v1/benchmarks</code>의 GET·POST, <code>/workspace/api/v1/benchmarks/[id]</code>의 GET·PATCH·DELETE. 폴더·원고·페르소나·양식·증빙도 같은 서비스 계층과 소유권 검사를 재사용한다.</td></tr>
+<tr><td>입력</td><td>필수 제목 1~200자, 본문·메모 합계 최대 50,000자, 선택적인 http/https 출처 URL, 소유한 폴더, 첨부 목록. 공백뿐인 필수값·잘못된 URL·유효하지 않은 폴더를 서버에서도 차단한다.</td></tr>
+<tr><td>응답·오류</td><td>새 API는 데이터와 페이지 정보, 오류 코드·메시지·필드 오류를 구분한다. 400 입력 오류, 401 연결 필요, 404 없는 자료, 409 수정 충돌, 413 크기 초과를 처리한다. 기존 DRT API 응답 형태는 호환 계층에서 유지한다.</td></tr>
+<tr><td>상태 표시</td><td>조회·저장 로딩, 빈 목록, 필드 오류, 네트워크 실패, 저장 완료, 삭제 확인을 별도 표시한다. 저장 중 중복 클릭을 막고 실패 시 입력값을 유지한다.</td></tr>
+</tbody></table></div>
+<h3>Supabase Storage</h3>
+<ul>
+<li>비공개 <code>drt-assets</code> 버킷을 사용하고 경로는 <code>workspace/entity/file-uuid.ext</code>로 생성한다. 실제 MIME·파일 서명을 확인하며 이미지와 영상 형식은 기존 편집기 지원 범위를 따른다. 원본 제한에 맞춰 파일당 최대 50MB, 편집기 첨부는 최대 9개로 시작한다.</li>
+<li>파일은 서버에서 사용자·크기·형식을 확인한 뒤 서명된 업로드로 Storage에 전송하고, 완료 시 DB의 첨부 관계를 저장한다. 미완료 업로드는 임시 상태로 남겨 만료 정리하고, 레코드 저장 실패 시 파일이 정상 첨부된 것처럼 표시하지 않는다.</li>
+<li>미리보기·다운로드는 소유권 확인 후 단기 서명 URL을 발급한다. 파일 없는 상세, 깨진 파일, 업로드 취소·실패, 기존 파일 교체·삭제를 처리한다. 레코드 삭제 후 참조가 없는 파일은 정리 작업으로 제거하며 실패는 재시도 대상으로 남긴다.</li>
+<li>Threads 발행용 미디어는 원본 업로드 계약에 맞게 전달하고 그 결과 URL을 사용한다. 미리보기용 단기 URL을 장시간 뒤의 예약 발행 URL로 재사용하지 않는다.</li>
+</ul>
+</section>
+
+<section id="access"><h2>5. 전체 공개와 사용자별 원본 세션</h2>
+<ul>
+<li><strong>모든 페이지는 연결 전에도 열린다.</strong> 연결 전 CRUD 체험 자료는 별도 guest workspace에 Supabase로 저장한다. 원본 API가 필요한 기능은 연결 필요 상태를 표시하며 실제 계정이나 성공 응답을 꾸며 넣지 않는다.</li>
+<li>원본 연결 시 각 방문자가 자신의 세션을 제출하고 서버가 원본 세션 API로 확인한다. 검증된 원본 사용자 식별자로 개인 workspace를 선택한다. 체험 자료와 실제 계정 자료는 자동 혼합하지 않는다.</li>
+<li>현재 전역 단일 세션을 요청별 연결 관리자로 변경한다. 브라우저에는 무작위 앱 세션 쿠키만 <code>HttpOnly · Secure · SameSite</code>로 보관한다. 서버는 쿠키의 해시·만료와 workspace 연결을 관리하고, 원본 세션 값은 연결 서버 메모리에만 둔다. 서버 재시작·원본 세션 만료 시 외부 연결은 다시 요구하되 Supabase 자료는 보존한다.</li>
+<li>원본이 갱신한 세션은 해당 사용자의 연결 안에서만 반영한다. 세션 입력·종료·전환은 다른 사용자의 연결에 영향을 주지 않는다. 소유자의 기존 세션도 같은 개인 연결로 이전한다.</li>
+<li>Supabase 접근은 서버 Route Handler를 통한다. 개인 테이블과 Storage의 직접 익명 접근은 닫고 서버에서 매 요청 workspace 소유권을 검사한다. <a href="https://supabase.com/docs/guides/getting-started/api-keys">Supabase 비밀키</a>는 서버 전용이며 브라우저·GitHub·설치물에 포함하지 않는다. 서비스 키는 RLS를 우회하므로 RLS만으로 서버 요청의 사용자 격리가 보장된다고 간주하지 않는다.</li>
+<li>앱 회원가입·별도의 비밀번호 회원 시스템은 만들지 않는다. 기존 원본 연결과 guest workspace로 구성한다. 과제 기본 범위를 넘는 사용자별 분리는 ‘전체 공개·각자 연결’ 요구를 충족하기 위한 추가 구현이다.</li>
+<li>공개 환경에서는 종료·전체 로그·원본 리소스 덤프·전역 setup token 조회 등 개발 제어 경로를 노출하지 않는다. 쓰기 요청의 Origin·CSRF 토큰과 요청 크기를 검사하고, 개인 응답은 공유 캐시를 사용하지 않는다.</li>
+<li>WIF는 기존 프로젝트를 사용하되 초기 동시 생성은 사용자당 1건·서버 전체 2건으로 제한한다. 초과 요청은 대기/재시도 상태로 반환하며, 누가 어떤 작업을 요청했는지 비밀값 없이 기록한다. 외부 발행과 예약은 해당 사용자가 화면에서 명시적으로 실행한 요청만 전달한다.</li>
+</ul>
+<div class="note">‘전체 공개’는 전체 화면에 접근할 수 있다는 뜻이다. 다른 사용자의 개인 원고·세션·제휴 자격·계정 쓰기 권한이 공용으로 공유되는 구성이 아니다. 이 기준은 대화에서 사용자가 선택한 ‘모든 화면 공개, 원본 계정은 각자 연결’을 반영한다.</div>
+</section>
+
+<section id="delivery"><h2>6. 구현 순서·데이터 이전·AWS 배포</h2>
+<div class="table"><table><thead><tr><th>단계</th><th>구현 내용</th><th>통과 기준</th></tr></thead><tbody>
+<tr><td>1. 기준선 고정</td><td>현재 실행 자산·패치·H 로고·화면별 기능·API 계약을 버전 고정한다. 기능표에는 원본/로컬/미검증/현재 계정 비노출을 구분한다.</td><td>현재 82개 테스트와 기존 화면·메뉴·AI 증거가 재현되고 원본 자료가 보존됨.</td></tr>
+<tr><td>2. Next·Supabase 기반</td><td>web 앱, 서버 환경변수, SQL migration, 테이블·Storage, 서버 검증·오류 형식, 사용자 workspace를 구현한다.</td><td>합성 데이터로 DB CRUD·파일 업로드와 사용자 A/B 격리 검사 통과.</td></tr>
+<tr><td>3. 과제 CRUD 완성</td><td>벤치마킹 등록·목록·상세·수정·삭제·페이지네이션을 연결하고 기존 메뉴 안에서 접근하게 한다.</td><td>Storage 파일 포함 전체 흐름이 새로고침·서버 재시작 후에도 유지됨.</td></tr>
+<tr><td>4. 전체 기능 통합</td><td>세 에디터, 원고, 페르소나·양식, 계정 분석, 아카이브, 제휴, 수익, 발행 이력을 순서대로 공통 저장 계층에 연결한다.</td><td>각 기능의 입력·처리·저장·재열기 확인. 외부 반영과 Supabase 동기화 상태가 일치함.</td></tr>
+<tr><td>5. 이전·호환 검증</td><td>기존 로컬 보관함·폴더·파일을 소유자 workspace로 복사한다. 원본 계정 자료는 원본 ID를 키로 읽기 가져오기를 수행한다.</td><td>건수·참조·파일 해시 비교. 중복 가져오기 없음. 원본·로컬 자료를 삭제하지 않고 되돌릴 수 있음.</td></tr>
+<tr><td>6. AWS 사전 운영</td><td>Linux runner, HTTPS Origin 처리, 공개 경로, 확장 origin, 업로드·SSE·대기 시간·오류 로그를 검증한다.</td><td>원본 세션 연결, WIF 생성, 쿠팡 연결 상태, 업로드·재생·사용자 분리 정상.</td></tr>
+<tr><td>7. 공개 배포·제출</td><td>검증된 릴리스를 배포하고 HTTPS에서 CRUD·파일·AI·주요 원본 흐름을 재확인한다. README·QA표·저장소 및 배포 URL을 정리한다.</td><td>실제 배포 URL에서 미션 6 전체 CRUD가 동작하고 미검증·권한 제한 항목을 구분해 제출.</td></tr>
+</tbody></table></div>
+<h3>배포 구성</h3>
+<ul>
+<li>목표 주소는 <strong>https://hongthreads.hongsik.blog</strong>로 정한다. 현재 서버가 사용하는 hongsik.blog의 별도 서브도메인에 A 레코드와 인증서를 추가한다. 기존 도메인·WordPress Nginx 설정을 덮어쓰지 않고 독립 vhost를 추가한다.</li>
+<li>현재 EC2는 Ubuntu, t3.medium, 약 4GB RAM이며 Nginx·PHP-FPM·MariaDB와 여러 앱이 함께 운영 중이다. 확인 시점 가용 메모리는 약 2.5GB, 디스크 여유는 약 29GB다. Linux CI에서 빌드한 standalone 릴리스를 올리고 EC2에서 무거운 빌드를 병행하지 않는다.</li>
+<li>Nginx가 80→443 리다이렉트, TLS, 업로드 상한, 요청 제한과 프록시를 담당한다. <code>/workspace/</code>는 Next.js, 나머지 기존 DRT 경로는 연결 서버로 전달한다. <a href="https://nextjs.org/docs/app/guides/self-hosting">Next.js 자체 호스팅 문서</a>의 역프록시 구성을 따른다. AI 스트리밍 경로는 버퍼링을 끄고 180초 처리 시간에 맞춘다.</li>
+<li>현재 서버의 localhost Host 검사와 <code>http://Host</code> Origin 비교를 그대로 배포하지 않는다. <code>PUBLIC_ORIGIN=https://hongthreads.hongsik.blog</code>를 기준으로 검사하고, 신뢰하는 loopback Nginx에서 전달된 헤더만 사용한다. 9250·9251은 외부에 열지 않는다.</li>
+<li>Next와 연결 서버는 별도 systemd 서비스로 운영한다. 기존 worker는 기존 Node.js 20.20.2 실행 환경을 유지하고, AWS 연결 서버는 Windows의 <code>ssh.exe</code> 대신 해당 worker를 로컬 subprocess로 호출한다. 기존 WIF 설정·worker 파일·WordPress DB는 교체하지 않는다.</li>
+<li>배포는 버전별 release 디렉터리와 current 링크로 구성한다. 새 릴리스의 상태 확인과 Nginx 설정 검사를 통과한 뒤 전환한다. 실패 시 직전 실행 릴리스로 되돌리며 Supabase 자료를 지우지 않는다. DB 변경은 이전 코드와 공존 가능한 추가 방식부터 적용한다.</li>
+</ul>
+<h3>환경·운영 설정</h3>
+<p>최소 환경변수는 <code>PUBLIC_ORIGIN</code>, <code>SUPABASE_URL</code>, <code>SUPABASE_SECRET_KEY</code>, <code>SESSION_SIGNING_SECRET</code>, <code>INTERNAL_BRIDGE_SECRET</code>, <code>DATA_BACKEND</code>, <code>VERTEX_TRANSPORT</code>, <code>VERTEX_WORKER_PATH</code>, <code>VERTEX_NODE_PATH</code>, <code>VERTEX_PROJECT</code>, <code>VERTEX_LOCATION</code>, <code>VERTEX_MODEL</code>이다. 실제 값은 서버의 접근 제한된 환경 파일/서비스 credential에 넣고 문서에는 이름과 설명만 남긴다.</p>
+<p>원본 세션 만료·403·429·원본 버전 불일치·WIF 실패·Storage 실패·DB 동기화 지연을 분리해 기록한다. 로그에는 cookie, 제휴 비밀키, WIF 자격값을 기록하지 않는다. 확장은 localhost 고정 주소에서 선택한 HTTPS 서비스 주소도 사용하도록 변경하며, 사용자별 확장 연결 키로 해당 workspace에만 저장하게 한다.</p>
+</section>
+
+<section id="qa"><h2>7. 최종 검증·완료 판정·제출물</h2>
+<div class="table"><table><thead><tr><th>검증 묶음</th><th>필수 시나리오</th></tr></thead><tbody>
+<tr><td>미션 기본 CRUD</td><td>필수값 누락·잘못된 URL, 등록→목록→상세, 수정 반영, 새로고침 유지, 삭제 확인 및 DB 삭제, 존재하지 않는 상세, 검색·정렬·페이지 이동·뒤로 가기.</td></tr>
+<tr><td>이미지·파일</td><td>실제 Storage 업로드→미리보기→상세 표시→재열기, 파일 없는 항목, 크기·형식 오류, 중간 실패·재시도, 교체·삭제, 영상 재생·다운로드, 외부 발행용 파일 접근.</td></tr>
+<tr><td>원본 기능 보존</td><td>13개 화면과 하위 기능표를 기준으로 일반·멀티·스마트 멀티 AI 생성→결과 선택→저장→재열기, 페르소나·양식 CRUD, 벤치마킹 수집·폴더·링크, 인사이트 검색·기간 변경, 아카이브 첨부, 쿠팡·토스·브랜드커넥트 선택·링크·원고 활용.</td></tr>
+<tr><td>공개·사용자 분리</td><td>미연결 방문자의 전체 화면 접근과 guest CRUD, 사용자 A/B 동시 연결, 다른 사용자의 ID·파일 URL 접근 차단, 로그아웃·세션 교체·만료·서버 재시작 후 자료 보존. 소유자 세션이 공용으로 사용되지 않음.</td></tr>
+<tr><td>AI·외부 작업</td><td>현재 WIF 모델의 실제 응답, 미디어 분석 켜짐·꺼짐, 작은 영상 분석, 중복 클릭·연속 생성·동시 요청. 발행·예약·댓글·외부 계정 변경은 별도로 지정한 테스트 계정과 승인된 내용으로 검증한다.</td></tr>
+<tr><td>AWS 운영</td><td>HTTPS·Origin·CSRF·CORS, 큰 업로드·SSE·타임아웃, 서비스 재시작·로그·롤백. 기존 WordPress와 Vertex worker의 정상 동작을 배포 전후 비교.</td></tr>
+<tr><td>화면·브랜딩</td><td>H 로고, 하단 이름·아바타 미표시, 마이페이지·로그아웃 유지, PC·모바일 메뉴·폼·파일 미리보기. 로고 변경이 원본 계정 데이터 삭제로 이어지지 않음.</td></tr>
+</tbody></table></div>
+<p><strong>완료 기준:</strong> 핵심 자료가 Mock Data나 localStorage가 아닌 Supabase에 실제 저장되고, 배포 URL에서 CRUD·파일 업로드·새로고침 유지가 재현되어야 한다. 각 원본 기능은 화면 표시뿐 아니라 해당 작업의 실제 결과와 저장·재조회까지 확인한다. 권한상 실행할 수 없는 기능, 실제 발행을 실행하지 않은 기능은 ‘미검증/제한’으로 남기며 ‘모든 기능 동일’로 포장하지 않는다.</p>
+<ul>
+<li>GitHub 전용 저장소: 실행 소스, 잠금 파일, DB migration, 합성 seed, 환경변수 예시, 기능 명세, QA 체크리스트, 배포 절차와 롤백 절차. 평가자가 접근할 수 있도록 공개하거나 접근 권한을 제공한다.</li>
+<li>실행 자산은 필요한 검증본만 선별한다. 실제 세션, SSH 키, 제휴 비밀키, 개인 API 응답 캡처, 트래픽 원문, 사용자 업로드 원본은 공개 저장소에 포함하지 않는다.</li>
+<li>README: 서비스 소개, 전체 기능별 저장 위치·외부 의존성, 데이터 관계, 로컬 실행, 환경변수 이름, AWS URL, CRUD·파일 시연 절차, 검증 결과와 제한사항을 포함한다.</li>
+<li>제출 링크: GitHub 저장소 URL과 AWS HTTPS 배포 URL. 첨부 미션의 Vercel 항목을 AWS로 대체한다는 요청은 반영하지만, 교육기관의 배포 방식 인정 여부까지 확인된 것으로 쓰지 않는다.</li>
+</ul>
+<div class="note pending"><strong>구현 시작 시 필요한 외부 준비:</strong> 전용 Supabase 프로젝트와 서버용 키, hongthreads.hongsik.blog DNS 설정 권한, GitHub 저장소 접근. 현재 대화에서는 실제 Supabase 프로젝트 연결이 확인되지 않았으므로 이를 완료된 설정으로 간주하지 않는다. 로고·프로필 표시 변경과 기존 오류 수정은 완료됐고, 이 계획의 DB 생성·데이터 이전·공개 배포는 아직 실행하지 않았다.</div>
+</section>
+
+<footer>
+<p>요구사항 근거: 사용자가 첨부한 코드잇 미션 6 화면과 대화의 확정 선택. 구현 근거: 현재 프로젝트·기능 검증 기록 및 EC2 읽기 전용 점검.</p>
+<p><a href="replay/verification-artifacts/fixes-20261110/report.html">기능 수정 검증 보고서</a> · <a href="replay/verification-artifacts/branding-20261110/verification.json">로고·프로필 표시 검증</a> · <a href="replay/verification-artifacts/branding-20261110/dashboard-insights.png">현재 화면</a> · <a href="https://supabase.com/docs/guides/storage/security/access-control">Supabase Storage 접근 제어</a></p>
+</footer>
+</main></body></html>

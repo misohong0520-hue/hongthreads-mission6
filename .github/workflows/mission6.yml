@@ -1,0 +1,47 @@
+name: HongThreads verify and build
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
+      - name: Install server dependencies
+        run: npm ci --omit=dev --ignore-scripts
+      - name: Verify isolation, storage and WIF protocol
+        run: npm test
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+      - name: Build Next.js
+        working-directory: web
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: npm run build
+      - name: Prepare standalone static files
+        run: |
+          cp -a web/public web/.next/standalone/public
+          mkdir -p web/.next/standalone/.next
+          cp -a web/.next/static web/.next/standalone/.next/static
+      - name: Assemble Linux release
+        run: >-
+          tar --exclude='./.git' --exclude='./.github' --exclude='./web/node_modules'
+          --exclude='./web/.next/cache' --exclude='./web/.next/dev'
+          --exclude='./hongthreads-release.tgz' -czf /tmp/hongthreads-release.tgz .
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: hongthreads-linux-release
+          path: /tmp/hongthreads-release.tgz
+          retention-days: 7

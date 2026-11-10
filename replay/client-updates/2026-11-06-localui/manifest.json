@@ -1,0 +1,14 @@
+{
+  "schema": "rea-local-ui-source-v1",
+  "origin": "https://drt.agczero.com",
+  "evidence_id": "ev_5f9bdbdcd126edc7febaa4481fceb7d086c2e0afb874f60a9f21191819ae437d",
+  "records": [
+    {
+      "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "object_sha256": "b9932beeaf712c41bd9727c0854ccbd18ac58819fed4bb21765a2a7543e4d756",
+      "file": "objects/b9932beeaf712c41bd9727c0854ccbd18ac58819fed4bb21765a2a7543e4d756"
+    }
+  ]
+}

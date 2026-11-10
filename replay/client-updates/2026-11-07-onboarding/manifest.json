@@ -1,0 +1,162 @@
+{
+  "schema": "rea-onboarding-source-capture-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-06T15:22:06.219Z",
+  "method": "Authenticated read-only original HTML and static assets through the private local resource bridge; no key read/write endpoints.",
+  "records": [
+    {
+      "path": "/onboarding/coupang",
+      "source_uri": "https://drt.agczero.com/onboarding/coupang",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 14954,
+      "object_sha256": "98c0e1e08562bd451f0a42a92cc05bcd739aba459bb2e203b18b8d3e8963ba13",
+      "file": "objects/98c0e1e08562bd451f0a42a92cc05bcd739aba459bb2e203b18b8d3e8963ba13",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": true
+        }
+      ],
+      "original_source_sha256": "73aff4745ee1ae6badeaddbd52f638f0642118957612f2497e4ec8488aecb80a",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/onboarding/toss",
+      "source_uri": "https://drt.agczero.com/onboarding/toss",
+      "status": 200,
+      "media_type": "text/html; charset=utf-8",
+      "bytes": 14936,
+      "object_sha256": "9697605e84a426c78f951197c8711058695e3a3abc66d0eec6f8db7182f82a1c",
+      "file": "objects/9697605e84a426c78f951197c8711058695e3a3abc66d0eec6f8db7182f82a1c",
+      "authentication_value_scan_passed": true,
+      "script_sources": [
+        {
+          "path": "/_next/static/chunks/fd9d1056-98dbd6d8ac8bdbf7.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8069-e887fb38096cd463.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/main-app-10eb23f0b8ec9a95.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/onboarding/toss/page-4f3f79b56566ed34.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/app/error-e472ff41c0f48850.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/global-error-fdcc7f287f902b56.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/3267-60d5a7fc86c240b8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/5935-9421001ccc79370a.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/8988-a6816206542002c3.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js",
+          "known": false
+        },
+        {
+          "path": "/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+          "known": true
+        },
+        {
+          "path": "/_next/static/chunks/webpack-35063ac0ca832062.js",
+          "known": true
+        }
+      ],
+      "original_source_sha256": "b7eb364ecf1040f114b4727beb081427edaf7acc4c6b684688baa02b38dcba2f",
+      "deployment_sanitized": true
+    },
+    {
+      "path": "/_next/static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 9708,
+      "object_sha256": "0bf52ed3e5a5dbfbada2ea9f2fc02789425e0b02281d001adc4cbd72106d429c",
+      "file": "objects/0bf52ed3e5a5dbfbada2ea9f2fc02789425e0b02281d001adc4cbd72106d429c",
+      "authentication_value_scan_passed": true
+    },
+    {
+      "path": "/_next/static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/onboarding/layout-3a2ba9b237e8ec80.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 8210,
+      "object_sha256": "1846b07abc1bab8828401198477f34d40ad40e04a151a159bf76134ec43baf2b",
+      "file": "objects/1846b07abc1bab8828401198477f34d40ad40e04a151a159bf76134ec43baf2b",
+      "authentication_value_scan_passed": true
+    },
+    {
+      "path": "/_next/static/chunks/app/onboarding/toss/page-4f3f79b56566ed34.js",
+      "source_uri": "https://drt.agczero.com/_next/static/chunks/app/onboarding/toss/page-4f3f79b56566ed34.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=UTF-8",
+      "bytes": 12020,
+      "object_sha256": "e516e0fd09ace94d0adcc81c02b1dfb6945f8a013bdf8388e27f4e8e7ec761e4",
+      "file": "objects/e516e0fd09ace94d0adcc81c02b1dfb6945f8a013bdf8388e27f4e8e7ec761e4",
+      "authentication_value_scan_passed": true
+    }
+  ]
+}

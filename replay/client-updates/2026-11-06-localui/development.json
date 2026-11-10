@@ -1,0 +1,24 @@
+{
+  "schema": "rea-client-update-overlay-v1",
+  "source_manifest_sha256": "441e979f247124801d482858c02b15e592c09209b753dec7d6c93ead60384772",
+  "records": [
+    {
+      "path": "/_next/static/chunks/3838-0ac8a13324c57770.js",
+      "media_type": "application/javascript; charset=UTF-8",
+      "source_sha256": "b9932beeaf712c41bd9727c0854ccbd18ac58819fed4bb21765a2a7543e4d756",
+      "base_sha256": "6c3a9d893c168ecced5c522d6dd615ed11c29b52bfa594768e4c5c1bd2d7e2f5",
+      "development_sha256": "8d6461f7d46faa80ba7d5d68a6cdb1e51ba9cec6dc14bded01908f487cfa5712",
+      "file": "development/objects/8d6461f7d46faa80ba7d5d68a6cdb1e51ba9cec6dc14bded01908f487cfa5712",
+      "patches": [
+        {
+          "id": "local-archive-state-actions",
+          "start_utf16": 4951,
+          "end_utf16": 4977,
+          "original_sha256": "ae69b1822626f785fbc005f17c7bacecf438cf5da3d78550b66f58fb111be8d9",
+          "replacement": "((typeof window!==\"undefined\"&&window.__REA_REPLAY__?.developmentArchiveImport===true)&&[\"archive_import\",\"videos_preview\",\"videos_write\",\"insights_search\",\"threads_manage_subtabs\"].includes(e))||(!b&&(!!l||(v(e),w(!0),!1)))"
+        }
+      ],
+      "baseline_manifest_sha256": "22a4c930dc761b3465b7e0495d1ed257bb35faf0b0515cc3b8df1c2130cca589"
+    }
+  ]
+}

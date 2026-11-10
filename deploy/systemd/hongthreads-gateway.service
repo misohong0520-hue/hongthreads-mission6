@@ -1,0 +1,21 @@
+[Unit]
+Description=HongThreads original workflows and Supabase gateway
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/hongthreads/current
+EnvironmentFile=/etc/hongthreads/runtime.env
+Environment=PORT=9251
+ExecStart=/opt/hongthreads/node24/bin/node --use-system-ca mission6/server.mjs
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+LimitNOFILE=8192
+[Install]
+WantedBy=multi-user.target
