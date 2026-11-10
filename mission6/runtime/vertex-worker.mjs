@@ -24,7 +24,7 @@ export function createVertexWorkerRunner({settings,transport=process.platform===
     // VERTEX_TRANSPORT means local/SSH in this adapter but WIF/direct in the
     // existing worker. Also keep application database/session secrets out of it.
     const workerEnv=transport==='local'?Object.fromEntries(Object.entries(environment).filter(([name])=>
-      !/^(?:SUPABASE_|SESSION_SIGNING_SECRET$|INTERNAL_BRIDGE_SECRET$|PUBLIC_ORIGIN$|DRT_|HONGTHREADS_|VERTEX_TRANSPORT$|PORT$|HOSTNAME$)/.test(name))):undefined;
+      !/^(?:SUPABASE_|SESSION_SIGNING_SECRET$|INTERNAL_BRIDGE_SECRET$|ORIGINAL_CONNECTION_KEY$|PUBLIC_ORIGINAL_|PUBLIC_ORIGIN$|DRT_|HONGTHREADS_|VERTEX_TRANSPORT$|PORT$|HOSTNAME$)/.test(name))):undefined;
     try{child=spawnImpl(command,args,{windowsHide:true,shell:false,stdio:['pipe','pipe','ignore'],...(workerEnv?{env:workerEnv}:{})})}
     catch{reject(failure(transport==='local'?'VERTEX_WORKER':'VERTEX_SSH'));return}
     const chunks=[];let size=0,settled=false;

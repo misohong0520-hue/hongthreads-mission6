@@ -136,36 +136,47 @@ test('401 clears session and cached data; upstream error bodies never escape',as
   noSessionValues(bridge.status());
 });
 
-test('403 disables the session and cannot fall back to cached data',async()=>{
-  const bridge=new LiveTrendsBridge({fetchImpl:async url=>new URL(url).pathname.endsWith('google')?google():json({sensitive:SESSION_A},{status:403})});
+test('403 preserves the session but cannot fall back to expired cached data for the denied route',async()=>{
+  let clock=1000,denied=false;
+  const bridge=new LiveTrendsBridge({now:()=>clock,fetchImpl:async url=>{
+    if(new URL(url).pathname.endsWith('google'))return google();
+    return denied?json({sensitive:SESSION_A},{status:403}):datalab();
+  }});
   await configure(bridge);
+  assert.equal((await bridge.request(local('/api/trends/datalab'))).status,200);
+  clock+=15001;denied=true;
   const result=await bridge.request(local('/api/trends/datalab'));
   assert.equal(result.status,403);
   assert.equal(error(result),'access_denied');
   assert.equal(bridge.status().state,'access-denied');
-  assert.equal(bridge.status().configured,false);
-  assert.equal((await bridge.request(local('/api/trends/google'))).status,403);
+  assert.equal(bridge.status().configured,true);
+  assert.equal((await bridge.request(local('/api/trends/datalab'))).status,403);
+  assert.equal((await bridge.request(local('/api/trends/google'))).status,200);
   noSessionValues(result);
+  noSessionValues(bridge.status());
 });
 
-test('403 also invalidates other inflight replies so an older success cannot restore connected state',async()=>{
-  let release;
+test('403 leaves unrelated inflight requests and their authenticated success intact',async()=>{
+  let release,signal;
   let calls=0;
-  const bridge=new LiveTrendsBridge({fetchImpl:async url=>{
+  const bridge=new LiveTrendsBridge({fetchImpl:async(url,options)=>{
     calls++;
     const path=new URL(url).pathname;
     if(path.endsWith('google'))return google();
-    if(path.endsWith('datalab'))return new Promise(resolve=>{release=resolve;});
+    if(path.endsWith('datalab')){signal=options.signal;return new Promise(resolve=>{release=resolve;});}
     return json({sensitive:SESSION_A},{status:403});
   }});
   await configure(bridge);
   const pending=bridge.request(local('/api/trends/datalab'));
   assert.equal((await bridge.request(local('/api/trends/realtime'))).status,403);
-  release(datalab());
-  assert.equal((await pending).status,409);
+  assert.equal(signal.aborted,false);
   assert.equal(bridge.status().state,'access-denied');
-  assert.equal(bridge.status().configured,false);
-  assert.equal((await bridge.request(local('/api/trends/google'))).status,403);
+  assert.equal(bridge.status().configured,true);
+  release(datalab());
+  assert.equal((await pending).status,200);
+  assert.equal(bridge.status().state,'connected');
+  assert.equal(bridge.status().configured,true);
+  assert.equal((await bridge.request(local('/api/trends/google'))).status,200);
   assert.equal(calls,3);
 });
 
@@ -367,16 +378,45 @@ test('original resource redirects remain manual and only same-origin Location va
   }
 });
 
-test('original resource 401/403 clears the session and cannot disclose the upstream error or cached trend data',async()=>{
-  for(const status of [401,403]){
-    const bridge=new LiveTrendsBridge({fetchImpl:async url=>new URL(url).pathname==='/api/trends/google'?google():json({sensitive:SESSION_A},{status})});
-    await configure(bridge);
-    const result=await bridge.readOriginalResource({path:'/write'});
-    assert.equal(result.status,status);assert.equal(bridge.status().configured,false);
-    assert.equal((await bridge.request(local('/api/trends/google'))).status,status);
-    assert.equal((await bridge.readOriginalResource({path:'/write'})).status,status);
-    noSessionValues(result);noSessionValues(bridge.status());
-  }
+test('original resource 401 clears the session and cannot disclose the upstream error or cached trend data',async()=>{
+  let release,signal;
+  const bridge=new LiveTrendsBridge({fetchImpl:async(url,options)=>{
+    const path=new URL(url).pathname;
+    if(path==='/api/trends/google')return google();
+    if(path==='/api/trends/datalab'){signal=options.signal;return new Promise(resolve=>{release=resolve;});}
+    return json({sensitive:SESSION_A},{status:401});
+  }});
+  await configure(bridge);
+  const pending=bridge.request(local('/api/trends/datalab'));
+  const result=await bridge.readOriginalResource({path:'/write'});
+  assert.equal(result.status,401);assert.equal(error(result),'session_expired');assert.equal(bridge.status().configured,false);
+  assert.equal(signal.aborted,true);
+  release(datalab());assert.equal((await pending).status,409);
+  assert.equal((await bridge.request(local('/api/trends/google'))).status,401);
+  assert.equal((await bridge.readOriginalResource({path:'/write'})).status,401);
+  noSessionValues(result);noSessionValues(bridge.status());
+});
+
+test('original resource 403 preserves credentials and unrelated inflight reads without disclosing the upstream error',async()=>{
+  let release,signal;
+  const bridge=new LiveTrendsBridge({fetchImpl:async(url,options)=>{
+    const path=new URL(url).pathname;
+    if(path==='/api/trends/google')return google();
+    assert.equal(options.headers.cookie,'next-auth.session-token='+SESSION_A);
+    if(path==='/write'){signal=options.signal;return new Promise(resolve=>{release=resolve;});}
+    return json({sensitive:SESSION_A},{status:403});
+  }});
+  await configure(bridge);
+  const pending=bridge.readOriginalResource({path:'/write'});
+  const result=await bridge.readOriginalResource({path:'/mypage'});
+  assert.equal(result.status,403);assert.equal(error(result),'access_denied');
+  assert.equal(bridge.status().configured,true);assert.equal(bridge.status().state,'access-denied');
+  assert.equal(signal.aborted,false);
+  release(new Response('fixture original document',{headers:{'content-type':'text/html'}}));
+  const allowed=await pending;assert.equal(allowed.status,200);assert.equal(allowed.body.toString(),'fixture original document');
+  assert.equal((await bridge.request(local('/api/trends/google'))).status,200);
+  assert.equal((await bridge.readOriginalResource({path:'/mypage'})).status,403);
+  noSessionValues(result);noSessionValues(bridge.status());
 });
 
 test('cleared resource reads discard late bytes and resource failures contain no submitted secrets',async()=>{

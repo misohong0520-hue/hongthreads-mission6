@@ -3,7 +3,7 @@ import {LiveTrendsBridge} from '../replay/live-trends-bridge.mjs';
 import {DataError} from './data/index.mjs';
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const COOKIE='hongthreads_session';
-export function createSessionManager({repository,secret,publicOrigin,bridgeFactory=()=>new LiveTrendsBridge(),now=Date.now}){
+export function createSessionManager({repository,secret,publicOrigin,bridgeFactory=()=>new LiveTrendsBridge(),publicConnection=null,now=Date.now}){
   if(typeof secret!=='string'||secret.length<32)throw new DataError('SESSION_SECRET_REQUIRED',503);
   const connections=new Map(),lifetime=30*86400000,secure=new URL(publicOrigin).protocol==='https:';
   const csrf=hash=>createHmac('sha256',secret).update('csrf:'+hash).digest('hex');
@@ -21,11 +21,13 @@ export function createSessionManager({repository,secret,publicOrigin,bridgeFacto
       // A request started before login/logout may finish after the rotated
       // cookie response. It must not overwrite that new cookie with a guest.
       if(value&&!(req.method==='GET'&&/text\/html/i.test(req.headers.accept??'')))throw new DataError('SESSION_EXPIRED',401);
-      return issue(res,await repository.ensureWorkspace({kind:'guest'}));
+      const next=await issue(res,await repository.ensureWorkspace({kind:'guest'}));
+      return publicConnection?publicConnection.context(next):next;
     }
     const workspace=await repository.ensureWorkspace({id:row.workspace_id});
     const connected=connections.get(hash);if(connected&&Date.parse(row.expires_at)<now()){connected.bridge.clear();connections.delete(hash)}
-    return{row,workspace,hash,csrfToken:csrf(hash),bridge:connected?.bridge??bridgeFactory(),originalSession:connected?.profile??null};
+    const ctx={row,workspace,hash,csrfToken:csrf(hash),bridge:connected?.bridge??bridgeFactory(),originalSession:connected?.profile??null};
+    return !connected&&publicConnection?publicConnection.context(ctx):ctx;
   };
   return{
     context,
@@ -41,7 +43,7 @@ export function createSessionManager({repository,secret,publicOrigin,bridgeFacto
       connections.get(current.hash)?.bridge.clear();connections.delete(current.hash);await repository.deleteSession(current.hash);
       return next;
     },
-    async disconnect(current,res){connections.get(current.hash)?.bridge.clear();connections.delete(current.hash);await repository.deleteSession(current.hash);return issue(res,await repository.ensureWorkspace({kind:'guest'}))},
+    async disconnect(current,res){connections.get(current.hash)?.bridge.clear();connections.delete(current.hash);await repository.deleteSession(current.hash);const next=await issue(res,await repository.ensureWorkspace({kind:'guest'}));return publicConnection?publicConnection.context(next):next},
     view(ctx){return{csrfToken:ctx.csrfToken,connected:ctx.bridge.status().configured,workspace:{id:ctx.workspace.id,kind:ctx.workspace.kind},storage:{backend:repository.backend,ready:true}}},
     guestProfile(ctx){return{user:{id:'guest-'+ctx.workspace.id,name:'체험 사용자',email:null,image:null,soId:0,authId:'',role:'GUEST'},expires:ctx.row.expires_at}},
     close(){for(const c of connections.values())c.bridge.clear();connections.clear()}

@@ -34,9 +34,9 @@ test('Windows SSH adapter keeps credentials out of the worker stdin and quotes t
 });
 test('the existing local WIF worker does not inherit the adapter transport or app secrets',async()=>{
   const f=fixture('{"result":{"authenticated":true}}');
-  await createVertexWorkerRunner({settings,transport:'local',spawnImpl:f.spawn,environment:{HOME:'/home/ubuntu',PATH:'/usr/bin',VERTEX_TRANSPORT:'local',SUPABASE_SECRET_KEY:'fixture-private',SESSION_SIGNING_SECRET:'fixture-private',PORT:'9251',GOOGLE_APPLICATION_CREDENTIALS:'/safe/wif.json'}})('auth');
+  await createVertexWorkerRunner({settings,transport:'local',spawnImpl:f.spawn,environment:{HOME:'/home/ubuntu',PATH:'/usr/bin',VERTEX_TRANSPORT:'local',SUPABASE_SECRET_KEY:'fixture-private',SESSION_SIGNING_SECRET:'fixture-private',ORIGINAL_CONNECTION_KEY:'fixture-vault-key',PUBLIC_ORIGINAL_SESSION_FILE:'/private/session.enc',PORT:'9251',GOOGLE_APPLICATION_CREDENTIALS:'/safe/wif.json'}})('auth');
   const env=f.seen[0].options.env;assert.equal(env.HOME,'/home/ubuntu');assert.equal(env.GOOGLE_APPLICATION_CREDENTIALS,'/safe/wif.json');
-  for(const key of ['VERTEX_TRANSPORT','SUPABASE_SECRET_KEY','SESSION_SIGNING_SECRET','PORT'])assert.equal(Object.hasOwn(env,key),false);
+  for(const key of ['VERTEX_TRANSPORT','SUPABASE_SECRET_KEY','SESSION_SIGNING_SECRET','ORIGINAL_CONNECTION_KEY','PUBLIC_ORIGINAL_SESSION_FILE','PORT'])assert.equal(Object.hasOwn(env,key),false);
 });
 test('oversized input and unknown operations are rejected before starting a child',async()=>{
   let called=false;const run=createVertexWorkerRunner({settings,transport:'local',maxBytes:160,spawnImpl:()=>{called=true}});

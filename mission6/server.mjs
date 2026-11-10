@@ -16,13 +16,16 @@ import {readBody,readJson,multipart,json,fail} from './http.mjs';
 import {createWorkflowRoutes} from '../replay/workflow-routes.mjs';
 import {patchDevelopmentMarkup} from '../development/patch-server-markup.mjs';
 import {VertexWifBridge} from '../replay/vertex-wif-bridge.mjs';
+import {LiveTrendsBridge} from '../replay/live-trends-bridge.mjs';
+import {createPublicConnection} from './public-connection.mjs';
 
 const root=resolve(import.meta.dirname,'..'),publicResources=new Set(['benchmarks','drafts','personas','templates','revenue','folders','sessions','generations','accounts','insights','affiliate_items','affiliate_links','publish_jobs','cache']);
 const readonlyResources=new Set(['sessions','generations','accounts','insights','affiliate_items','affiliate_links','publish_jobs','cache']);
-export async function createMissionServer({repository,publicOrigin,secret,vertex,bridgeFactory,assetRuntime,logDirectory,nextUrl='http://127.0.0.1:9250'}={}){
+export async function createMissionServer({repository,publicOrigin,secret,vertex,bridgeFactory=()=>new LiveTrendsBridge(),publicConnectionConfig,assetRuntime,logDirectory,nextUrl='http://127.0.0.1:9250'}={}){
   const origin=new URL(publicOrigin);if(!['http:','https:'].includes(origin.protocol)||origin.pathname!=='/')throw new Error('PUBLIC_ORIGIN invalid');
   const runtime=assetRuntime??await loadRuntimeAssets();
-  const storage=new AsyncLocalStorage(),sessions=createSessionManager({repository,secret,publicOrigin,bridgeFactory}),mirror=createMirror(repository),internalNonce=randomBytes(32).toString('hex');
+  const publicConnection=await createPublicConnection({config:publicConnectionConfig,repository,bridgeFactory});
+  const storage=new AsyncLocalStorage(),sessions=createSessionManager({repository,secret,publicOrigin,bridgeFactory,publicConnection}),mirror=createMirror(repository),internalNonce=randomBytes(32).toString('hex');
   const pending=new Set();let aiActive=0;const aiOwners=new Map();
   const current=()=>{const context=storage.getStore();if(!context)throw new Error('Request context missing');return context};
   const event=async value=>{if(!logDirectory)return;await mkdir(logDirectory,{recursive:true});await appendFile(join(logDirectory,'events.jsonl'),JSON.stringify({at:new Date().toISOString(),method:value.method,path:value.pathname,status:value.status,code:value.code})+'\n')};
@@ -74,7 +77,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
     try{
       const host=String(req.headers.host??'');if(![origin.host,'127.0.0.1:9251','localhost:9251'].includes(host))throw new DataError('INVALID_HOST',421);
       const url=new URL(req.url,publicOrigin),path=url.pathname,method=req.method;
-      if(path==='/healthz'){json(res,200,{app:'hongthreads',ready:true,storage:repository.backend,vertex:vertex.status().credentialReady});return}
+      if(path==='/healthz'){json(res,200,{app:'hongthreads',ready:true,storage:repository.backend,vertex:vertex.status().credentialReady,publicAutoConnectEnabled:Boolean(publicConnection),publicAutoConnected:publicConnection?.bridge.status().configured??false});return}
       if(path==='/extensions/hongthreads.zip'&&['GET','HEAD'].includes(method)){const bytes=await readFile(join(root,'extension-cloud.zip'));res.writeHead(200,{'content-type':'application/zip','content-disposition':'attachment; filename="hongthreads-extension.zip"','content-length':bytes.length,'cache-control':'no-store'}).end(method==='HEAD'?undefined:bytes);return}
       if(/^\/(?:__shutdown|__desktop|__origin|__replay\/(?:coverage|misses)|__workflow\/resource|internal)(?:\/|$)/.test(path))throw new DataError('NOT_FOUND',404);
       if((path==='/workspace'||path.startsWith('/workspace/'))&&!path.startsWith('/workspace/api/')){
@@ -115,10 +118,10 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
         }
         if(['/__live/','/__live'].includes(path)&&method==='GET'){res.writeHead(200,{'content-type':'text/html; charset=utf-8','content-length':setupPage.length,'cache-control':'no-store','referrer-policy':'no-referrer','x-frame-options':'DENY'}).end(setupPage);return}
         if(path==='/__live/setup.js'&&method==='GET'){res.writeHead(200,{'content-type':'application/javascript; charset=utf-8','content-length':setupScript.length,'cache-control':'no-store'}).end(setupScript);return}
-        if(path==='/auth/login'){res.writeHead(302,{location:'/__live/','cache-control':'no-store'}).end();return}
+        if(path==='/auth/login'){res.writeHead(302,{location:publicConnection?'/dashboard/insights':'/__live/','cache-control':'no-store'}).end();return}
         if(path==='/__live/status'){json(res,200,{...ctx.bridge.status(),enabled:true,setupToken:ctx.csrfToken});return}
         if(path==='/api/auth/csrf'){json(res,200,{csrfToken:ctx.csrfToken});return}
-        if(path==='/api/auth/signout'&&method==='POST'){await sessions.disconnect(ctx,res);json(res,200,{url:origin.origin+'/auth/login'});return}
+        if(path==='/api/auth/signout'&&method==='POST'){await sessions.disconnect(ctx,res);json(res,200,{url:origin.origin+(publicConnection?'/dashboard/insights':'/auth/login')});return}
         if(path==='/api/auth/session'&&method==='GET'){json(res,200,ctx.originalSession??sessions.guestProfile(ctx));return}
         if(path==='/__workflow/status'){json(res,200,{enabled:true,session:ctx.bridge.status(),vertex:vertexFacade.status(),benchmark:{mode:'supabase',workspace:ctx.workspace.id},storage:repository.backend});return}
         if(path==='/workspace/api/v1/uploads'&&method==='POST'){
@@ -157,7 +160,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
       });
     }catch(error){await event({method:req.method,pathname:new URL(req.url,publicOrigin).pathname,status:error.status??500,code:error.code??error.name}).catch(()=>{});fail(res,error)}
   });
-  return{server,sessions,repository,async close(){sessions.close();await Promise.allSettled([...pending]);server.closeAllConnections();await new Promise(resolve=>server.close(resolve))}};
+  return{server,sessions,repository,async close(){sessions.close();publicConnection?.close();await Promise.allSettled([...pending]);server.closeAllConnections();await new Promise(resolve=>server.close(resolve))}};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
@@ -166,7 +169,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const port=Number(process.env.PORT??9251),publicOrigin=process.env.PUBLIC_ORIGIN??'http://127.0.0.1:'+port;
   const repository=await createRepository({backend:process.env.DATA_BACKEND??'supabase',directory:process.env.DREATHS_LOCAL_DATA_DIR});
   const vertex=new VertexWifBridge();try{await vertex.authenticate()}catch(error){console.error('VERTEX_NOT_READY',error.code??'VERTEX_AUTH')}
-  const app=await createMissionServer({repository,publicOrigin,secret:process.env.SESSION_SIGNING_SECRET,vertex,nextUrl:process.env.DRT_NEXT_URL??'http://127.0.0.1:9250',logDirectory:process.env.HONGTHREADS_LOG_DIR??join(root,'mission6/runtime-data/logs')});
+  const app=await createMissionServer({repository,publicOrigin,secret:process.env.SESSION_SIGNING_SECRET,vertex,publicConnectionConfig:{enabled:process.env.PUBLIC_ORIGINAL_ENABLED==='true',file:process.env.PUBLIC_ORIGINAL_SESSION_FILE,key:process.env.ORIGINAL_CONNECTION_KEY},nextUrl:process.env.DRT_NEXT_URL??'http://127.0.0.1:9250',logDirectory:process.env.HONGTHREADS_LOG_DIR??join(root,'mission6/runtime-data/logs')});
   app.server.listen(port,'127.0.0.1',()=>console.log(JSON.stringify({ready:true,origin:publicOrigin,storage:repository.backend,vertex:vertex.status().credentialReady})));
   process.once('SIGTERM',()=>app.close().then(()=>process.exit(0)));
 }

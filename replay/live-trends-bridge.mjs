@@ -174,11 +174,11 @@ export class LiveTrendsBridge {
       const response=await this.#fetch(target.href,{method:'GET',redirect:'manual',credentials:'omit',cache:'no-store',
         headers:{...forwarded,cookie:this.#cookie,referer:ORIGIN+'/dashboard/insights'},signal:controller.signal});
       if (changed()) return errorResponse(409,'session_changed');
-      if (response.status === 401 || response.status === 403) {
+      if (response.status === 401) {
         this.clear();
-        return response.status === 401 ? this.#failure(401,'session_expired','session-expired')
-          : this.#failure(403,'access_denied','access-denied');
+        return this.#failure(401,'session_expired','session-expired');
       }
+      if (response.status === 403) return this.#failure(403,'access_denied','access-denied');
       const outgoing={'cache-control':'no-store','x-content-type-options':'nosniff','x-rea-body-representation':'live-original-resource'};
       for (const name of ['content-type','content-language','vary']) {
         const value=response.headers.get(name);
@@ -433,7 +433,6 @@ export class LiveTrendsBridge {
         return this.#failure(401,'session_expired','session-expired');
       }
       if (response.status === 403) {
-        this.clear();
         return this.#failure(403,'access_denied','access-denied');
       }
       if (response.status >= 300 && response.status < 400)
