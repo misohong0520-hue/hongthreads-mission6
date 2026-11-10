@@ -18,12 +18,14 @@ import {patchDevelopmentMarkup} from '../development/patch-server-markup.mjs';
 import {VertexWifBridge} from '../replay/vertex-wif-bridge.mjs';
 import {LiveTrendsBridge} from '../replay/live-trends-bridge.mjs';
 import {createPublicConnection} from './public-connection.mjs';
+import {loadBookmark} from './bookmark.mjs';
 
 const root=resolve(import.meta.dirname,'..'),publicResources=new Set(['benchmarks','drafts','personas','templates','revenue','folders','sessions','generations','accounts','insights','affiliate_items','affiliate_links','publish_jobs','cache']);
 const readonlyResources=new Set(['sessions','generations','accounts','insights','affiliate_items','affiliate_links','publish_jobs','cache']);
 export async function createMissionServer({repository,publicOrigin,secret,vertex,bridgeFactory=()=>new LiveTrendsBridge(),publicConnectionConfig,assetRuntime,logDirectory,nextUrl='http://127.0.0.1:9250'}={}){
   const origin=new URL(publicOrigin);if(!['http:','https:'].includes(origin.protocol)||origin.pathname!=='/')throw new Error('PUBLIC_ORIGIN invalid');
   const runtime=assetRuntime??await loadRuntimeAssets();
+  const bookmark=await loadBookmark(publicOrigin);
   const publicConnection=await createPublicConnection({config:publicConnectionConfig,repository,bridgeFactory});
   const storage=new AsyncLocalStorage(),sessions=createSessionManager({repository,secret,publicOrigin,bridgeFactory,publicConnection}),mirror=createMirror(repository),internalNonce=randomBytes(32).toString('hex');
   const pending=new Set();let aiActive=0;const aiOwners=new Map();
@@ -60,7 +62,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
   }};
   const csp="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.amazonaws.com https://cdn.agczero.com https://*.supabase.co; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
   const workflows=await createWorkflowRoutes({bridge,vertex:vertexFacade,nonce:internalNonce,csp,
-    rewriteDocument:bytes=>{const ctx=current();return rewriteDocument(bytes,{ctx,profile:ctx.originalSession??sessions.guestProfile(ctx),vertex:vertexFacade.status()})},rewriteCss:b=>b,patchMarkup:patchDevelopmentMarkup,recordEvent:event});
+    rewriteDocument:bytes=>{const ctx=current();return rewriteDocument(bytes,{ctx,profile:ctx.originalSession??sessions.guestProfile(ctx),vertex:vertexFacade.status(),publicOrigin})},rewriteCss:b=>b,patchMarkup:patchDevelopmentMarkup,recordEvent:event});
   const publicAsset=async(wid,id)=>{const row=await repository.get('assets',wid,id);return{id:row.id,name:row.title,mime_type:row.metadata.mime_type,size:row.metadata.size,status:row.status,url:await repository.getAssetUrl(wid,id)}};
   const decorate=async(wid,row)=>({...row,assets:await Promise.all(row.assets.map(a=>publicAsset(wid,a.id)))});
   const compatibility=createCompatibility({repository,secret,publicOrigin,publicAsset});
@@ -78,6 +80,13 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
       const host=String(req.headers.host??'');if(![origin.host,'127.0.0.1:9251','localhost:9251'].includes(host))throw new DataError('INVALID_HOST',421);
       const url=new URL(req.url,publicOrigin),path=url.pathname,method=req.method;
       if(path==='/healthz'){json(res,200,{app:'hongthreads',ready:true,storage:repository.backend,vertex:vertex.status().credentialReady,publicAutoConnectEnabled:Boolean(publicConnection),publicAutoConnected:publicConnection?.bridge.status().configured??false});return}
+      if(path==='/'||bookmark.assets.has(path)){
+        if(!['GET','HEAD'].includes(method))throw new DataError('METHOD_NOT_ALLOWED',405);
+        const home=path==='/',bytes=home?bookmark.document:bookmark.assets.get(path);
+        res.writeHead(200,{'content-type':home?'text/html; charset=utf-8':'image/png','content-length':bytes.length,
+          'cache-control':home?'public, max-age=300':'public, max-age=31536000, immutable','x-content-type-options':'nosniff',
+          ...(home?{'content-security-policy':bookmark.csp}:{})}).end(method==='HEAD'?undefined:bytes);return;
+      }
       if(path==='/extensions/hongthreads.zip'&&['GET','HEAD'].includes(method)){const bytes=await readFile(join(root,'extension-cloud.zip'));res.writeHead(200,{'content-type':'application/zip','content-disposition':'attachment; filename="hongthreads-extension.zip"','content-length':bytes.length,'cache-control':'no-store'}).end(method==='HEAD'?undefined:bytes);return}
       if(/^\/(?:__shutdown|__desktop|__origin|__replay\/(?:coverage|misses)|__workflow\/resource|internal)(?:\/|$)/.test(path))throw new DataError('NOT_FOUND',404);
       if((path==='/workspace'||path.startsWith('/workspace/'))&&!path.startsWith('/workspace/api/')){
@@ -155,7 +164,6 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
         // the public Origin and viewer-specific token have already been checked.
         req.headers.origin='http://'+req.headers.host;req.headers['x-rea-workflow-token']=internalNonce;
         if(await workflows(req,res,url))return;
-        if(path==='/'){res.writeHead(302,{location:'/dashboard/insights'}).end();return}
         throw new DataError('NOT_FOUND',404);
       });
     }catch(error){await event({method:req.method,pathname:new URL(req.url,publicOrigin).pathname,status:error.status??500,code:error.code??error.name}).catch(()=>{});fail(res,error)}

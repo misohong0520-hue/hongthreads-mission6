@@ -6,6 +6,7 @@ import {patchDevelopmentMarkup,patchDevelopmentScript} from '../development/patc
 import {loadClientUpdates} from '../replay/workflow-client-updates.mjs';
 import {loadWorkflowFonts} from '../replay/workflow-fonts.mjs';
 import {loadWorkflowStyles} from '../replay/workflow-styles.mjs';
+import {applyBookmarkMetadata} from './bookmark.mjs';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const root=resolve(import.meta.dirname,'..');
 const ORIGIN='https://drt.agczero.com';
@@ -74,10 +75,10 @@ export async function loadRuntimeAssets(){
   for(const asset of assets.values())if(/javascript|ecmascript/.test(asset.type))asset.bytes=patchDevelopmentScript(asset.bytes);
   return{manifest,assets,documents};
 }
-export function rewriteDocument(bytes,{ctx,profile,vertex}){
+export function rewriteDocument(bytes,{ctx,profile,vertex,publicOrigin}){
   const config={primaryOrigin:ORIGIN,originalWorkflows:true,liveTrends:true,developmentDraftView:true,developmentArchiveImport:true,benchmarkLive:true,benchmarkLocal:true,threadsAuthFixture:false,workflowToken:ctx.csrfToken,vertex,mission6:{connected:ctx.bridge.status().configured}};
   let text=sanitizeDocument(bytes,profile).toString();
   text=text.replace(/\b(src|href|action|poster)=(['"])(https:\/\/drt\.agczero\.com[^'"]*)\2/g,(_,name,quote,value)=>name+'='+quote+value.slice(ORIGIN.length)+quote);
   const injection='<link rel="stylesheet" href="/__replay/ui-visibility.css"><script>window.__REA_REPLAY__='+JSON.stringify(config).replace(/</g,'\\u003c')+';</script><script src="/__replay/relocate.js"></script><script src="/__workflow/benchmark-client.js"></script><script src="/mission6/client.js" defer></script>';
-  return Buffer.from(text.replace(/<head(?:\s[^>]*)?>/i,tag=>tag+injection));
+  return applyBookmarkMetadata(Buffer.from(text.replace(/<head(?:\s[^>]*)?>/i,tag=>tag+injection)),publicOrigin);
 }

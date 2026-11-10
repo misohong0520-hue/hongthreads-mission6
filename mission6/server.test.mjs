@@ -7,6 +7,7 @@ import {createServer} from 'node:net';
 import {createRepository} from './data/index.mjs';
 import {createMissionServer} from './server.mjs';
 import {loadRuntimeAssets,sanitizeDocument,replaceFlightSession} from './render.mjs';
+import {applyBookmarkMetadata,BOOKMARK_IMAGE,BOOKMARK_ICON} from './bookmark.mjs';
 
 let assets;
 const vertex={status:()=>({provider:'VERTEX_WIF',model:'gemini-3.8-flash',credentialReady:true}),credentialMetadata:()=>({hasKey:false,provider:'VERTEX_WIF',credentialReady:true}),generate:async()=>({candidates:[{content:{parts:[{text:'fixture generated text'}]}}]})};
@@ -26,6 +27,33 @@ test('workspace CRUD is isolated across browsers and rejects client-selected own
   assert.equal((await b.request('/workspace/api/v1/benchmarks/'+created.data.id)).status,404);
   assert.equal((await(await b.request('/workspace/api/v1/benchmarks')).json()).total,0);
   assert.equal((await f.write(a,'/workspace/api/v1/benchmarks','POST',{title:'owner override',workspace_id:(await f.session(b)).workspace.id})).status,400);
+});
+
+test('bookmark HTML and PNGs are public without issuing a session or requiring JavaScript',async t=>{
+  const f=await fixture(t),response=await fetch(f.base+'/?preview=hongthreads-v1',{headers:{'User-Agent':'NotionBot'}});
+  assert.equal(response.status,200);assert.equal(response.headers.get('set-cookie'),null);
+  assert.match(response.headers.get('cache-control'),/^public/);
+  assert.match(response.headers.get('content-security-policy'),/script-src 'sha256-/);
+  const html=await response.text();assert.match(html,/<title>HongThreads<\/title>/);
+  assert.ok(html.includes('property="og:image" content="'+f.base+BOOKMARK_IMAGE+'"'));
+  assert.match(html,/location\.replace\("\/dashboard\/insights"\+location\.search\+location\.hash\)/);
+  assert.doesNotMatch(html,/workflowToken|csrfToken|sessionCookie|cookieValue|fixture-secret/);
+  for(const [path,width,height]of [[BOOKMARK_IMAGE,1200,630],[BOOKMARK_ICON,64,64]]){
+    const image=await fetch(f.base+path);assert.equal(image.status,200);assert.equal(image.headers.get('content-type'),'image/png');assert.equal(image.headers.get('set-cookie'),null);
+    const bytes=Buffer.from(await image.arrayBuffer());assert.equal(bytes.readUInt32BE(16),width);assert.equal(bytes.readUInt32BE(20),height);
+    const head=await fetch(f.base+path,{method:'HEAD'});assert.equal(head.status,200);assert.equal((await head.arrayBuffer()).byteLength,0);assert.equal(Number(head.headers.get('content-length')),bytes.length);
+  }
+  const head=await fetch(f.base+'/',{method:'HEAD'});assert.equal(head.status,200);assert.equal((await head.arrayBuffer()).byteLength,0);
+  assert.equal((await fetch(f.base+BOOKMARK_IMAGE,{method:'POST'})).status,405);
+});
+
+test('bookmark metadata replaces stale preview tags without changing application scripts or body',()=>{
+  const body='<body><h1>Keep this page</h1><script>const text="og:image";</script></body>';
+  const source=Buffer.from('<html><head><title>Page title</title><meta property="og:image" content="https://old.invalid/private.png"><meta name="description" content="old"><meta name="twitter:title" content="old"><link rel="shortcut icon" href="/old.ico"><script>window.fixture="og:image";</script></head>'+body+'</html>');
+  const result=applyBookmarkMetadata(source,'https://hongthreads.example').toString();
+  assert.ok(result.includes(body));assert.ok(result.includes('<title>Page title</title>'));assert.ok(result.includes('<script>window.fixture="og:image";</script>'));
+  assert.equal((result.match(/property="og:image"/g)??[]).length,1);assert.doesNotMatch(result,/old\.invalid|old\.ico|content="old"/);
+  assert.equal(applyBookmarkMetadata(Buffer.from(result),'https://hongthreads.example').toString(),result);
 });
 test('mutations require same Origin and a token bound to the current browser',async t=>{
   const f=await fixture(t),a=f.client(),b=f.client(),as=await f.session(a),bs=await f.session(b);

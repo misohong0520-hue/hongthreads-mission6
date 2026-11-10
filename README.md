@@ -104,6 +104,10 @@ node mission6/start.mjs
 
 브라우저 코드에 서버 키를 넣지 않습니다. 첨부파일은 비공개 버킷에서 관리하며 접근 주소는 필요한 기간만 서명합니다.
 
+## 노션 북마크
+
+노션에서 `/bookmark`에 서비스 주소를 넣으면 HongThreads 제목과 H 로고·이름이 담긴 미리보기 이미지를 읽을 수 있도록 Open Graph 메타데이터를 제공합니다. 대표 주소와 미리보기 PNG는 로그인·쿠키·JavaScript 실행 없이 조회할 수 있습니다. 브라우저로 대표 주소를 열면 인사이트 화면으로 이동합니다.
+
 ## QA 결과
 
 2026-11-11 공개 HTTPS 환경에서 임시 점검용 자료·폴더·파일로 직접 점검했습니다. 점검 후 임시 자료는 삭제했습니다.
@@ -125,7 +129,7 @@ node mission6/start.mjs
 
 CRUD·입력 오류 요청은 /workspace/api/v1 데이터 API로 전송하고, 보관함 화면에서 카드·이미지 표시와 새로고침 후 반영을 확인했습니다. 세부 검사 **14개 통과·실패 0개**, 브라우저 JavaScript 오류 0건, 점검 자료 정리 완료입니다. 상세는 팝업으로 표시하므로 없는 자료 검사는 상세 데이터 API 기준입니다. [QA 체크리스트](QA-CHECKLIST.ko.html)와 [실행 결과 JSON](mission6/qa/2026-11-11.json)에 방법·결과를 기록했습니다.
 
-자동 검사 `npm test`는 **82개 통과**했습니다. 배포 빌드는 [Linux CI](https://github.com/misohong0520-hue/hongthreads-mission6/actions/runs/42853012407)에서 확인했습니다. 공개 13개 화면은 HTTP 200, JavaScript 오류·정적 파일 실패 0건을 확인했습니다. 게시·예약·결제·계정 설정 변경은 이번 CRUD QA 범위에 포함하지 않습니다.
+자동 검사 `npm test`는 북마크 검사를 포함해 **84개 통과**했습니다. 배포 빌드는 [Linux CI](https://github.com/misohong0520-hue/hongthreads-mission6/actions/workflows/mission6.yml)에서 확인했습니다. 공개 13개 화면은 HTTP 200, JavaScript 오류·정적 파일 실패 0건을 확인했습니다. 게시·예약·결제·계정 설정 변경은 이번 CRUD QA 범위에 포함하지 않습니다.
 
 ## 권장 체크포인트
 

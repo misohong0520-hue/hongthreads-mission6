@@ -99,7 +99,9 @@ test('every public original page resolves its styles without an original account
   for(const path of ORIGINAL_PAGES){
     const document=runtime.documents.get(path);
     assert.ok(document,'retained document missing: '+path);
-    const tree=parse(rewriteDocument(document.bytes,{ctx,profile:null,vertex:{}}).toString());
+    const html=rewriteDocument(document.bytes,{ctx,profile:null,vertex:{},publicOrigin:'https://hongthreads.example'}).toString();
+    assert.ok(html.includes('property="og:image" content="https://hongthreads.example/social/hongthreads-v1.png"'));
+    const tree=parse(html);
     const links=[];
     const walk=node=>{if(node.tagName==='link'&&node.attrs?.some(a=>a.name==='rel'&&a.value==='stylesheet'))links.push(node.attrs.find(a=>a.name==='href')?.value);for(const child of node.childNodes??[])walk(child)};
     walk(tree);
