@@ -275,7 +275,6 @@ export class LiveTrendsBridge {
         return this.#failure(401,'session_expired','session-expired');
       }
       if(response.status>=300&&response.status<400){
-        this.clear();
         return this.#failure(502,'upstream_workflow_redirect_rejected','upstream-error');
       }
       const outgoing={'cache-control':'no-store','x-content-type-options':'nosniff','x-rea-body-representation':'live-original-workflow'};

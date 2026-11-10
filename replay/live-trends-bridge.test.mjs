@@ -611,19 +611,42 @@ test('workflow request bounds and unsupported methods cannot perform any upstrea
   assert.equal(calls,1);
 });
 
-test('workflow auth failures and redirects clear credentials without exposing original errors or redirect targets',async()=>{
-  for(const status of [401,302]){
-    let calls=0;
-    const bridge=new LiveTrendsBridge({fetchImpl:async url=>{
-      calls++;
-      return new URL(url).pathname==='/api/trends/google'?google():new Response(SESSION_A,{status,headers:{location:'https://fixture.invalid/'+SESSION_A}});
+test('workflow auth failures clear credentials without exposing original errors or redirect targets',async()=>{
+  let calls=0;
+  const bridge=new LiveTrendsBridge({fetchImpl:async url=>{
+    calls++;
+    return new URL(url).pathname==='/api/trends/google'?google():new Response(SESSION_A,{status:401,headers:{location:'https://fixture.invalid/'+SESSION_A}});
+  }});
+  await configure(bridge);
+  const result=await bridge.forwardOriginalRequest({path:'/api/threads',method:'POST'});
+  assert.equal(result.status,401);assert.equal(bridge.status().configured,false);
+  assert.equal(result.headers.location,undefined);assert.equal(calls,2);noSessionValues(result);
+  assert.equal((await bridge.forwardOriginalRequest({path:'/api/threads',method:'POST'})).status,401);
+  assert.equal(calls,2);
+});
+
+test('workflow redirects fail closed without clearing credentials or cancelling unrelated inflight replies',async()=>{
+  for(const [method,status]of [['GET',302],['POST',307]]){
+    let release,signal,started;
+    const ready=new Promise(resolve=>{started=resolve});
+    const bridge=new LiveTrendsBridge({fetchImpl:async(url,options)=>{
+      assert.equal(options.headers.cookie,'next-auth.session-token='+SESSION_A);
+      const path=new URL(url).pathname;
+      if(path==='/api/trends/google')return google();
+      if(path==='/api/personas'){signal=options.signal;started();return new Promise(resolve=>{release=resolve})}
+      if(path==='/api/threads')return new Response(SESSION_A,{status,headers:{location:'https://fixture.invalid/'+SESSION_A,'set-cookie':'next-auth.session-token='+SESSION_B}});
+      return json({data:[]});
     }});
     await configure(bridge);
-    const result=await bridge.forwardOriginalRequest({path:'/api/threads',method:'POST'});
-    assert.equal(result.status,status===302?502:status);assert.equal(bridge.status().configured,false);
-    assert.equal(result.headers.location,undefined);assert.equal(calls,2);noSessionValues(result);
-    assert.ok((await bridge.forwardOriginalRequest({path:'/api/threads',method:'POST'})).status>=400);
-    assert.equal(calls,2);
+    const pending=bridge.forwardOriginalRequest({path:'/api/personas'});await ready;
+    const result=await bridge.forwardOriginalRequest({path:'/api/threads',method});
+    assert.equal(result.status,502);assert.equal(error(result),'upstream_workflow_redirect_rejected');
+    assert.equal(result.headers.location,undefined);assert.equal(result.headers['set-cookie'],undefined);
+    assert.equal(bridge.status().configured,true);assert.equal(signal.aborted,false);
+    noSessionValues(result);noSessionValues(bridge.status());
+    release(json({personas:[]}));assert.equal((await pending).status,200);
+    assert.equal((await bridge.forwardOriginalRequest({path:'/api/templates/comment'})).status,200);
+    assert.equal(bridge.status().configured,true);
   }
 });
 
