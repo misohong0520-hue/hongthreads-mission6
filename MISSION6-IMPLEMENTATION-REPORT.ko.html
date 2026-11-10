@@ -1,46 +1,160 @@
-<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HongThreads 미션 6 구현 보고서</title>
-<style>body{font:15px/1.8 system-ui,sans-serif;color:#17241c;background:#f4f7f5;max-width:1080px;margin:40px auto;padding:0 20px}main{background:#fff;border:1px solid #dde6df;border-radius:20px;padding:36px}h1{font-size:30px;line-height:1.4}h2{margin-top:35px;font-size:21px}p{margin:12px 0}.status{background:#eaf7ee;border-left:4px solid #00c862;padding:18px}.pending{background:#fff8e8;border-left:4px solid #e3ae35;padding:18px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #dfe7e1;padding:12px;text-align:left;vertical-align:top}th{background:#eff6f1}code{font:12px/1.6 Consolas,monospace;overflow-wrap:anywhere}a{color:#087a3b}.small{font-size:13px;color:#64766a}.table{overflow:auto}li{margin:7px 0}@media(max-width:600px){main{padding:21px}h1{font-size:25px}td,th{padding:9px;font-size:12px}}@media print{body{background:white;margin:0;max-width:none}main{border:0;padding:0}table{break-inside:auto}tr{break-inside:avoid}h2{break-after:avoid}}</style>
-<main><p class="small">2026-11-11 · HongThreads · 배포 주소 hongthreads.hongsik.blog</p>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>미션 6 구현·검증 보고서</title>
+<style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#17241c;font:15px/1.8 system-ui,"맑은 고딕",sans-serif}main{max-width:1120px;margin:32px auto;padding:36px;background:white;border:1px solid #dce7df;border-radius:18px}h1{font-size:30px;line-height:1.4}h2{margin-top:32px;font-size:21px}p{margin:12px 0}a{color:#087a3b}code{font:12px/1.7 Consolas,monospace;overflow-wrap:anywhere}.status{background:#eaf7ee;border-left:4px solid #00c862;padding:18px}.small{font-size:13px;color:#64766a}.table{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}th,td{border:1px solid #dfe7e1;padding:12px;text-align:left;vertical-align:top}th{background:#eff6f1}.pass{font-weight:700;color:#087a3b}li{margin:7px 0}@media(max-width:700px){main{margin:0;padding:20px;border:0;border-radius:0}h1{font-size:25px}}@media print{body{background:white}main{margin:0;padding:0;border:0}table{min-width:0;font-size:11px}tr{break-inside:avoid}h2{break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<p class="small">HongThreads · 미션 6 · 2026-11-11</p>
 <h1>미션 6 구현·검증 보고서</h1>
-<div class="status"><strong>HongThreads의 데이터 저장·파일 처리·AI 연동 및 AWS 배포 환경을 구현했습니다.</strong><br>Threads 콘텐츠 작성, 트렌드 확인, 벤치마킹 자료 관리와 AI 활용을 제공하는 미션 6 웹 프로젝트입니다. 아래에는 구현 내용과 실제 검증 범위를 정리했습니다.</div>
-<h2>프로젝트 구현 범위</h2>
-<p>이 프로젝트에서는 데이터·파일 저장, API 호환·동기화, 세션 관리, AI 연결, 브랜딩 조정, 검증·배포를 구현했습니다. 화면 실행 자산은 DRT의 배포 자산을 기반으로 조정했으며, 계정·상품·게시·예약 등 일부 기능은 외부 서비스 API를 활용합니다.</p>
-<h2>현재 버전과 승인 범위</h2>
-<p>사용자의 2026-11-11 “배포해줘” 승인 후 Linux CI를 통과한 <code>d9127c5</code>를 AWS에 배포했습니다. 현재 실행 경로는 <code>/opt/hongthreads/releases/d9127c5</code>이며 직전 <code>f285502</code>로 복구할 수 있습니다. 최초 버전 c440144 이후의 원본 UI 복구와 표시 변경을 모두 포함합니다.</p>
-<p>공개 주소는 <a href="https://hongthreads.hongsik.blog">https://hongthreads.hongsik.blog</a>이고, 기존 WordPress와 별도 서비스로 동작합니다. 공개 GitHub 저장소는 <a href="https://github.com/misohong0520-hue/hongthreads-mission6">hongthreads-mission6</a>입니다. 구현 소스와 검증 이력을 저장소에 반영했습니다.</p>
-<div class="status"><strong>공개 버전의 WIF 수정 반영 완료:</strong> 앱과 기존 worker의 환경을 분리한 어댑터를 적용했습니다. HTTPS health의 Supabase·Vertex가 정상이며 실제 WIF 생성200·STOP·완료 이력 저장을 확인했습니다. 기존 worker 파일과 WordPress는 유지했습니다.</div>
-<h2>구현한 기능</h2>
-<div class="table"><table><thead><tr><th>영역</th><th>구현 내용</th></tr></thead><tbody>
-<tr><td>원본 화면·Next.js</td><td>별도 관리 화면·공통 폼·추가 사이드바를 제거했습니다. 기존 <code>/dashboard/benchmark</code> 등 13개 화면을 사용합니다. 잘못 추가됐던 <code>/workspace</code> HTML 주소는 각각 원래 화면으로 이동하며 서버 API만 유지합니다.</td></tr>
-<tr><td>Supabase</td><td>서울의 전용 프로젝트, 19개 테이블, 서버 전용 REST/RPC, 개인 workspace, RLS 및 비공개 <code>drt-assets</code> 버킷. 원본 응답은 자격값을 제거한 사본과 원본 ID로 동기화.</td></tr>
-<tr><td>원본 기능</td><td>기존 13개 화면과 원본 API 계약 유지. 실제 상품·계정·게시 업무의 결과는 원본 API를 따름. 원본 자료 수정은 기존 원본 화면으로 연결하며 DB 사본만 수정해 외부 작업이 완료됐다고 표시하지 않음.</td></tr>
-<tr><td>세션·공개 범위</td><td>모든 화면 공개, 개인 기능은 방문자별 원본 세션 연결. HttpOnly 앱 쿠키, DB에는 앱 세션 해시만 저장. 원본 세션은 서버 메모리만 사용. 다른 방문자의 계정으로 공용 연결하지 않음. 재시작 후 원본 재연결 필요.</td></tr>
-<tr><td>첨부</td><td>이미지·영상 파일당 50MB, 최대 9개. 파일 서명 검사, 소유권 확인, 미리보기·다운로드, 버전 충돌, 자료 삭제 또는 첨부 해제 후 미참조 파일 정리. 정리 실패 이력 저장.</td></tr>
-<tr><td>클라우드 확장</td><td>기존 로컬 확장과 별도 ID로 설치하는 <code>extension-cloud</code>와 다운로드 ZIP. 개인 키 발급·검사·회전, 쿠키 없는 일회용 업로드, 서명 미디어 주소, URL 수집 작업·결과 계약, 폴더·링크·목적 분류.</td></tr>
-<tr><td>Vertex WIF</td><td>기존 프로젝트·worker·모델 유지. 생성 결과·입력 메타데이터·상태 저장. 인라인 바이너리와 자격값 제외. 빈 응답·실패 및 동시 요청 처리.</td></tr>
-<tr><td>브랜딩·AWS 준비</td><td>H 로고, 하단 이름·아바타 미표시. 전용 Nginx·systemd·HTTPS·버전별 release 구성. CI는 검사와 Linux artifact 생성만 수행. 배포 검사 실패 시 직전 HongThreads release로 복구하도록 준비.</td></tr>
-</tbody></table></div>
-<h2>검증 결과</h2>
-<p>최종 공개 배포 검증: Linux CI44개 테스트와 Next.js 빌드 통과, HTTPS13개 화면200·JavaScript 오류0·정적 파일 실패0, 모바일 마이페이지 이동·가로 넘침 없음. 실제 CRUD·브라우저 격리·파일 업로드·서명 URL·삭제 후 파일404·Origin 검사와 Secure/HttpOnly/SameSite 쿠키를 확인했습니다. 방문자별 원본 연결과 WIF 실제 응답·완료 이력 저장·다른 방문자404도 통과했습니다. 임시 자료·파일을 삭제하고 테스트 원본 연결을 해제했습니다. 근거: <code>public-deployed.json</code>, <code>public-private-ai.json</code>, <code>deploy-secret-scan.json</code>. <a href="https://github.com/misohong0520-hue/hongthreads-mission6/actions/runs/42847670063">최종 Linux CI</a>.</p>
-<p>2026-11-11: 마이페이지 진입 오류를 수정했습니다. 이전 아카이브 제목 패치가 같은 제목 클래스를 가진 마이페이지 레이아웃에도 대시보드 전용 변수를 추가한 것이 원인이었습니다. 적용 범위를 대시보드로 제한하고 메뉴·제목을 마이페이지관리로 변경했습니다. 실제 캡처 레이아웃 실행 회귀 검사와 관련 검사42개가 통과했으며, 로컬9248·9251에서 메뉴 진입·설정 탭4개·새로고침·모바일 표시 유지와 JavaScript 오류0건을 확인했습니다. 근거: <code>mission6/verification/mypage-restored.json</code>. 배포본 검사에도 회귀 테스트를 추가했으며 공개 릴리스에도 반영했습니다.</p>
-<p>추가 요청에 따라 모든 사용법 버튼, API 연동 말풍선·연결 상태 패널, 멤버십 구독 및 무료 오픈채팅 안내 카드를 공통 스타일로 숨겼습니다. 로컬9248·9251의 13개 페이지를 PC·모바일에서 총52회 검사했고, 사용법 버튼56개가 모두 숨겨졌으며 JavaScript 오류0건입니다. 마이페이지의 일반 계정 입력4개와 기존 연결 버튼은 표시됩니다. 근거: <code>mission6/verification/hidden-ui.json</code>. 표시 변경이며 실제 구독·계정 상태를 바꾸지 않았습니다.</p>
-<p>후속 표시 요청도 적용했습니다. 마이페이지의 연동 방법 보기와 접힌 사용법 보기를 숨기고, H 로고 옆에 HongThreads를 추가했으며 공통 저작권을 © 2026 HongThreads· ALL RIGHTS RESERVED로 교체했습니다. PC·모바일 및 화면 이동 뒤 표시를 확인했고, 상태/프로필 동기화는 유지됩니다. 로그인 전 원본 공통 CSS 누락도 보완했습니다. 원본 스타일은 SHA-256으로 검증하며 원본 캡처와 API는 변경하지 않았습니다. 근거: <code>mission6/verification/branding-ui.json</code>, 관련 테스트44개 통과. 공개 배포에도 반영했습니다.</p>
-<div class="table"><table><thead><tr><th>검사</th><th>결과와 근거</th></tr></thead><tbody>
-<tr><td>자동 검사</td><td>원본 회귀와 세션·저장·확장·WIF·동기화·원본 화면 복귀 검사 <strong>110개 통과</strong>. <code>mission6/verification/remaining-contract-regression.tap</code></td></tr>
-<tr><td>Next.js·화면</td><td>프로덕션 빌드와 TypeScript 검사 통과. 동일 계정의 기존 개발판과 사이드바 메뉴·폭 일치. 모바일 390px 가로 넘침 없음. 추가 메뉴·배너 0개.</td></tr>
-<tr><td>실제 Supabase</td><td>6개 자료 유형 모두 등록 201, 조회·수정·삭제 200, 다른 브라우저 접근 404. <code>all-resources-live.json</code></td></tr>
-<tr><td>원본 화면 CRUD</td><td>기존 수동 등록창에서 본문·파일 저장, 카드 본문·이미지 표시, 새로고침, 작성 기준 수정, 폴더 생성·이름 수정·삭제, 자료 삭제 후 파일 404를 확인했습니다. <code>e2e-original-ui.json</code>. 이전 별도 UI 검증 증거는 과거 기록으로만 유지합니다.</td></tr>
-<tr><td>원본 13개 화면</td><td>현재 복구본 모두 HTTP 200, JavaScript 오류 0, 추가 UI 0개. <code>original-ui-pages.json</code>. 이전 원본 검색 결과 18개·게시글/멘션 전환 증거도 보존했습니다.</td></tr>
-<tr><td>실제 AI</td><td>단일 생성과 3개 동시 생성 모두 Vertex WIF HTTP200·실제 텍스트·STOP. 동시 완료 이력3건 저장 확인. <code>parallel-wif-live.json</code>. 원본 에디터의 3종 병렬 요청을 1개만 허용하던 로컬 제한을 수정했습니다.</td></tr>
-<tr><td>동기화 계약·중복 정리</td><td>query ID의 원고 수정, sessionId의 자동 저장·삭제, templateId 선택, POST 일괄 삭제, 발행/예약·제휴 링크 분류와 서로 다른 링크 보존을 합성 응답으로 검사했습니다. 실제 DB의 이전 편집 세션 사본34건을 원본17개에 맞춰17건으로 정리했습니다. 원본 서버 변경 없음. <code>session-reconcile-live.json</code></td></tr>
-<tr><td>사용법 영상·작은 영상 분석</td><td>원래 사용법 iframe의 YouTube 요청200/CSP 차단 오류0. 작은 합성 MP4는 실제 WIF200·색상 인식·완료 이력 및 인라인 바이너리 제외를 확인했습니다. 전체 아카이브 재생·분석 검증은 아닙니다. <code>tutorial-frame-live.json</code>, <code>video-wif-live.json</code></td></tr>
-<tr><td>실제 확장 업로드 API</td><td>쿠키 없는 업로드 200 → 미디어 읽기 200 → 자료 저장 201 → 삭제 200 → 파일 404. 세션 경합 수정 후 연결 유지 확인. <code>extension-live.json</code></td></tr>
-<tr><td>DB 권한</td><td>적용된 스키마의 Supabase 보안 advisor 경고 없음. 익명·일반 사용자 직접 테이블 접근 차단, 서버 소유권 검사.</td></tr>
-<tr><td>기존 로컬 자료</td><td>기존 9248 서버 유지. 로컬 벤치마킹 확인 당시 폴더 0개·스크랩 0개. 사용자 자료를 이동·삭제하지 않음.</td></tr>
-</tbody></table></div>
-<h2>완료 판정의 범위</h2>
-<p>미션 6의 Supabase CRUD·파일·새로고침 유지 흐름은 로컬과 공개 HTTPS에서 실제 저장소로 확인했습니다. 전체 원본 기능은 원본 서비스와 계정 권한에 계속 의존합니다. 화면 검사 통과를 모든 외부 업무의 성공으로 계산하지 않았습니다.</p>
-<ul><li>실제 Threads 게시·예약·댓글, 구독·결제, 외부 계정 추가·삭제는 실행하지 않았습니다. 지정 테스트 계정과 승인된 내용으로 별도 검증해야 합니다.</li><li>새 확장을 실제 Chrome에 설치해 로그인된 Threads 페이지에서 끝까지 수집하는 흐름은 미검증입니다. 업로드·키·URL 작업 API 계약과 실제 Storage 저장은 검증했습니다.</li><li>쿠팡·토스·브랜드커넥트의 모든 상품 선택→링크 발급→발행 조합과 원본 아카이브에서 선택하는 전체 영상 분석·대용량 재생은 실행하지 않았습니다. 작은 합성 영상의 서버 분석과 사용법 iframe 로드만 해당 범위에서 확인했습니다. 원본 연결 상태와 권한을 그대로 사용합니다.</li><li>원본의 외부 미디어는 출처 URL을 보존합니다. 모든 원본 S3 파일을 Supabase로 일괄 복사한 상태는 아닙니다. 개인 보관함 신규 업로드는 Supabase Storage에 저장합니다.</li><li>원본 성공 후 DB 저장이 실패하면 동기화 대기 이력을 남깁니다. 외부 작업을 자동으로 재실행하지 않으며, 일반 동기화 대기의 자동 재조정·장기 미참조 파일 정리는 추가 운영 과제로 남습니다.</li><li>현재 계정에서 노출되지 않는 WDRB를 일반 기능의 장애로 계산하지 않습니다. 원본 공용 보관함·제휴 공급자의 접근 권한을 새 앱에서 만들어 주지 않습니다.</li><li>현재 수정본의 Linux CI 및 공개 HTTPS 재검증은 위 범위에서 완료했습니다. 전용 GitHub 저장소는 비공개여서 과제 평가자 접근 권한을 별도로 제공해야 합니다.</li></ul>
-<h2>배포 결과와 복구</h2>
-<ol><li>실행 릴리스: d9127c5. 소스·Linux 빌드 artifact와 서버 전송 파일의 SHA-256을 확인했습니다.</li><li>HongThreads 두 서비스와 해당 도메인 경로만 반영했으며 기존 WordPress200 및 WIF worker 해시를 유지했습니다.</li><li>문제 발생 시 current 링크를 직전 f285502로 되돌리고 HongThreads 두 서비스만 재시작합니다. 자료를 삭제해 복구하지 않습니다.</li><li>원본 계정은 각 방문자가 /__live/에서 연결합니다. 소유자의 원본 세션을 공개 공용 계정으로 설정하지 않았습니다.</li></ol>
-<p class="small">비밀값은 이 보고서와 저장소에 포함하지 않습니다. 이 보고서는 교육기관이 Vercel 대신 AWS 제출을 승인했다는 확인서가 아닙니다.</p></main></html>
+<div class="status">
+<strong>HongThreads의 데이터 저장·파일 처리·AI 연결과 AWS 배포 환경을 구현했습니다.</strong>
+<br>이번 보완은 제출 문서 정리와 필수 QA입니다. 실행 서비스와 화면은 변경하지 않았습니다.</div>
+<h2>서비스 소개</h2>
+<p>Threads 콘텐츠 작성, 트렌드 확인, 벤치마킹 자료 관리와 AI 활용을 제공하는 웹 프로젝트입니다. 배포 주소는 <a href="https://hongthreads.hongsik.blog">https://hongthreads.hongsik.blog</a>이며, 소스는 <a href="https://github.com/misohong0520-hue/hongthreads-mission6">공개 GitHub 저장소</a>에 있습니다.</p>
+<h2>핵심 구현</h2>
+<ul>
+<li>Supabase 19개 테이블과 비공개 Storage를 사용하는 자료·첨부 저장.</li>
+<li>입력값·소유권·첨부 참조·수정 버전 검사와 오류 처리.</li>
+<li>벤치마킹 자료 등록·목록·상세 확인·수정·삭제와 화면 반영.</li>
+<li>원고·편집 세션·페르소나·댓글 양식·분석·작업 이력 관리.</li>
+<li>Vertex AI WIF 연결과 생성 결과 저장.</li>
+<li>Nginx HTTPS·systemd·버전별 릴리스·롤백 및 GitHub Actions 검사.</li>
+</ul>
+<h2>QA 결과</h2>
+<p>CRUD·입력 오류 요청은 /workspace/api/v1 데이터 API로 전송하고, 보관함 화면에서 카드·이미지 표시와 새로고침 후 반영을 확인했습니다.</p>
+<p>2026-11-11 공개 HTTPS에서 임시 자료와 파일로 세부 검사 <strong>14개 통과·실패 0개</strong>를 확인했습니다. 브라우저 JavaScript 오류는 0건이며 임시 자료·폴더·파일 정리를 완료했습니다.</p>
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>검사</th>
+<th>직접 점검한 방법</th>
+<th>실제 결과</th>
+<th>판정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>필수 입력값 공백</td>
+<td>필수 제목을 공백으로 제출</td>
+<td>400 · VALIDATION_ERROR · 필드 오류</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>2</td>
+<td>잘못된 URL 형식</td>
+<td>허용하지 않는 URL로 등록</td>
+<td>400 · VALIDATION_ERROR</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>3</td>
+<td>업로드 파일 누락</td>
+<td>파일 없는 업로드 요청</td>
+<td>400 · FILE_REQUIRED</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>4</td>
+<td>지원하지 않는 파일</td>
+<td>텍스트 파일 업로드</td>
+<td>415 · INVALID_MEDIA_TYPE</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>5</td>
+<td>위장 이미지 파일</td>
+<td>PNG 이름에 이미지가 아닌 내용 업로드</td>
+<td>415 · MEDIA_SIGNATURE_MISMATCH</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>6</td>
+<td>파일 없이 등록·목록·상세</td>
+<td>임시 자료 등록 후 목록·상세 API 조회</td>
+<td>201 → 200 → 200 · 첨부 없이 정상 저장</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>7</td>
+<td>이미지 저장·첨부</td>
+<td>이미지 2개 저장 후 자료에 연결</td>
+<td>업로드 201 · 미리보기 읽기 200</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>8</td>
+<td>새로고침 후 유지</td>
+<td>보관함 화면을 새로고침하고 데이터 재조회</td>
+<td>본문·첨부 유지 · 카드 표시</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>9</td>
+<td>화면 미리보기</td>
+<td>저장된 이미지가 화면에 로드되는지 확인</td>
+<td>이미지 2개 표시 · 실제 이미지 디코딩 확인</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>10</td>
+<td>수정 후 화면 반영</td>
+<td>본문 수정 후 보관함 새로고침</td>
+<td>200 · 변경된 카드 표시</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>11</td>
+<td>오래된 버전 저장</td>
+<td>이전 version으로 수정</td>
+<td>409 · VERSION_CONFLICT</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>12</td>
+<td>존재하지 않는 상세 데이터</td>
+<td>없는 ID의 상세 API 조회</td>
+<td>404 · NOT_FOUND</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>13</td>
+<td>첨부 해제·파일 삭제</td>
+<td>첨부 1개 제거 후 파일 재조회</td>
+<td>수정 200 · 제거 파일 404 · 나머지 1개 유지</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>14</td>
+<td>자료 삭제 후 반영</td>
+<td>자료 삭제 후 화면·상세·파일 재조회</td>
+<td>삭제 200 · 카드 제거 · 상세·첨부 파일 404</td>
+<td class="pass">통과</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>없는 자료는 상세 데이터 API에서 404를 확인했습니다. 화면 상세는 팝업입니다. 게시·예약·결제·계정 설정 변경은 이번 검사 범위에 포함하지 않습니다.</p>
+<h2>자동 검사와 공개 화면</h2>
+<p>
+<code>npm test</code> 82개 통과. <a href="https://github.com/misohong0520-hue/hongthreads-mission6/actions/runs/42853012407">Linux CI</a>에서 Next.js 빌드 완료. 공개 13개 화면은 HTTP 200, JavaScript 오류·정적 파일 실패 0건을 확인했습니다. 별도 로그인·비밀번호·쿠키 입력 없이 연결된 화면에 접속할 수 있습니다.</p>
+<h2>문서화 보완</h2>
+<p>README에 서비스 소개, 핵심 기능 명세, 19개 테이블과 공통 필드·관계, 로컬 실행 절차, 환경변수 이름, 배포 URL, QA 결과와 체크포인트를 정리했습니다. 환경변수의 실제 값·세션·비밀 키는 기록하지 않았습니다.</p>
+<h2>체크포인트</h2>
+<ol>
+<li>1/3: 기능 명세·테이블·폴더와 자료·첨부 관계를 코드·SQL과 대조했습니다.</li>
+<li>2/3: 실제 DB의 등록→목록→상세 데이터와 화면 표시를 확인했습니다.</li>
+<li>마감 전: 공개 배포 환경에서 CRUD·파일 업로드·새로고침 유지와 오류 처리를 재점검했습니다.</li>
+</ol>
+<p>
+<a href="README.md">README</a> · <a href="QA-CHECKLIST.ko.html">QA 체크리스트</a> · <a href="mission6/qa/2026-11-11.json">실행 결과 JSON</a>
+</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,114 @@
+{
+  "checkedAt": "2026-11-10T16:38:57.462Z",
+  "target": "https://hongthreads.hongsik.blog",
+  "scope": "Temporary app-owned Supabase records and files; no external account or publishing changes.",
+  "checks": [
+    {
+      "name": "Empty required field",
+      "result": "pass",
+      "status": 400,
+      "errorCode": "VALIDATION_ERROR"
+    },
+    {
+      "name": "Invalid URL format",
+      "result": "pass",
+      "status": 400,
+      "errorCode": "VALIDATION_ERROR"
+    },
+    {
+      "name": "Missing upload file",
+      "result": "pass",
+      "status": 400,
+      "errorCode": "FILE_REQUIRED"
+    },
+    {
+      "name": "Upload fails for unsupported format",
+      "result": "pass",
+      "status": 415,
+      "errorCode": "INVALID_MEDIA_TYPE"
+    },
+    {
+      "name": "Upload rejects forged image bytes",
+      "result": "pass",
+      "status": 415,
+      "errorCode": "MEDIA_SIGNATURE_MISMATCH"
+    },
+    {
+      "name": "Create without a file, then list and detail",
+      "result": "pass",
+      "createStatus": 201,
+      "listStatus": 200,
+      "detailStatus": 200,
+      "noFileAllowed": true
+    },
+    {
+      "name": "Multiple image upload and attachment",
+      "result": "pass",
+      "imageCount": 2,
+      "uploadStatus": 201,
+      "previewReadStatus": 200
+    },
+    {
+      "name": "List display and data persistence after reload",
+      "result": "pass",
+      "listCardVisible": true,
+      "reloadPreserved": true,
+      "apiDetailStatus": 200
+    },
+    {
+      "name": "Image previews are displayed in browser",
+      "result": "pass",
+      "displayedImages": 2,
+      "storedImageCount": 2
+    },
+    {
+      "name": "Update reflected after reload",
+      "result": "pass",
+      "status": 200,
+      "updatedCardVisible": true
+    },
+    {
+      "name": "Stale update is rejected",
+      "result": "pass",
+      "status": 409,
+      "errorCode": "VERSION_CONFLICT"
+    },
+    {
+      "name": "Nonexistent detail",
+      "result": "pass",
+      "status": 404,
+      "errorCode": "NOT_FOUND",
+      "layer": "data API"
+    },
+    {
+      "name": "Delete an attached file",
+      "result": "pass",
+      "updateStatus": 200,
+      "fileAfterDetachStatus": 404,
+      "remainingImages": 1
+    },
+    {
+      "name": "Delete reflected in list and detail",
+      "result": "pass",
+      "deleteStatus": 200,
+      "detailAfterDeleteStatus": 404,
+      "listCardRemoved": true,
+      "attachedFilesRemoved": true
+    }
+  ],
+  "cleanup": {
+    "done": true,
+    "failures": []
+  },
+  "limitations": [
+    "The current benchmark detail is a modal. Missing-record validation is tested through its data API; a standalone detail page is not claimed."
+  ],
+  "browser": {
+    "pageErrors": [],
+    "blockedExternalWrites": []
+  },
+  "summary": {
+    "pass": 14,
+    "fail": 0
+  }
+}

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA 체크리스트</title>
+<style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#17241c;font:15px/1.8 system-ui,"맑은 고딕",sans-serif}main{max-width:1120px;margin:32px auto;padding:36px;background:white;border:1px solid #dce7df;border-radius:18px}h1{font-size:30px;line-height:1.4}h2{margin-top:32px;font-size:21px}p{margin:12px 0}a{color:#087a3b}code{font:12px/1.7 Consolas,monospace;overflow-wrap:anywhere}.status{background:#eaf7ee;border-left:4px solid #00c862;padding:18px}.small{font-size:13px;color:#64766a}.table{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}th,td{border:1px solid #dfe7e1;padding:12px;text-align:left;vertical-align:top}th{background:#eff6f1}.pass{font-weight:700;color:#087a3b}li{margin:7px 0}@media(max-width:700px){main{margin:0;padding:20px;border:0;border-radius:0}h1{font-size:25px}}@media print{body{background:white}main{margin:0;padding:0;border:0}table{min-width:0;font-size:11px}tr{break-inside:avoid}h2{break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<p class="small">HongThreads · 미션 6 · 2026-11-11</p>
+<h1>QA 체크리스트</h1>
+<div class="status">
+<strong>배포 환경의 세부 검사 14개 통과 · 실패 0개</strong>
+<br>브라우저 JavaScript 오류 0건. 임시 점검 자료·폴더·파일 삭제 완료.</div>
+<h2>점검 환경과 범위</h2>
+<p>대상: <a href="https://hongthreads.hongsik.blog">hongthreads.hongsik.blog</a> · 실제 Supabase Database·Storage · Chromium 1440×1000. 실행 시각: 2026. 11. 11. 1시 38분 57초 (한국 시간).</p>
+<p>임시 자료를 만들고 등록·목록·상세 데이터·수정·삭제와 화면 반영을 직접 확인했습니다. CRUD·입력 오류 요청은 /workspace/api/v1 데이터 API로 전송하고, 보관함 화면에서 카드·이미지 표시와 새로고침 후 반영을 확인했습니다. 상세는 팝업으로 표시하므로 없는 자료는 상세 데이터 API 기준으로 검사했습니다. 게시·예약·결제·계정 설정 변경은 이 QA에 포함하지 않습니다.</p>
+<h2>필수 시나리오와 실행 결과</h2>
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>번호</th>
+<th>검사</th>
+<th>직접 점검한 방법</th>
+<th>실제 결과</th>
+<th>판정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>필수 입력값 공백</td>
+<td>필수 제목을 공백으로 제출</td>
+<td>400 · VALIDATION_ERROR · 필드 오류</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>2</td>
+<td>잘못된 URL 형식</td>
+<td>허용하지 않는 URL로 등록</td>
+<td>400 · VALIDATION_ERROR</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>3</td>
+<td>업로드 파일 누락</td>
+<td>파일 없는 업로드 요청</td>
+<td>400 · FILE_REQUIRED</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>4</td>
+<td>지원하지 않는 파일</td>
+<td>텍스트 파일 업로드</td>
+<td>415 · INVALID_MEDIA_TYPE</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>5</td>
+<td>위장 이미지 파일</td>
+<td>PNG 이름에 이미지가 아닌 내용 업로드</td>
+<td>415 · MEDIA_SIGNATURE_MISMATCH</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>6</td>
+<td>파일 없이 등록·목록·상세</td>
+<td>임시 자료 등록 후 목록·상세 API 조회</td>
+<td>201 → 200 → 200 · 첨부 없이 정상 저장</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>7</td>
+<td>이미지 저장·첨부</td>
+<td>이미지 2개 저장 후 자료에 연결</td>
+<td>업로드 201 · 미리보기 읽기 200</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>8</td>
+<td>새로고침 후 유지</td>
+<td>보관함 화면을 새로고침하고 데이터 재조회</td>
+<td>본문·첨부 유지 · 카드 표시</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>9</td>
+<td>화면 미리보기</td>
+<td>저장된 이미지가 화면에 로드되는지 확인</td>
+<td>이미지 2개 표시 · 실제 이미지 디코딩 확인</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>10</td>
+<td>수정 후 화면 반영</td>
+<td>본문 수정 후 보관함 새로고침</td>
+<td>200 · 변경된 카드 표시</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>11</td>
+<td>오래된 버전 저장</td>
+<td>이전 version으로 수정</td>
+<td>409 · VERSION_CONFLICT</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>12</td>
+<td>존재하지 않는 상세 데이터</td>
+<td>없는 ID의 상세 API 조회</td>
+<td>404 · NOT_FOUND</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>13</td>
+<td>첨부 해제·파일 삭제</td>
+<td>첨부 1개 제거 후 파일 재조회</td>
+<td>수정 200 · 제거 파일 404 · 나머지 1개 유지</td>
+<td class="pass">통과</td>
+</tr>
+<tr>
+<td>14</td>
+<td>자료 삭제 후 반영</td>
+<td>자료 삭제 후 화면·상세·파일 재조회</td>
+<td>삭제 200 · 카드 제거 · 상세·첨부 파일 404</td>
+<td class="pass">통과</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>자동 검사</h2>
+<p>
+<code>npm test</code> 실행 결과 82개 통과·실패 0개. <a href="https://github.com/misohong0520-hue/hongthreads-mission6/actions/runs/42853012407">Linux CI</a>에서도 자동 검사와 Next.js 빌드를 확인했습니다. 공개 13개 화면은 HTTP 200·JavaScript 오류 0건·정적 파일 실패 0건을 확인했습니다.</p>
+<h2>수동 재점검 순서</h2>
+<ol>
+<li>벤치마킹 보관함에서 임시 자료를 첨부 없이 등록하고 목록·상세 내용을 확인합니다.</li>
+<li>새로고침 후 내용이 유지되는지 확인하고, 본문을 수정한 뒤 다시 확인합니다.</li>
+<li>이미지를 첨부해 미리보기를 확인합니다. 파일 해제와 자료 삭제 후 화면·파일 조회 결과를 확인합니다.</li>
+<li>빈 값·잘못된 URL·지원하지 않는 파일을 제출해 오류 처리를 확인합니다.</li>
+<li>점검 자료·폴더·파일을 삭제하고 정리가 끝났는지 확인합니다.</li>
+</ol>
+<h2>문서·비밀정보 점검</h2>
+<ul>
+<li>README에 소개·기능 명세·테이블 구조·실행 방법·환경변수 이름·배포 URL·QA 결과를 정리했습니다.</li>
+<li>문서와 결과 JSON에는 환경변수의 실제 값·쿠키·세션·비밀 키를 기록하지 않습니다.</li>
+<li>자료별 임시 식별자와 개인 계정 정보는 공개 결과에 포함하지 않습니다.</li>
+</ul>
+<p>
+<a href="README.md">README</a> · <a href="MISSION6-IMPLEMENTATION-REPORT.ko.html">구현 보고서</a> · <a href="mission6/qa/2026-11-11.json">실행 결과 JSON</a>
+</p>
+</main>
+</body>
+</html>
