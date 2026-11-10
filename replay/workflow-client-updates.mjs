@@ -4,6 +4,11 @@ import {createHash} from 'node:crypto';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const digest=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
 const invalid=()=>new Error('Client update verification failed.');
+// Lazy chunks witnessed in the retained client's public runtime. These exact
+// source bytes are additions only; they must never carry development patches.
+const supplementalAssets=new Map([
+  ['/_next/static/chunks/2897.1b32fc00e21c9a61.js','b422fb80d58e05d28162c2bdf1eecd2386667f4eb7e69f2956361b60d6fb2cd7']
+]);
 /** Load only explicitly captured and source-bound editor updates; never fetch or patch unknown code on demand. */
 export async function loadClientUpdates(root=join(import.meta.dirname,'client-updates')){
   let pointerBytes;
@@ -34,7 +39,11 @@ async function loadRelease(root,pointer){
   };
   const paths=new Set(),records=[];
   for(const record of overlay.records){
-    if(!/^\/_next\/static\/chunks\/(?:app\/(?:write|multi-write|smart-multi-write|mypage|dashboard\/(?:personas|threads-manage)|onboarding\/(?:coupang|toss))\/page|app\/onboarding\/layout|3838|5281|9465|webpack)-[a-f0-9]+\.js$/.test(record.path??'')||paths.has(record.path)||!/(?:java|ecma)script/.test(record.media_type??''))throw invalid();
+    const supplemental=supplementalAssets.get(record.path);
+    const supplementalAllowed=supplemental&&pointer.release==='2026-11-11-assets'&&
+      source.schema==='rea-supplemental-client-assets-v1'&&source.origin==='https://drt.agczero.com'&&
+      record.source_sha256===supplemental&&record.development_sha256===supplemental;
+    if((!/^\/_next\/static\/chunks\/(?:app\/(?:write|multi-write|smart-multi-write|mypage|dashboard\/(?:personas|threads-manage)|onboarding\/(?:coupang|toss))\/page|app\/onboarding\/layout|3838|5281|9465|webpack)-[a-f0-9]+\.js$/.test(record.path??'')&&!supplementalAllowed)||paths.has(record.path)||!/(?:java|ecma)script/.test(record.media_type??''))throw invalid();
     paths.add(record.path);
     const original=source.records.find(item=>item.path===record.path&&item.status===200&&item.object_sha256===record.source_sha256);
     if(!original)throw invalid();

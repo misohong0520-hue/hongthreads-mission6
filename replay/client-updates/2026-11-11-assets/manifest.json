@@ -1,0 +1,14 @@
+{
+  "schema": "rea-supplemental-client-assets-v1",
+  "origin": "https://drt.agczero.com",
+  "captured_at": "2026-11-10T15:44:28.055Z",
+  "records": [
+    {
+      "path": "/_next/static/chunks/2897.1b32fc00e21c9a61.js",
+      "status": 200,
+      "media_type": "application/javascript; charset=utf-8",
+      "object_sha256": "b422fb80d58e05d28162c2bdf1eecd2386667f4eb7e69f2956361b60d6fb2cd7",
+      "file": "objects/b422fb80d58e05d28162c2bdf1eecd2386667f4eb7e69f2956361b60d6fb2cd7"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node mission6/server.mjs",
-    "test": "node --test development/patch-server-markup.test.mjs mission6/server.test.mjs mission6/mirror.test.mjs mission6/runtime/vertex-worker.test.mjs"
+    "test": "node --test development/patch-server-markup.test.mjs replay/workflow-client-updates.test.mjs mission6/server.test.mjs mission6/mirror.test.mjs mission6/runtime/vertex-worker.test.mjs"
   },
   "dependencies": {
     "parse5": "8.1.0"

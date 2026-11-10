@@ -30,6 +30,12 @@
       "release": "2026-11-10",
       "source_manifest_sha256": "1e12a910138ec8661b015a4f8b21605230573302dc3ede53762ba3cfcdec83a8",
       "development_manifest_sha256": "d9230cbbea8ae2c6d9f950cd8c185bb26d6944c0243965dfdba71c9cebcaa826"
+    },
+    {
+      "schema": "rea-client-update-pointer-v1",
+      "release": "2026-11-11-assets",
+      "source_manifest_sha256": "d3d7ac487a5927ec7afb1d20e67aa2a51d4874f4b1929d6c0bb19129322a55a2",
+      "development_manifest_sha256": "69a85d89e570029d702102860b3c90eda152d49b433d30e64c901e9beb8c8c6a"
     }
   ]
 }

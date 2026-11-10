@@ -1,0 +1,14 @@
+{
+  "schema": "rea-client-update-overlay-v1",
+  "source_manifest_sha256": "d3d7ac487a5927ec7afb1d20e67aa2a51d4874f4b1929d6c0bb19129322a55a2",
+  "records": [
+    {
+      "path": "/_next/static/chunks/2897.1b32fc00e21c9a61.js",
+      "media_type": "application/javascript; charset=utf-8",
+      "source_sha256": "b422fb80d58e05d28162c2bdf1eecd2386667f4eb7e69f2956361b60d6fb2cd7",
+      "development_sha256": "b422fb80d58e05d28162c2bdf1eecd2386667f4eb7e69f2956361b60d6fb2cd7",
+      "file": "objects/b422fb80d58e05d28162c2bdf1eecd2386667f4eb7e69f2956361b60d6fb2cd7",
+      "patches": []
+    }
+  ]
+}
