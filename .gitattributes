@@ -1,0 +1,7 @@
+* text=auto eol=lf
+replay/**/objects/* -text
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.webp -text
+*.ttf -text

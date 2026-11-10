@@ -47,9 +47,9 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
   const vertexFacade={status:()=>({...vertex.status(),credentialReady:vertex.status().credentialReady&&current().bridge.status().configured}),credentialMetadata:()=>({...vertex.credentialMetadata(),credentialReady:vertex.status().credentialReady&&current().bridge.status().configured}),generate:async payload=>{
     const ctx=current();if(!ctx.bridge.status().configured)throw new DataError('ORIGINAL_CONNECTION_REQUIRED',401);
     if(aiOwners.has(ctx.workspace.id)||aiActive>=2)throw new DataError('AI_BUSY',429);aiOwners.add(ctx.workspace.id);aiActive++;
-    const job=await repository.create('generations',ctx.workspace.id,{title:'AI 원고 생성',status:'running',metadata:{provider:'VERTEX_WIF',model:vertex.status().model}});
-    try{const result=await vertex.generate(payload);const text=(result.candidates??[]).flatMap(c=>c.content?.parts??[]).filter(p=>!p.thought).map(p=>p.text??'').join('');await repository.update('generations',ctx.workspace.id,job.id,{content:text.slice(0,50000),status:'completed',metadata:{...job.metadata,completed_at:new Date().toISOString()}});return result}
-    catch(error){await repository.update('generations',ctx.workspace.id,job.id,{status:'failed',metadata:{...job.metadata,error:error.code??'VERTEX_REQUEST'}}).catch(()=>{});throw error}
+    let job;
+    try{job=await repository.create('generations',ctx.workspace.id,{title:'AI 원고 생성',status:'running',metadata:{provider:'VERTEX_WIF',model:vertex.status().model}});const result=await vertex.generate(payload);const text=(result.candidates??[]).flatMap(c=>c.content?.parts??[]).filter(p=>!p.thought).map(p=>p.text??'').join('');await repository.update('generations',ctx.workspace.id,job.id,{content:text.slice(0,50000),status:'completed',metadata:{...job.metadata,completed_at:new Date().toISOString()}});return result}
+    catch(error){if(job)await repository.update('generations',ctx.workspace.id,job.id,{status:'failed',metadata:{...job.metadata,error:error.code??'VERTEX_REQUEST'}}).catch(()=>{});throw error}
     finally{aiActive--;aiOwners.delete(ctx.workspace.id)}
   }};
   const csp="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.amazonaws.com https://cdn.agczero.com https://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";

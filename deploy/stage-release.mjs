@@ -48,5 +48,6 @@ await save('replay/client-updates/active.json',JSON.stringify(pointer,null,2)+'\
 const fonts=JSON.parse(await readFile(join(root,'replay/font-assets/manifest.json')));await copy('replay/font-assets/manifest.json');for(const font of fonts.records)await copy('replay/font-assets/'+font.file);
 await save('package.json',JSON.stringify({name:'hongthreads-runtime',version:'1.0.0',type:'module',private:true,scripts:{start:'node mission6/server.mjs',test:'node --test mission6/server.test.mjs mission6/runtime/vertex-worker.test.mjs'},dependencies:{parse5:'8.1.0'}},null,2)+'\n');
 await save('.gitignore','node_modules/\nweb/node_modules/\nweb/.next/\n.env\n.env.*\n!.env.example\nmission6/runtime-data/\nmission6/verification/\n*.log\n');
+await copy('.gitattributes');
 await save('release.json',JSON.stringify({name:'HongThreads',domain:'hongthreads.hongsik.blog',createdAt:new Date().toISOString(),staticRecords:records.length,originalApiBodiesIncluded:false,originalSessionsIncluded:false,documentsSanitized:true,files:copied.size},null,2)+'\n');
 console.log(JSON.stringify({destination,files:copied.size,staticRecords:records.length,personalApiResponsesIncluded:false,documentsSanitized:true}));

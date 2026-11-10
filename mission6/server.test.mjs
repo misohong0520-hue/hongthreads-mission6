@@ -63,3 +63,8 @@ test('Flight replacement handles nested braces, strings and null sessions withou
   const source='1:{"session":{"user":{"name":"name with } bracket","nested":{"x":1}}},"keep":{"valid":true}}';
   const result=replaceFlightSession(source,{user:{id:'guest'}});assert.equal(result,'1:{"session":{"user":{"id":"guest"}},"keep":{"valid":true}}');assert.equal(replaceFlightSession('"session":null',{user:null}),'"session":{"user":null}');
 });
+test('a database failure before AI generation releases the viewer concurrency slot',async t=>{
+  const f=await fixture(t),a=f.client();await f.session(a);await f.write(a,'/workspace/api/connection','POST',{cookieValue:'fixture-a'});
+  const original=f.repository.create;let rejectOnce=true;f.repository.create=async(resource,...args)=>{if(resource==='generations'&&rejectOnce){rejectOnce=false;throw Object.assign(new Error('fixture database outage'),{status:503,code:'SUPABASE_UNAVAILABLE'})}return original(resource,...args)};
+  const body={contents:[{parts:[{text:'fixture'}]}]};assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,503);assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,200);
+});
