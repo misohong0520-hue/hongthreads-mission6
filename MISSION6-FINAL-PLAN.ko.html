@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>미션 6 최종 구현 계획서 — H DRT 개발판</title>
+<title>미션 6 최종 구현 계획서 — HongThreads</title>
 <style>
 :root{color-scheme:light;--green:#00c85a;--ink:#18251e;--line:#dce7df}*{box-sizing:border-box}body{margin:0;background:#f3f7f4;color:var(--ink);font:16px/1.75 system-ui,"맑은 고딕",sans-serif}main{max-width:1120px;margin:36px auto;padding:44px;background:#fff;border:1px solid var(--line);border-radius:20px}header{border-bottom:2px solid var(--ink);padding-bottom:25px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:15px}.brand img{width:68px;height:68px}h1{font-size:30px;line-height:1.4;margin:4px 0 12px}h2{font-size:23px;margin:36px 0 15px;padding-top:10px;border-top:1px solid var(--line)}h3{font-size:18px;margin:24px 0 9px}p{margin:9px 0 14px}.meta{color:#5c6b62;font-size:14px}.lead{font-size:18px}.tag{display:inline-block;padding:3px 10px;background:#e4f8ec;border-radius:20px;font-size:13px;color:#126439}.note{padding:17px 20px;background:#eff8f2;border-left:4px solid var(--green);border-radius:7px;margin:18px 0}.pending{background:#fff7e7;border-left-color:#ce9b35}.table{overflow-x:auto}table{width:100%;border-collapse:collapse;margin:12px 0 20px;min-width:660px}th,td{padding:12px 14px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#f0f6f2;font-weight:700}td:first-child{font-weight:600}ul,ol{padding-left:24px}li{margin:7px 0}code{font-family:ui-monospace,Consolas,monospace;font-size:.88em;background:#eef2ef;border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}a{color:#176c44;text-underline-offset:3px}.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:22px;background:#f4f8f5;border-radius:12px}.flow b{border:1px solid #bdd7c5;background:white;padding:12px 16px;border-radius:9px}.check{color:#176c44;font-weight:700}.small{font-size:14px}.toc{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}footer{border-top:1px solid var(--line);padding-top:20px;margin-top:36px;font-size:14px;color:#58665d}@media(max-width:720px){main{margin:0;padding:22px;border:0;border-radius:0}h1{font-size:25px}h2{font-size:21px}.brand img{width:54px;height:54px}.flow{justify-content:flex-start}}@media print{body{background:white;font-size:11pt}main{margin:0;padding:0;border:0;max-width:none}.toc{display:none}h2,h3{break-after:avoid}tr,.note,.flow{break-inside:avoid}a{color:inherit}table{min-width:0}th,td{padding:8px}code{background:none}}
 th:first-child,td:first-child{min-width:132px;width:18%}
@@ -11,10 +11,11 @@ th:first-child,td:first-child{min-width:132px;width:18%}
 </head>
 <body><main>
 <header>
-<div class="brand"><img src="development/branding/h-logo.png" alt="H 로고"><div><span class="tag">최종 구현 계획 · 2026-11-10</span><h1>미션 6 — H DRT 개발판</h1></div></div>
-<p class="lead">원본 DRT의 화면·메뉴·폼·팝업·사용 흐름을 유지한다. Supabase 저장·파일 처리와 Vertex WIF는 기존 화면 뒤에서 연결하고, 검증 후 승인받아 AWS에 배포한다.</p>
+<div class="brand"><img src="development/branding/h-logo.png" alt="H 로고"><div><span class="tag">최종 구현 계획 · 2026-11-10</span><h1>미션 6 — HongThreads</h1></div></div>
+<p class="lead">Threads 콘텐츠 작성, 트렌드 확인, 벤치마킹 자료 관리와 AI 활용을 한곳에서 제공하는 웹 프로젝트를 구현한다. Next.js 기반 서버 구성, Supabase 데이터·파일 저장, Vertex AI WIF 연동과 AWS 배포 환경을 구축한다.</p>
 <p class="meta">대상: 현재 <code>drt-agczero-insights-local</code> 개발판. 실제 진행·검증 상태는 <a href="MISSION6-IMPLEMENTATION-REPORT.ko.html">구현 보고서</a>에서 확인한다. 2026-11-11 사용자 승인 후 최신 수정본 d9127c5를 AWS에 배포하고 공개 HTTPS QA를 완료했다.</p>
 </header>
+<div class="note"><strong>프로젝트 구현 범위:</strong> 데이터·파일 저장, API 호환·동기화, 세션 관리, AI 연결, 브랜딩 조정, 검증·배포를 구현한다. 화면 실행 자산은 DRT의 배포 자산을 기반으로 조정하며, 계정·상품·게시·예약 등 일부 기능은 외부 서비스 API를 활용한다.</div>
 <nav class="toc"><a href="#decisions">확정 사항</a><a href="#architecture">구조</a><a href="#data">데이터와 기능</a><a href="#crud">CRUD·파일</a><a href="#access">공개·세션</a><a href="#delivery">구현·배포</a><a href="#qa">검증·제출</a></nav>
 
 <section id="decisions"><h2>1. 확정 사항과 현재 기준선</h2>
