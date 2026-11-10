@@ -11,10 +11,10 @@ import {loadRuntimeAssets,sanitizeDocument,replaceFlightSession} from './render.
 let assets;
 const vertex={status:()=>({provider:'VERTEX_WIF',model:'gemini-3.8-flash',credentialReady:true}),credentialMetadata:()=>({hasKey:false,provider:'VERTEX_WIF',credentialReady:true}),generate:async()=>({candidates:[{content:{parts:[{text:'fixture generated text'}]}}]})};
 const bridgeFactory=()=>{let identity=null;return{status:()=>({configured:Boolean(identity),state:identity?'connected':'awaiting-session'}),match:()=>false,clear:()=>{identity=null},configure:async value=>{if(!['fixture-a','fixture-b'].includes(value.cookieValue))return{status:401,body:{error:'INVALID_FIXTURE'}};identity=value.cookieValue;return{status:200,body:{}}},readOriginalResource:async()=>({status:200,headers:{'content-type':'application/json'},body:Buffer.from(JSON.stringify({user:{id:identity,name:identity,soId:identity==='fixture-a'?1:2,authId:identity},expires:'2030-01-01T00:00:00Z'}))}),forwardOriginalRequest:async()=>({status:200,headers:{'content-type':'application/json'},body:Buffer.from('{"data":[]}')})}};
-async function fixture(t){
+async function fixture(t,{vertexImpl=vertex}={}){
   const directory=await mkdtemp(join(tmpdir(),'hongthreads-test-'));const repository=await createRepository({backend:'local',directory});
   const reservation=createServer();await new Promise(resolve=>reservation.listen(0,'127.0.0.1',resolve));const port=reservation.address().port;await new Promise(resolve=>reservation.close(resolve));const base='http://127.0.0.1:'+port;
-  assets??=await loadRuntimeAssets();const app=await createMissionServer({repository,publicOrigin:base,secret:'fixture-secret-with-at-least-thirty-two-characters',vertex,bridgeFactory,assetRuntime:assets});await new Promise(resolve=>app.server.listen(port,'127.0.0.1',resolve));
+  assets??=await loadRuntimeAssets();const app=await createMissionServer({repository,publicOrigin:base,secret:'fixture-secret-with-at-least-thirty-two-characters',vertex:vertexImpl,bridgeFactory,assetRuntime:assets});await new Promise(resolve=>app.server.listen(port,'127.0.0.1',resolve));
   t.after(async()=>{await app.close();await rm(directory,{recursive:true,force:true})});
   const client=()=>{let cookie='';return{async request(path,{method='GET',body,headers={}}={}){const response=await fetch(base+path,{method,headers:{cookie,...headers,...(body?{'content-type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});const set=response.headers.get('set-cookie');if(set)cookie=set.split(';')[0];return response},get cookie(){return cookie}}};
   const session=async c=>c.request('/workspace/api/session').then(r=>r.json());const write=async(c,path,method,body)=>{const s=await session(c);return c.request(path,{method,body,headers:{Origin:base,'X-CSRF-Token':s.csrfToken}})};
@@ -67,6 +67,18 @@ test('a database failure before AI generation releases the viewer concurrency sl
   const f=await fixture(t),a=f.client();await f.session(a);await f.write(a,'/workspace/api/connection','POST',{cookieValue:'fixture-a'});
   const original=f.repository.create;let rejectOnce=true;f.repository.create=async(resource,...args)=>{if(resource==='generations'&&rejectOnce){rejectOnce=false;throw Object.assign(new Error('fixture database outage'),{status:503,code:'SUPABASE_UNAVAILABLE'})}return original(resource,...args)};
   const body={contents:[{parts:[{text:'fixture'}]}]};assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,503);assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,200);
+});
+
+test('the original three parallel generation variants all complete for one connected account',async t=>{
+  let release,firstStarted,threeStarted,started=0;
+  const hold=new Promise(resolve=>{release=resolve}),firstReady=new Promise(resolve=>{firstStarted=resolve}),threeReady=new Promise(resolve=>{threeStarted=resolve});
+  const provider={...vertex,generate:async()=>{started++;if(started===1)firstStarted();if(started===3)threeStarted();await hold;return{candidates:[{content:{parts:[{text:'variant '+started}]}}]}}};
+  const f=await fixture(t,{vertexImpl:provider}),a=f.client();await f.session(a);await f.write(a,'/workspace/api/connection','POST',{cookieValue:'fixture-a'});
+  const body={contents:[{parts:[{text:'original variant'}]}]};const first=f.write(a,'/__vertex/generate','POST',body);await firstReady;
+  const second=f.write(a,'/__vertex/generate','POST',body),third=f.write(a,'/__vertex/generate','POST',body);
+  try{await Promise.race([threeReady,Promise.all([second,third])]);assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,429)}finally{release()}
+  const responses=await Promise.all([first,second,third]);assert.deepEqual(responses.map(r=>r.status),[200,200,200]);
+  assert.equal(started,3);const records=await f.repository.list('generations',(await f.session(a)).workspace.id);assert.equal(records.data.filter(r=>r.status==='completed').length,3);
 });
 
 test('extension upload tickets work without cookies, are single use and produce durable owned media',async t=>{

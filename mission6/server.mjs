@@ -23,7 +23,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
   const origin=new URL(publicOrigin);if(!['http:','https:'].includes(origin.protocol)||origin.pathname!=='/')throw new Error('PUBLIC_ORIGIN invalid');
   const runtime=assetRuntime??await loadRuntimeAssets();
   const storage=new AsyncLocalStorage(),sessions=createSessionManager({repository,secret,publicOrigin,bridgeFactory}),mirror=createMirror(repository),internalNonce=randomBytes(32).toString('hex');
-  const pending=new Set();let aiActive=0;const aiOwners=new Set();
+  const pending=new Set();let aiActive=0;const aiOwners=new Map();
   const current=()=>{const context=storage.getStore();if(!context)throw new Error('Request context missing');return context};
   const event=async value=>{if(!logDirectory)return;await mkdir(logDirectory,{recursive:true});await appendFile(join(logDirectory,'events.jsonl'),JSON.stringify({at:new Date().toISOString(),method:value.method,path:value.pathname,status:value.status,code:value.code})+'\n')};
   const background=fn=>{const promise=Promise.resolve().then(fn).catch(()=>{});pending.add(promise);promise.finally(()=>pending.delete(promise))};
@@ -46,13 +46,16 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
   };
   const vertexFacade={status:()=>({...vertex.status(),credentialReady:vertex.status().credentialReady&&current().bridge.status().configured}),credentialMetadata:()=>({...vertex.credentialMetadata(),credentialReady:vertex.status().credentialReady&&current().bridge.status().configured}),generate:async payload=>{
     const ctx=current();if(!ctx.bridge.status().configured)throw new DataError('ORIGINAL_CONNECTION_REQUIRED',401);
-    if(aiOwners.has(ctx.workspace.id)||aiActive>=2)throw new DataError('AI_BUSY',429);aiOwners.add(ctx.workspace.id);aiActive++;
+    // The original editor requests its three variants in parallel. Keep that
+    // batch intact while bounding total worker processes on this shared host.
+    const ownerActive=aiOwners.get(ctx.workspace.id)??0;
+    if(ownerActive>=3||aiActive>=3)throw new DataError('AI_BUSY',429);aiOwners.set(ctx.workspace.id,ownerActive+1);aiActive++;
     let job;
     try{let input=clean(payload);if(Buffer.byteLength(JSON.stringify(input))>800000)input={largeInput:true};job=await repository.create('generations',ctx.workspace.id,{title:'AI 원고 생성',status:'running',metadata:{provider:'VERTEX_WIF',model:vertex.status().model,input}});const result=await vertex.generate(payload);const parts=(result.candidates??[]).flatMap(c=>c.content?.parts??[]).filter(p=>!p.thought),text=parts.map(p=>p.text??'').join('');await repository.update('generations',ctx.workspace.id,job.id,{content:text.slice(0,50000),status:text||parts.some(p=>p.functionCall)?'completed':'empty',metadata:{...job.metadata,completed_at:new Date().toISOString(),finish_reason:result.candidates?.[0]?.finishReason??null}});return result}
     catch(error){if(job)await repository.update('generations',ctx.workspace.id,job.id,{status:'failed',metadata:{...job.metadata,error:error.code??'VERTEX_REQUEST'}}).catch(()=>{});throw error}
-    finally{aiActive--;aiOwners.delete(ctx.workspace.id)}
+    finally{aiActive--;const remaining=(aiOwners.get(ctx.workspace.id)??1)-1;if(remaining)aiOwners.set(ctx.workspace.id,remaining);else aiOwners.delete(ctx.workspace.id)}
   }};
-  const csp="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.amazonaws.com https://cdn.agczero.com https://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
+  const csp="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.amazonaws.com https://cdn.agczero.com https://*.supabase.co; frame-src https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
   const workflows=await createWorkflowRoutes({bridge,vertex:vertexFacade,nonce:internalNonce,csp,
     rewriteDocument:bytes=>{const ctx=current();return rewriteDocument(bytes,{ctx,profile:ctx.originalSession??sessions.guestProfile(ctx),vertex:vertexFacade.status()})},rewriteCss:b=>b,patchMarkup:patchDevelopmentMarkup,recordEvent:event});
   const publicAsset=async(wid,id)=>{const row=await repository.get('assets',wid,id);return{id:row.id,name:row.title,mime_type:row.metadata.mime_type,size:row.metadata.size,status:row.status,url:await repository.getAssetUrl(wid,id)}};
