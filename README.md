@@ -1,6 +1,6 @@
 # HongThreads — 미션 6
 
-현재 DRT 화면과 원본 서비스 연결을 유지하면서 Next.js App Router, Supabase Database·Storage, 사용자별 연결을 추가한 웹 서비스입니다. 공개 주소는 **https://hongthreads.hongsik.blog**입니다. 사용자 지시에 따라 **추가 배포는 승인 후에만 진행**합니다. 현재 공개된 최초 버전과 로컬 수정본은 다르며, 실제 상태와 제한은 [구현 보고서](MISSION6-IMPLEMENTATION-REPORT.ko.html)를 따릅니다.
+현재 DRT 화면과 원본 서비스 연결을 유지하면서 Next.js App Router, Supabase Database·Storage, 사용자별 연결을 추가한 웹 서비스입니다. 공개 주소는 **https://hongthreads.hongsik.blog**입니다. **2026-11-11 사용자 승인 후 릴리스 `d9127c5`를 AWS에 배포했습니다.** 실제 검증 범위와 제한은 [구현 보고서](MISSION6-IMPLEMENTATION-REPORT.ko.html)를 따릅니다. 원본 계정은 [계정 연결](https://hongthreads.hongsik.blog/__live/)에서 방문자마다 연결합니다.
 
 ## 기능과 데이터
 
@@ -17,7 +17,7 @@
 
 마이페이지 메뉴·제목은 `마이페이지관리`로 표시합니다. 아카이브 제목의 경로 변수 패치가 마이페이지에도 들어가던 렌더링 오류는 수정했습니다. 실제 캡처 레이아웃을 실행하는 회귀 검사를 배포본 테스트에 포함했습니다. 로컬9248·9251에서 메뉴 진입·새로고침·4개 설정 탭·모바일 표시가 유지되고 JavaScript 오류가 없는 것을 확인했습니다. 근거: `mission6/verification/mypage-restored.json`, `mypage-regression.tap`(42개 통과).
 
-사이드바 스마트 멀티에디터의 NEW 배지와 수익 인증 라운지 메뉴를 숨기고, 아카이브 메뉴·페이지 제목을 `Threads Archive`로 표시합니다. 스마트 에디터 버튼과 `/dashboard/videos` 경로·아카이브 기능은 유지합니다. PC·모바일 확인 기록은 `mission6/verification/archive-label-ui.json`입니다. 로컬 수정이며 공개 배포는 승인 대기입니다.
+사이드바 스마트 멀티에디터의 NEW 배지와 수익 인증 라운지 메뉴를 숨기고, 아카이브 메뉴·페이지 제목을 `Threads Archive`로 표시합니다. 스마트 에디터 버튼과 `/dashboard/videos` 경로·아카이브 기능은 유지합니다. 페르소나의 공식 전용 배지와 공통 하단 링크 행도 숨겼으며 공개 배포에 반영했습니다.
 
 추가 표시 변경: 마이페이지 AI·쓰레드·쿠팡·토스의 ‘연동 방법 보기’(접힌 상태의 ‘사용법 보기’ 포함)를 숨깁니다. H 로고 옆 HongThreads 이름과 `© 2026 HongThreads· ALL RIGHTS RESERVED` 저작권 문구는 서버 HTML과 클라이언트 렌더링에 함께 적용합니다. 원본 캡처 파일은 변경하지 않습니다. 로그인 전에도 원본 디자인을 표시하도록 누락된 원본 공통 CSS를 해시 검증 후 제공합니다. 로컬9248·9251의 PC·모바일 확인 결과와 화면은 `mission6/verification/branding-ui.json` 및 `branding-*.png`, 관련 테스트44개 통과 기록은 `branding-regression.tap`에 있습니다.
 
@@ -61,8 +61,10 @@ GitHub 저장소에는 실제 원본 API 응답과 세션·키가 포함되지 �
 
 ## 현재 검증 범위
 
+AWS 최종 배포의 [Linux CI](https://github.com/misohong0520-hue/hongthreads-mission6/actions/runs/42847670063)에서 테스트44개와 Next.js 빌드가 통과했습니다. 공개 HTTPS13개 화면 모두200·JavaScript 오류0·정적 파일 실패0, 모바일 마이페이지 진입과 가로 넘침 없음, 실제 CRUD·브라우저 격리·파일 업로드·서명 URL·삭제 후 파일404를 확인했습니다. 개인 원본 연결과 다른 방문자의 비연결 상태가 분리되며 실제 WIF 생성200·STOP·완료 이력 저장 및 타 방문자404도 확인했습니다. 테스트 원본 연결은 해제했고 임시 CRUD 자료·파일은 삭제했습니다. 기존 WordPress200 및 기존 WIF worker 해시도 유지됐습니다. 근거: `mission6/verification/public-deployed.json`, `public-private-ai.json`, `deploy-secret-scan.json`. 계정·키·개인 응답은 이 문서에 포함하지 않습니다.
+
 원본 회귀와 새 검사 110개, Next 빌드·타입 검사, 실제 Supabase의 6개 자료 유형 CRUD·사용자 격리를 확인했습니다. 원본 UI 복구 후에는 기존 등록창에서 본문·파일을 저장하고 카드 표시·새로고침·작성 기준 수정·폴더 생성/수정/삭제·자료와 첨부 삭제까지 실제 클릭으로 확인했습니다. 원본13개 화면 모두200, JavaScript 오류0, 추가 UI0이며 같은 계정의 기존 개발판과 사이드바 메뉴·폭도 일치합니다.
 
 추가 점검에서 같은 계정의 3종 병렬 생성을 1개로 제한하던 오류를 수정했습니다. 실제 WIF 동시 요청3개가 모두200·STOP으로 끝나고 완료 이력3건이 저장됐습니다. 원본 요청의 query ID·sessionId·templateId, 일괄 삭제, 발행/예약·제휴 링크 응답 분류와 서로 다른 링크의 보존을 검사했습니다. 이전 잘못된 키로 생성된 편집 세션 사본34건도 원본17개에 맞게17건으로 정리했으며 원본 서버에는 변경을 보내지 않았습니다. 사용법 영상 iframe은 원본이 사용하는 www.youtube.com만 허용해 HTTP200/CSP 오류0을 확인했고, 작은 합성 MP4의 실제 WIF 분석과 바이너리를 제외한 이력 저장도 통과했습니다. 근거는 mission6/verification/의 remaining-contract-regression.tap, parallel-wif-live.json, session-reconcile-live.json, tutorial-frame-live.json, video-wif-live.json입니다.
 
-전체 기능 동일 검증은 아직 완료로 판정하지 않습니다. 실제 게시·예약·댓글·결제·외부 계정 변경, 확장의 실제 Chrome 설치 수집, 모든 제휴 조합과 원본 아카이브에서 시작하는 전체 영상 분석·대용량 재생은 실행하지 않았습니다. 작은 합성 영상의 서버 분석과 사용법 iframe 로드는 해당 범위의 검사입니다. 원본 외부 미디어 전체를 Supabase로 복사하지 않았고, 일반 동기화 대기 자동 재조정과 장기 미참조 파일 정리는 추가 운영 과제입니다. 현재 수정본의 Linux CI와 공개 도메인 재검증은 승인 후 진행합니다.
+전체 기능 동일 검증은 아직 완료로 판정하지 않습니다. 실제 게시·예약·댓글·결제·외부 계정 변경, 확장의 실제 Chrome 설치 수집, 모든 제휴 조합과 원본 아카이브에서 시작하는 전체 영상 분석·대용량 재생은 실행하지 않았습니다. 작은 합성 영상의 서버 분석과 사용법 iframe 로드는 해당 범위의 검사입니다. 원본 외부 미디어 전체를 Supabase로 복사하지 않았고, 일반 동기화 대기 자동 재조정과 장기 미참조 파일 정리는 추가 운영 과제입니다. 현재 수정본의 Linux CI와 공개 도메인 재검증은 위 배포 검증 범위에서 완료했습니다.
