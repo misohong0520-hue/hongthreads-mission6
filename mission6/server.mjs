@@ -10,7 +10,7 @@ import {pipeline} from 'node:stream/promises';
 import {createRepository,DataError,RESOURCE_MAP} from './data/index.mjs';
 import {createSessionManager} from './sessions.mjs';
 import {loadRuntimeAssets,rewriteDocument,ORIGINAL_PAGES} from './render.mjs';
-import {createMirror} from './mirror.mjs';
+import {createMirror,clean} from './mirror.mjs';
 import {createCompatibility} from './compatibility.mjs';
 import {readBody,readJson,multipart,json,fail} from './http.mjs';
 import {createWorkflowRoutes} from '../replay/workflow-routes.mjs';
@@ -48,7 +48,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
     const ctx=current();if(!ctx.bridge.status().configured)throw new DataError('ORIGINAL_CONNECTION_REQUIRED',401);
     if(aiOwners.has(ctx.workspace.id)||aiActive>=2)throw new DataError('AI_BUSY',429);aiOwners.add(ctx.workspace.id);aiActive++;
     let job;
-    try{job=await repository.create('generations',ctx.workspace.id,{title:'AI 원고 생성',status:'running',metadata:{provider:'VERTEX_WIF',model:vertex.status().model}});const result=await vertex.generate(payload);const text=(result.candidates??[]).flatMap(c=>c.content?.parts??[]).filter(p=>!p.thought).map(p=>p.text??'').join('');await repository.update('generations',ctx.workspace.id,job.id,{content:text.slice(0,50000),status:'completed',metadata:{...job.metadata,completed_at:new Date().toISOString()}});return result}
+    try{let input=clean(payload);if(Buffer.byteLength(JSON.stringify(input))>800000)input={largeInput:true};job=await repository.create('generations',ctx.workspace.id,{title:'AI 원고 생성',status:'running',metadata:{provider:'VERTEX_WIF',model:vertex.status().model,input}});const result=await vertex.generate(payload);const parts=(result.candidates??[]).flatMap(c=>c.content?.parts??[]).filter(p=>!p.thought),text=parts.map(p=>p.text??'').join('');await repository.update('generations',ctx.workspace.id,job.id,{content:text.slice(0,50000),status:text||parts.some(p=>p.functionCall)?'completed':'empty',metadata:{...job.metadata,completed_at:new Date().toISOString(),finish_reason:result.candidates?.[0]?.finishReason??null}});return result}
     catch(error){if(job)await repository.update('generations',ctx.workspace.id,job.id,{status:'failed',metadata:{...job.metadata,error:error.code??'VERTEX_REQUEST'}}).catch(()=>{});throw error}
     finally{aiActive--;aiOwners.delete(ctx.workspace.id)}
   }};
@@ -69,6 +69,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
       const host=String(req.headers.host??'');if(![origin.host,'127.0.0.1:9251','localhost:9251'].includes(host))throw new DataError('INVALID_HOST',421);
       const url=new URL(req.url,publicOrigin),path=url.pathname,method=req.method;
       if(path==='/healthz'){json(res,200,{app:'hongthreads',ready:true,storage:repository.backend,vertex:vertex.status().credentialReady});return}
+      if(path==='/extensions/hongthreads.zip'&&['GET','HEAD'].includes(method)){const bytes=await readFile(join(root,'extension-cloud.zip'));res.writeHead(200,{'content-type':'application/zip','content-disposition':'attachment; filename="hongthreads-extension.zip"','content-length':bytes.length,'cache-control':'no-store'}).end(method==='HEAD'?undefined:bytes);return}
       if(/^\/(?:__shutdown|__desktop|__origin|__replay\/(?:coverage|misses)|__workflow\/resource|internal)(?:\/|$)/.test(path))throw new DataError('NOT_FOUND',404);
       if(path.startsWith('/workspace')&&!path.startsWith('/workspace/api/')){if((req.headers.accept??'').includes('text/html'))await sessions.context(req,res);await proxyNext(req,res);return}
       let asset=runtime.assets.get(path+url.search)??runtime.assets.get(path);
@@ -78,11 +79,16 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
       if(path==='/mission6/client.js')asset={bytes:client,type:'application/javascript'};
       if(asset&&['GET','HEAD'].includes(method)){res.writeHead(200,{'content-type':asset.type,'content-length':asset.bytes.length,'cache-control':'no-store','x-content-type-options':'nosniff'}).end(method==='HEAD'?undefined:asset.bytes);return}
       if(method==='OPTIONS'&&/^chrome-extension:\/\/[a-p]{32}$/.test(req.headers.origin??'')){res.writeHead(204,{'access-control-allow-origin':req.headers.origin,'access-control-allow-methods':'GET,POST,PATCH,PUT,DELETE,OPTIONS','access-control-allow-headers':'Authorization,Content-Type','vary':'Origin'}).end();return}
-      let ctx=await sessions.context(req,res);const externalExtension=/^chrome-extension:\/\/[a-p]{32}$/.test(req.headers.origin??'');
+      const externalExtension=/^chrome-extension:\/\/[a-p]{32}$/.test(req.headers.origin??'');
       const authorization=/^Bearer (.+)$/.exec(req.headers.authorization??'');
-      if(authorization){const validated=await compatibility.verifyExtension(authorization[1]);if(!validated)throw new DataError('EXTENSION_KEY_REQUIRED',401);ctx={...ctx,workspace:await repository.ensureWorkspace({id:validated.workspaceId}),extension:true};if(externalExtension)res.setHeader('access-control-allow-origin',req.headers.origin)}
+      const capability=compatibility.capability(url,method);
+      let ctx;
+      if(authorization){const validated=await compatibility.verifyExtension(authorization[1]);if(!validated)throw new DataError('EXTENSION_KEY_REQUIRED',401);ctx={...await sessions.workspaceContext(validated.workspaceId),extension:true};if(externalExtension)res.setHeader('access-control-allow-origin',req.headers.origin)}
+      else if(capability)ctx={...await sessions.workspaceContext(capability.workspaceId),capability};
+      else ctx=await sessions.context(req,res);
+      if(capability&&externalExtension)res.setHeader('access-control-allow-origin',req.headers.origin);
       const mutating=!['GET','HEAD'].includes(method);
-      if(mutating&&!ctx.extension){
+      if(mutating&&!ctx.extension&&!capability?.upload){
         if(req.headers.origin!==origin.origin||req.headers['sec-fetch-site']==='cross-site')throw new DataError('ORIGIN_REQUIRED',403);
         const token=req.headers['x-csrf-token']??req.headers['x-rea-workflow-token']??req.headers['x-rea-setup-token'];
         if(token!==ctx.csrfToken)throw new DataError('CSRF_REQUIRED',403);
@@ -116,6 +122,7 @@ export async function createMissionServer({repository,publicOrigin,secret,vertex
           if(method==='GET'&&id){json(res,200,{data:await decorate(wid,await repository.get(name,wid,id))});return}
           if(readonlyResources.has(name))throw new DataError('READ_ONLY_RESOURCE',405);
           if(method==='POST'&&!id){json(res,201,{data:await decorate(wid,await repository.create(name,wid,await readJson(req)))});return}
+          if(['PATCH','DELETE'].includes(method)&&id){const row=await repository.get(name,wid,id);if(row.upstream_id)throw new DataError('UPSTREAM_EDIT_REQUIRED',409)}
           if(method==='PATCH'&&id){const input=await readJson(req);json(res,200,{data:await decorate(wid,await repository.update(name,wid,id,input,{version:input.version}))});return}
           if(method==='DELETE'&&id){await repository.remove(name,wid,id);json(res,200,{success:true});return}
           throw new DataError('METHOD_NOT_ALLOWED',405);

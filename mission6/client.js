@@ -2,6 +2,9 @@
   const config=window.__REA_REPLAY__;if(!config?.mission6)return;
   const install=()=>{
     const aside=document.querySelector('aside');if(!aside||aside.querySelector('#hongthreads-workspace'))return;
+    // The retained Next application hydrates the server document. Adding a nav
+    // before React owns the sidebar causes it to discard the whole page tree.
+    if(!Object.keys(aside).some(key=>key.startsWith('__reactFiber$')))return;
     const nav=document.createElement('div');nav.id='hongthreads-workspace';nav.style.cssText='display:flex;gap:8px;flex-wrap:wrap;padding:10px 20px;border-top:1px solid #e5e7eb;background:#fff;flex-shrink:0;font-size:12px;font-weight:700';
     for(const [href,label]of [['/workspace/benchmarks','자료 관리'],['/workspace/connect',config.mission6.connected?'계정 연결 관리':'원본 계정 연결']]){const a=document.createElement('a');a.href=href;a.textContent=label;a.style.cssText='padding:7px 10px;border:1px solid #dce7df;border-radius:8px;color:#126439;text-decoration:none';nav.append(a)}aside.append(nav);
     if(!config.mission6.connected&&!document.getElementById('hongthreads-connect-notice')){
@@ -17,4 +20,5 @@
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
   new MutationObserver(install).observe(document.documentElement,{childList:true,subtree:true});
+  const hydrationPoll=setInterval(()=>{install();if(document.getElementById('hongthreads-workspace'))clearInterval(hydrationPoll)},100);
 })();

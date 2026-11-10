@@ -32,6 +32,12 @@ test('Windows SSH adapter keeps credentials out of the worker stdin and quotes t
   assert.ok(f.seen[0].args.includes("'node' '/srv/existing worker/worker.cjs'"));
   assert.deepEqual(f.seen[1].input.payload,payload);assert.ok(!JSON.stringify(f.seen[1].input).includes('test-identity.pem'));
 });
+test('the existing local WIF worker does not inherit the adapter transport or app secrets',async()=>{
+  const f=fixture('{"result":{"authenticated":true}}');
+  await createVertexWorkerRunner({settings,transport:'local',spawnImpl:f.spawn,environment:{HOME:'/home/ubuntu',PATH:'/usr/bin',VERTEX_TRANSPORT:'local',SUPABASE_SECRET_KEY:'fixture-private',SESSION_SIGNING_SECRET:'fixture-private',PORT:'9251',GOOGLE_APPLICATION_CREDENTIALS:'/safe/wif.json'}})('auth');
+  const env=f.seen[0].options.env;assert.equal(env.HOME,'/home/ubuntu');assert.equal(env.GOOGLE_APPLICATION_CREDENTIALS,'/safe/wif.json');
+  for(const key of ['VERTEX_TRANSPORT','SUPABASE_SECRET_KEY','SESSION_SIGNING_SECRET','PORT'])assert.equal(Object.hasOwn(env,key),false);
+});
 test('oversized input and unknown operations are rejected before starting a child',async()=>{
   let called=false;const run=createVertexWorkerRunner({settings,transport:'local',maxBytes:160,spawnImpl:()=>{called=true}});
   await assert.rejects(run('delete'),e=>e.code==='VERTEX_REQUEST');

@@ -30,13 +30,14 @@ export async function createRepository({backend='supabase',url=process.env.SUPAB
       if(version!==undefined&&(!Number.isInteger(Number(version))||Number(version)!==current.version))throw new DataError('VERSION_CONFLICT',409);
       const data=recordData(table,input,{partial:true,now:now()});delete data.id;
       await refs(table,wid,{...current,...data},id);
-      const row=await driver.patch(table,wid,id,data,current.version);if(!row)throw new DataError('VERSION_CONFLICT',409);return row;
+      const row=await driver.patch(table,wid,id,data,current.version);if(!row)throw new DataError('VERSION_CONFLICT',409);
+      if(data.assets&&table!=='assets')for(const ref of current.assets.filter(a=>!row.assets.some(b=>b.id===a.id)))await api.cleanupAsset(wid,ref.id);
+      return row;
     },
     async remove(resource,wid,id){
       const current=await get(resource,wid,id);const row=await driver.remove(RESOURCE_MAP[resource],wid,id);if(!row)throw new DataError('NOT_FOUND',404);
       if(RESOURCE_MAP[resource]!=='assets')for(const ref of current.assets){
-        try{if(await driver.assetReferences(wid,ref.id)===0){const asset=await driver.get('assets',wid,ref.id);if(asset){await driver.storage.remove(asset.metadata.path);await driver.remove('assets',wid,ref.id)}}}
-        catch{await api.create('sync_events',wid,{title:'첨부파일 정리 대기',status:'cleanup_pending',metadata:{asset_id:ref.id}}).catch(()=>{})}
+        await api.cleanupAsset(wid,ref.id);
       }
       return current;
     },
@@ -48,14 +49,18 @@ export async function createRepository({backend='supabase',url=process.env.SUPAB
     },
     async getSession(hash){if(!/^[a-f0-9]{64}$/.test(hash??''))return null;const row=await driver.getSession(hash);return row&&Date.parse(row.expires_at)>Date.parse(now())?row:null},
     async deleteSession(hash){if(!/^[a-f0-9]{64}$/.test(hash??''))return false;return driver.deleteSession(hash)},
-    async uploadAsset(wid,input){
-      await workspace(wid);const valid=assetInput(input),id=randomUUID(),path=wid+'/'+valid.entity+'/'+id+'.'+({ 'image/png':'png','image/jpeg':'jpg','image/webp':'webp','image/gif':'gif','video/mp4':'mp4','video/webm':'webm','video/quicktime':'mov' })[valid.mime];
+    async uploadAsset(wid,input,{id=randomUUID()}={}){
+      await workspace(wid);assertId(id);const valid=assetInput(input),path=wid+'/'+valid.entity+'/'+id+'.'+({ 'image/png':'png','image/jpeg':'jpg','image/webp':'webp','image/gif':'gif','video/mp4':'mp4','video/webm':'webm','video/quicktime':'mov' })[valid.mime];
       const bytes=Buffer.from(input.bytes);await driver.storage.upload(path,bytes,valid.mime);
       try{return await api.create('assets',wid,{id,title:valid.filename,content:'',status:'ready',metadata:{...valid.metadata,path,mime_type:valid.mime,size:valid.size,sha256:createHash('sha256').update(bytes).digest('hex')}})}catch(error){await driver.storage.remove(path).catch(()=>{});throw error}
     },
     async getAssetUrl(wid,id,{expiresIn=300}={}){const row=await get('assets',wid,id);if(row.status!=='ready')throw new DataError('ASSET_NOT_READY',409);if(backend==='local')return '/workspace/api/v1/assets/'+id+'/content';return driver.storage.sign(row.metadata.path,Math.min(3600,Math.max(30,expiresIn)))},
     async downloadAsset(wid,id){const row=await get('assets',wid,id);if(row.status!=='ready')throw new DataError('ASSET_NOT_READY',409);return{row,bytes:await driver.storage.download(row.metadata.path)}},
     async removeAsset(wid,id){const row=await get('assets',wid,id);if(await driver.assetReferences(wid,id))throw new DataError('ASSET_IN_USE',409);await driver.storage.remove(row.metadata.path);await api.remove('assets',wid,id);return row},
+    async cleanupAsset(wid,id){
+      try{if(await driver.assetReferences(wid,id)===0){const asset=await driver.get('assets',wid,id);if(asset){await driver.storage.remove(asset.metadata.path);await driver.remove('assets',wid,id)}}}
+      catch{await api.create('sync_events',wid,{title:'첨부파일 정리 대기',status:'cleanup_pending',metadata:{asset_id:id}}).catch(()=>{})}
+    },
     async createAssetUpload(wid,input){
       await workspace(wid);const valid=assetInput(input),id=randomUUID(),path=wid+'/'+valid.entity+'/'+id;
       const row=await api.create('assets',wid,{id,title:valid.filename,status:'pending',metadata:{...valid.metadata,path,mime_type:valid.mime,size:valid.size,expires_at:new Date(Date.parse(now())+10*60000).toISOString()}});

@@ -14,7 +14,7 @@ export default function ResourceForm({ config, id }: { config: ResourceConfig; i
   const [loading, setLoading] = useState(Boolean(id)), [loadError, setLoadError] = useState(''), [saving, setSaving] = useState(false), [uploading, setUploading] = useState(false), [error, setError] = useState(''), [fields, setFields] = useState<Record<string, string>>({});
   useEffect(() => {
     if (config.name === 'benchmarks') void request<ListData>('v1/folders?limit=100').then(r => setFolders(r.data)).catch(() => setFolders([]));
-    if (id) void request<{ data: RecordData }>(`v1/${config.name}/${id}`).then(({ data }) => { setTitle(data.title || ''); setContent(data.content || ''); setSource(data.source_url || ''); setFolder(data.folder_id || ''); setAssets(data.assets || []); setVersion(data.version); }).catch(cause => setLoadError(errorMessage(cause))).finally(() => setLoading(false));
+    if (id) void request<{ data: RecordData }>(`v1/${config.name}/${id}`).then(({ data }) => { if(data.upstream_id) throw new Error('원본 계정에서 동기화한 자료입니다. 상세 화면의 원본 화면 링크에서 수정해 주세요.'); setTitle(data.title || ''); setContent(data.content || ''); setSource(data.source_url || ''); setFolder(data.folder_id || ''); setAssets(data.assets || []); setVersion(data.version); }).catch(cause => setLoadError(errorMessage(cause))).finally(() => setLoading(false));
   }, [config.name, id]);
   const attach = async (files: FileList | null) => {
     if (!files?.length) return;

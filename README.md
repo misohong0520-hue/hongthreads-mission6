@@ -1,6 +1,6 @@
 # HongThreads — 미션 6
 
-현재 DRT 화면과 원본 서비스 연결을 유지하면서 Next.js App Router, Supabase Database·Storage, 사용자별 연결을 추가한 웹 서비스입니다. 공개 주소는 **https://hongthreads.hongsik.blog**입니다. 실제 공개 전 검증 상태는 구현 보고서의 상태를 따릅니다.
+현재 DRT 화면과 원본 서비스 연결을 유지하면서 Next.js App Router, Supabase Database·Storage, 사용자별 연결을 추가한 웹 서비스입니다. 공개 주소는 **https://hongthreads.hongsik.blog**입니다. 사용자 지시에 따라 **추가 배포는 승인 후에만 진행**합니다. 현재 공개된 최초 버전과 로컬 수정본은 다르며, 실제 상태와 제한은 [구현 보고서](MISSION6-IMPLEMENTATION-REPORT.ko.html)를 따릅니다.
 
 ## 기능과 데이터
 
@@ -9,6 +9,8 @@
 - 기존 13개 DRT 화면: 편집기·트렌드·계정 분석·아카이브·제휴·마이페이지 흐름을 유지합니다. 원본 조회와 처리 결과는 개인 workspace에 동기화합니다.
 - 원본 계정은 방문자마다 연결합니다. 연결 전에는 개인 브라우저의 guest 보관함을 사용합니다. 원본 계정 연결 시 검증된 사용자에게 속한 보관함으로 전환하며 체험 자료를 자동 혼합하지 않습니다.
 - 원본 서비스의 권한과 실제 게시·예약·상품 조회는 원본 API를 따릅니다. DB 사본으로 외부 처리 성공을 대신하지 않습니다.
+- 원본 ID가 있는 자료는 기존 화면에서 수정하며, 원본 응답 성공 후 사본을 갱신합니다. 서버 재시작 후에는 원본 계정을 재연결해야 합니다. 앱 쿠키에 연결된 보관함 자료는 유지됩니다.
+- `/workspace/connect`에서 확장 프로그램 ZIP과 개인 보관함 키를 받습니다. 새 `extension-cloud`는 기존 `extension-local`과 별도 설치됩니다. 키는 보관함 접근 권한이므로 원본 세션과 함께 공유하지 않습니다.
 
 ## 구성
 
@@ -38,7 +40,7 @@ node mission6/start.mjs
 ## 검증
 
 ```powershell
-node --test mission6/server.test.mjs mission6/runtime/vertex-worker.test.mjs
+node --test mission6/server.test.mjs mission6/mirror.test.mjs mission6/runtime/vertex-worker.test.mjs
 npm --prefix web run build
 ```
 
@@ -49,3 +51,9 @@ npm --prefix web run build
 GitHub Actions는 Linux 빌드·격리 테스트 후 standalone 릴리스 artifact를 생성합니다. 기존 EC2에 release 디렉터리로 설치하고 `current` 링크로 전환합니다. Nginx vhost와 두 systemd 서비스는 `deploy/`에 있습니다. 기존 WordPress·DB·WIF worker는 교체하지 않습니다. 실패하면 직전 release로 `current`를 되돌리고 서비스만 재시작합니다. Supabase 자료를 삭제해 롤백하지 않습니다.
 
 GitHub 저장소에는 실제 원본 API 응답과 세션·키가 포함되지 않으며, 서버용 HTML shell의 이전 계정 SessionProvider 값은 guest 값으로 정리한 배포 사본만 포함합니다.
+
+## 현재 검증 범위
+
+원본 회귀와 새 검사 100개, Next 빌드·타입 검사, 실제 Supabase의 6개 자료 유형 CRUD, 브라우저 파일 업로드·새로고침·수정·삭제와 다른 브라우저 접근 차단을 확인했습니다. 본인 세션에서 원본 13개 화면, 검색 결과 18개, 게시글·멘션 탭 및 실제 WIF 생성·DB 이력을 확인했습니다. 확장 업로드 API의 실제 Storage 저장·삭제도 통과했습니다.
+
+전체 기능 동일 검증은 아직 완료로 판정하지 않습니다. 실제 게시·예약·댓글·결제·외부 계정 변경, 확장의 실제 Chrome 설치 수집, 모든 제휴 조합과 영상 분석은 이번 종단 검증에서 실행하지 않았습니다. 원본 외부 미디어 전체를 Supabase로 복사하지 않았고, 동기화 대기 자동 재조정과 장기 미참조 파일 정리는 추가 운영 과제입니다. 현재 수정본의 Linux CI와 공개 도메인 재검증은 승인 후 진행합니다.

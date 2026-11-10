@@ -1,0 +1,38 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HongThreads 미션 6 구현 보고서</title>
+<style>body{font:15px/1.8 system-ui,sans-serif;color:#17241c;background:#f4f7f5;max-width:1080px;margin:40px auto;padding:0 20px}main{background:#fff;border:1px solid #dde6df;border-radius:20px;padding:36px}h1{font-size:30px;line-height:1.4}h2{margin-top:35px;font-size:21px}p{margin:12px 0}.status{background:#eaf7ee;border-left:4px solid #00c862;padding:18px}.pending{background:#fff8e8;border-left:4px solid #e3ae35;padding:18px}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #dfe7e1;padding:12px;text-align:left;vertical-align:top}th{background:#eff6f1}code{font:12px/1.6 Consolas,monospace;overflow-wrap:anywhere}a{color:#087a3b}.small{font-size:13px;color:#64766a}.table{overflow:auto}li{margin:7px 0}@media(max-width:600px){main{padding:21px}h1{font-size:25px}td,th{padding:9px;font-size:12px}}@media print{body{background:white;margin:0;max-width:none}main{border:0;padding:0}table{break-inside:auto}tr{break-inside:avoid}h2{break-after:avoid}}</style>
+<main><p class="small">2026-11-10 · DRT 로컬 개발판 → HongThreads · 배포 대상 hongthreads.hongsik.blog</p>
+<h1>미션 6 구현·검증 보고서</h1>
+<div class="status"><strong>핵심 CRUD·파일·개인 세션·원본 연결의 로컬 구현과 실제 Supabase 검증을 마쳤습니다.</strong><br>현재 수정본은 배포 승인 대기입니다. 이 보고서는 모든 외부 업무가 검증됐다는 뜻이 아닙니다.</div>
+<h2>현재 버전과 승인 범위</h2>
+<p>사용자의 “배포는 승인후 진행” 지시 이전에 최초 버전 <code>c440144</code>가 AWS에 배포되어 있습니다. 지시 이후 수정한 코드는 로컬에만 준비했습니다. 서버 파일·설정 변경, 업로드, 운영 서비스 재시작은 추가로 수행하지 않았습니다.</p>
+<p>공개 주소는 <a href="https://hongthreads.hongsik.blog">https://hongthreads.hongsik.blog</a>이고, 기존 WordPress와 별도 서비스로 동작합니다. 전용 비공개 GitHub 저장소는 <a href="https://github.com/misohong0520-hue/hongthreads-mission6">hongthreads-mission6</a>입니다. 현재 저장소의 공개된 최신 커밋과 로컬 수정본은 다릅니다.</p>
+<div class="pending"><strong>현재 공개 버전의 알려진 문제:</strong> Linux WIF worker에 앱의 <code>VERTEX_TRANSPORT=local</code> 값이 전달돼 AI 연결이 준비되지 않습니다. 기존 worker를 교체하지 않고 로컬 어댑터에서 환경을 분리하는 수정과 검사를 완료했습니다. 서버 반영은 승인 후에 합니다. 수정본에는 React 초기화 충돌, 다중 탭의 세션 교체 경합, 확장 프로그램 업로드, 원본 본문 동기화 수정도 포함됩니다.</div>
+<h2>구현한 기능</h2>
+<div class="table"><table><thead><tr><th>영역</th><th>구현 내용</th></tr></thead><tbody>
+<tr><td>Next.js 자료 관리</td><td><code>/workspace</code> App Router. 벤치마킹·원고·페르소나·양식·수익 증빙·폴더의 등록·검색·목록·상세·수정·삭제. 편집 세션과 AI 이력 조회. 공통 폼과 오류·빈 화면·로딩·삭제 확인.</td></tr>
+<tr><td>Supabase</td><td>서울의 전용 프로젝트, 19개 테이블, 서버 전용 REST/RPC, 개인 workspace, RLS 및 비공개 <code>drt-assets</code> 버킷. 원본 응답은 자격값을 제거한 사본과 원본 ID로 동기화.</td></tr>
+<tr><td>원본 기능</td><td>기존 13개 화면과 원본 API 계약 유지. 실제 상품·계정·게시 업무의 결과는 원본 API를 따름. 원본 자료 수정은 기존 원본 화면으로 연결하며 DB 사본만 수정해 외부 작업이 완료됐다고 표시하지 않음.</td></tr>
+<tr><td>세션·공개 범위</td><td>모든 화면 공개, 개인 기능은 방문자별 원본 세션 연결. HttpOnly 앱 쿠키, DB에는 앱 세션 해시만 저장. 원본 세션은 서버 메모리만 사용. 다른 방문자의 계정으로 공용 연결하지 않음. 재시작 후 원본 재연결 필요.</td></tr>
+<tr><td>첨부</td><td>이미지·영상 파일당 50MB, 최대 9개. 파일 서명 검사, 소유권 확인, 미리보기·다운로드, 버전 충돌, 자료 삭제 또는 첨부 해제 후 미참조 파일 정리. 정리 실패 이력 저장.</td></tr>
+<tr><td>클라우드 확장</td><td>기존 로컬 확장과 별도 ID로 설치하는 <code>extension-cloud</code>와 다운로드 ZIP. 개인 키 발급·검사·회전, 쿠키 없는 일회용 업로드, 서명 미디어 주소, URL 수집 작업·결과 계약, 폴더·링크·목적 분류.</td></tr>
+<tr><td>Vertex WIF</td><td>기존 프로젝트·worker·모델 유지. 생성 결과·입력 메타데이터·상태 저장. 인라인 바이너리와 자격값 제외. 빈 응답·실패 및 동시 요청 처리.</td></tr>
+<tr><td>브랜딩·AWS 준비</td><td>H 로고, 하단 이름·아바타 미표시. 전용 Nginx·systemd·HTTPS·버전별 release 구성. CI는 검사와 Linux artifact 생성만 수행. 배포 검사 실패 시 직전 HongThreads release로 복구하도록 준비.</td></tr>
+</tbody></table></div>
+<h2>검증 결과</h2>
+<div class="table"><table><thead><tr><th>검사</th><th>결과와 근거</th></tr></thead><tbody>
+<tr><td>자동 검사</td><td>원본 회귀와 새 세션·저장·확장·WIF·동기화 검사 <strong>100개 통과</strong>. <code>mission6/verification/regression.tap</code></td></tr>
+<tr><td>Next.js</td><td>프로덕션 빌드와 TypeScript 검사 통과. PC 1440px 및 모바일 390px에서 가로 넘침 없음. 새 UI 페이지 오류 없음.</td></tr>
+<tr><td>실제 Supabase</td><td>6개 자료 유형 모두 등록 201, 조회·수정·삭제 200, 다른 브라우저 접근 404. <code>all-resources-live.json</code></td></tr>
+<tr><td>브라우저 CRUD</td><td>실제 클릭으로 파일 첨부·등록·상세·새로고침·수정·삭제. 이미지 실제 로딩 확인. <code>e2e-final.json</code></td></tr>
+<tr><td>원본 13개 화면</td><td>본인 원본 세션으로 모두 HTTP 200, JavaScript 오류 0, 검사 중 실패 요청 0. 인기 글 검색 결과 18개, 게시글·멘션 탭 전환 확인. <code>original-pages-live.json</code>, <code>e2e-final.json</code></td></tr>
+<tr><td>실제 AI</td><td>Vertex WIF HTTP 200, 실제 텍스트 수신, 종료 사유 STOP, Supabase 완료 이력 확인. <code>vertex-live.json</code></td></tr>
+<tr><td>실제 확장 업로드 API</td><td>쿠키 없는 업로드 200 → 미디어 읽기 200 → 자료 저장 201 → 삭제 200 → 파일 404. 세션 경합 수정 후 연결 유지 확인. <code>extension-live.json</code></td></tr>
+<tr><td>DB 권한</td><td>적용된 스키마의 Supabase 보안 advisor 경고 없음. 익명·일반 사용자 직접 테이블 접근 차단, 서버 소유권 검사.</td></tr>
+<tr><td>기존 로컬 자료</td><td>기존 9248 서버 유지. 로컬 벤치마킹 확인 당시 폴더 0개·스크랩 0개. 사용자 자료를 이동·삭제하지 않음.</td></tr>
+</tbody></table></div>
+<h2>완료 판정의 범위</h2>
+<p>미션 6의 Supabase CRUD·파일·새로고침 유지 흐름은 로컬에서 실제 저장소로 확인했습니다. 전체 원본 기능은 원본 서비스와 계정 권한에 계속 의존합니다. 화면 검사 통과를 모든 외부 업무의 성공으로 계산하지 않았습니다.</p>
+<ul><li>실제 Threads 게시·예약·댓글, 구독·결제, 외부 계정 추가·삭제는 실행하지 않았습니다. 지정 테스트 계정과 승인된 내용으로 별도 검증해야 합니다.</li><li>새 확장을 실제 Chrome에 설치해 로그인된 Threads 페이지에서 끝까지 수집하는 흐름은 미검증입니다. 업로드·키·URL 작업 API 계약과 실제 Storage 저장은 검증했습니다.</li><li>쿠팡·토스·브랜드커넥트의 모든 상품 선택→링크 발급→발행 조합과 영상 분석·재생은 이번 수정본의 종단 검사에서 모두 실행하지 않았습니다. 원본 연결 상태와 권한을 그대로 사용합니다.</li><li>원본의 외부 미디어는 출처 URL을 보존합니다. 모든 원본 S3 파일을 Supabase로 일괄 복사한 상태는 아닙니다. 개인 보관함 신규 업로드는 Supabase Storage에 저장합니다.</li><li>원본 성공 후 DB 저장이 실패하면 동기화 대기 이력을 남깁니다. 외부 작업을 자동으로 재실행하지 않으며, 운영용 자동 재조정·장기 미참조 파일 정리는 추가 운영 과제로 남습니다.</li><li>현재 계정에서 노출되지 않는 WDRB를 일반 기능의 장애로 계산하지 않습니다. 원본 공용 보관함·제휴 공급자의 접근 권한을 새 앱에서 만들어 주지 않습니다.</li><li>현재 수정본의 Linux CI 및 공개 HTTPS 재검증은 배포 승인 후 진행합니다. 전용 GitHub 저장소는 비공개여서 과제 평가자 접근 권한을 별도로 제공해야 합니다.</li></ul>
+<h2>승인 후 반영할 작업</h2>
+<ol><li>검토된 로컬 스냅샷을 전용 저장소에 반영하고 Linux CI를 통과시킵니다.</li><li>새 release를 AWS에 업로드해 HongThreads 두 서비스만 전환합니다. 기존 WordPress·DB·Vertex worker는 유지합니다.</li><li>WIF 준비 상태·HTTPS·세션·CRUD·파일을 다시 확인합니다. 검사 실패 시 직전 release로 복구합니다.</li><li>공개 도메인에서 실제 원본 연결·AI·미션 6 CRUD QA 결과와 제출 자료를 갱신합니다.</li></ol>
+<p class="small">비밀값은 이 보고서와 저장소에 포함하지 않습니다. 이 보고서는 교육기관이 Vercel 대신 AWS 제출을 승인했다는 확인서가 아닙니다.</p></main></html>

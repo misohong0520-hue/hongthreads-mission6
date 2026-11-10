@@ -68,3 +68,54 @@ test('a database failure before AI generation releases the viewer concurrency sl
   const original=f.repository.create;let rejectOnce=true;f.repository.create=async(resource,...args)=>{if(resource==='generations'&&rejectOnce){rejectOnce=false;throw Object.assign(new Error('fixture database outage'),{status:503,code:'SUPABASE_UNAVAILABLE'})}return original(resource,...args)};
   const body={contents:[{parts:[{text:'fixture'}]}]};assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,503);assert.equal((await f.write(a,'/__vertex/generate','POST',body)).status,200);
 });
+
+test('extension upload tickets work without cookies, are single use and produce durable owned media',async t=>{
+  const f=await fixture(t),a=f.client(),b=f.client();await f.session(a);await f.session(b);
+  const key=await(await f.write(a,'/api/keys/extension','POST')).json(),headers={Authorization:'Bearer '+key.token,Origin:'chrome-extension://'+'a'.repeat(32)};
+  const ticket=await(await fetch(f.base+'/api/upload/presigned-url',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({fileType:'image/png',fileName:'fixture.png'})})).json();
+  const bytes=await readFile(new URL('../development/branding/h-logo.png',import.meta.url));
+  const upload=await fetch(ticket.uploadUrl,{method:'PUT',headers:{Origin:headers.Origin,'Content-Type':'image/png'},body:bytes});assert.equal(upload.status,200);assert.equal(upload.headers.get('access-control-allow-origin'),headers.Origin);
+  assert.equal((await fetch(ticket.uploadUrl,{method:'PUT',body:bytes})).status,403);
+  const media=await fetch(ticket.finalPublicUrl);assert.equal(media.status,200);assert.deepEqual(Buffer.from(await media.arrayBuffer()),bytes);
+  const noCapability=new URL(ticket.finalPublicUrl);noCapability.search='';assert.equal((await b.request(noCapability.pathname)).status,404);
+  const invalid=new URL(ticket.finalPublicUrl);invalid.searchParams.set('access',invalid.searchParams.get('access')+'x');assert.equal((await b.request(invalid.pathname+invalid.search)).status,404);
+  const saved=await fetch(f.base+'/api/reference/scrap',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({raw_content:'Extension capture',original_url:'https://www.threads.com/@fixture/post/test',media_items:[{type:'image',url:ticket.finalPublicUrl}]})});assert.equal(saved.status,201);const row=await saved.json();assert.ok(row.data.media_items[0].url.includes('?access='));
+  const native=(await(await a.request('/workspace/api/v1/benchmarks')).json()).data[0];assert.equal(native.assets.length,1);assert.equal((await b.request('/workspace/api/v1/benchmarks/'+native.id)).status,404);
+  assert.equal((await f.write(a,'/api/reference/scrap?ids='+row.id,'DELETE')).status,200);assert.equal((await fetch(ticket.finalPublicUrl)).status,404);
+});
+
+test('extension key rotation revokes the previous key and folders/categories stay isolated',async t=>{
+  const f=await fixture(t),a=f.client(),b=f.client();await f.session(a);await f.session(b);
+  const key=await(await f.write(a,'/api/keys/extension','POST')).json();const folder=await(await f.write(a,'/api/scraps/folders','POST',{folder_name:'Owned'})).json();
+  const scrap=await(await f.write(a,'/api/reference/scrap','POST',{raw_content:'Categorized',folder_id:folder.folder.id})).json();
+  assert.equal((await f.write(b,'/api/reference/scrap','POST',{raw_content:'Foreign folder',folder_id:folder.folder.id})).status,404);
+  assert.equal((await f.write(a,'/api/reference/scrap','PUT',{action:'SAVE_STABILIZATION',scrap_id:scrap.id})).status,200);
+  const filtered=await(await a.request('/api/reference/scrap?link_filter=STABILIZATION')).json();assert.equal(filtered.total,1);assert.equal(filtered.link_summary.unlinked,0);
+  const s=await f.session(a);assert.equal((await a.request('/api/keys/extension',{method:'POST',headers:{Origin:f.base,'X-CSRF-Token':s.csrfToken,'X-Rea-Local-Key-Rotate':'1'}})).status,200);
+  assert.equal((await fetch(f.base+'/__local_benchmark/key-check',{headers:{Authorization:'Bearer '+key.token}})).status,401);
+});
+
+test('URL collection jobs require a matching owned scrap and extension credentials',async t=>{
+  const f=await fixture(t),a=f.client(),b=f.client();await f.session(a);await f.session(b);const url='https://www.threads.com/@fixture/post/test';
+  assert.equal((await f.write(a,'/api/scraps/by-url','POST',{url:'https://127.0.0.1/private'})).status,400);
+  const job=await(await f.write(a,'/api/scraps/by-url','POST',{url})).json(),path='/__local_benchmark/jobs/'+job.job_id;
+  assert.equal((await b.request(path)).status,404);assert.equal((await f.write(a,path+'/result','POST',{success:false})).status,405);
+  const key=await(await f.write(a,'/api/keys/extension','POST')).json(),headers={Authorization:'Bearer '+key.token,'Content-Type':'application/json'};
+  const row=await(await f.write(a,'/api/reference/scrap','POST',{raw_content:'Collected',original_url:url})).json();
+  assert.equal((await fetch(f.base+path+'/result',{method:'POST',headers,body:JSON.stringify({success:true,scrap_id:row.id})})).status,200);
+  assert.equal((await(await a.request(path)).json()).state,'complete');
+  assert.equal((await fetch(f.base+path+'/result',{method:'POST',headers,body:JSON.stringify({success:true,scrap_id:row.id})})).status,409);
+});
+
+test('native management cannot silently edit or delete an upstream record copy',async t=>{
+  const f=await fixture(t),a=f.client(),s=await f.session(a);const row=await f.repository.create('drafts',s.workspace.id,{title:'Original',upstream_id:'/api/threads:1'});
+  assert.equal((await f.write(a,'/workspace/api/v1/drafts/'+row.id,'PATCH',{title:'Unsent edit'})).status,409);
+  assert.equal((await f.write(a,'/workspace/api/v1/drafts/'+row.id,'DELETE')).status,409);
+  assert.equal((await f.repository.get('drafts',s.workspace.id,row.id)).title,'Original');
+});
+
+test('an old concurrent request cannot overwrite a newly rotated browser session',async t=>{
+  const f=await fixture(t),a=f.client();await f.session(a);const oldCookie=a.cookie;await f.write(a,'/workspace/api/connection','POST',{cookieValue:'fixture-a'});
+  const stale=await fetch(f.base+'/workspace/api/session',{headers:{cookie:oldCookie}});assert.equal(stale.status,401);assert.equal(stale.headers.get('set-cookie'),null);assert.equal((await f.session(a)).connected,true);
+  const key=await(await f.write(a,'/api/keys/extension','POST')).json();const extension=await fetch(f.base+'/api/scraps/folders',{headers:{Authorization:'Bearer '+key.token}});assert.equal(extension.status,200);assert.equal(extension.headers.get('set-cookie'),null);
+});

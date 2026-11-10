@@ -13,6 +13,7 @@ export const resources: ResourceConfig[] = [
 export function getResource(value: string) { return resources.find(item => item.name === value); }
 
 export type Asset = { id: string; name: string; mime_type?: string; size?: number; url?: string; status?: string };
-export type RecordData = { id: string; title: string; content: string; source_url?: string; folder_id?: string | null; assets: Asset[]; status?: string; version: number; created_at: string; updated_at: string; metadata?: Record<string, unknown> };
+export type RecordData = { id: string; title: string; content: string; source_url?: string; folder_id?: string | null; assets: Asset[]; status?: string; version: number; created_at: string; updated_at: string; metadata?: Record<string, unknown>; upstream_id?: string | null };
+export function originalEditor(resource: string) { return resource === 'personas' ? '/dashboard/personas' : resource === 'templates' || resource === 'sessions' ? '/multi-write' : '/dashboard/threads'; }
 export type SessionInfo = { csrfToken: string; connected: boolean; workspace: { id: string; kind: string }; storage: { backend: string; ready: boolean } };
 export type ListData = { data: RecordData[]; total: number; page: number; limit: number };

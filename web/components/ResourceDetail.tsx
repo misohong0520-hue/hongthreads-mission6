@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { errorMessage, formatDate, mutate, request } from '@/lib/api';
 import type { RecordData, ResourceConfig } from '@/lib/resources';
+import { originalEditor } from '@/lib/resources';
 
 export default function ResourceDetail({ config, id }: { config: ResourceConfig; id: string }) {
   const router = useRouter(), params = useSearchParams();
@@ -16,7 +17,8 @@ export default function ResourceDetail({ config, id }: { config: ResourceConfig;
     <Link className="back-link" href={`/${config.name}`}>← {config.label}</Link>
     {params.get('saved') && <div className="success-notice" role="status"><span>✓</span>자료가 저장되었습니다.</div>}
     <article className="panel detail-panel">
-      <div className="detail-heading"><div><span className="resource-type">{config.icon} {config.single}</span><h1>{item.title || '제목 없는 자료'}</h1><div className="detail-meta"><span>등록 {formatDate(item.created_at)}</span><span>수정 {formatDate(item.updated_at)}</span>{item.status && <span className="status-chip">{item.status}</span>}</div></div>{!config.readonly && <div className="detail-actions"><Link className="button secondary" href={`/${config.name}/${id}/edit`}>수정</Link><button className="button danger-subtle" onClick={() => setConfirm(true)}>삭제</button></div>}</div>
+      <div className="detail-heading"><div><span className="resource-type">{config.icon} {config.single}</span><h1>{item.title || '제목 없는 자료'}</h1><div className="detail-meta"><span>등록 {formatDate(item.created_at)}</span><span>수정 {formatDate(item.updated_at)}</span>{item.status && <span className="status-chip">{item.status}</span>}</div></div>{!config.readonly && !item.upstream_id && <div className="detail-actions"><Link className="button secondary" href={`/${config.name}/${id}/edit`}>수정</Link><button className="button danger-subtle" onClick={() => setConfirm(true)}>삭제</button></div>}</div>
+      {item.upstream_id && <div className="success-notice">원본 계정에서 동기화한 자료입니다. <a href={originalEditor(config.name)}>원본 화면에서 수정하기 →</a></div>}
       {error && <div className="error-notice" role="alert">{error}</div>}
       <div className="detail-content">{item.content || <span className="muted">등록된 내용이 없습니다.</span>}</div>
       {item.source_url && <section className="detail-section"><h2>참고 링크</h2><a className="source-link" href={item.source_url} target="_blank" rel="noopener noreferrer"><span aria-hidden="true">↗</span>{item.source_url}</a></section>}

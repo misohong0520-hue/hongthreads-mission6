@@ -13,7 +13,7 @@ th:first-child,td:first-child{min-width:132px;width:18%}
 <header>
 <div class="brand"><img src="development/branding/h-logo.png" alt="H 로고"><div><span class="tag">최종 구현 계획 · 2026-11-10</span><h1>미션 6 — H DRT 개발판</h1></div></div>
 <p class="lead">기존 DRT 기능과 사용 흐름을 유지하면서 전체 기능의 데이터를 Supabase에 통합하고, Next.js CRUD와 파일 업로드를 구현해 기존 AWS EC2에 공개 배포한다.</p>
-<p class="meta">대상: 현재 <code>drt-agczero-insights-local</code> 개발판. 이 문서는 구현 명세이며, Next.js·Supabase 통합과 AWS 웹 배포가 완료됐다는 보고서가 아니다.</p>
+<p class="meta">대상: 현재 <code>drt-agczero-insights-local</code> 개발판. 구현 명세의 실제 진행·검증 상태는 <a href="MISSION6-IMPLEMENTATION-REPORT.ko.html">구현 보고서</a>에서 확인한다. 현재 수정본은 로컬 검증 후 배포 승인 대기 상태다.</p>
 </header>
 <nav class="toc"><a href="#decisions">확정 사항</a><a href="#architecture">구조</a><a href="#data">데이터와 기능</a><a href="#crud">CRUD·파일</a><a href="#access">공개·세션</a><a href="#delivery">구현·배포</a><a href="#qa">검증·제출</a></nav>
 
@@ -28,7 +28,7 @@ th:first-child,td:first-child{min-width:132px;width:18%}
 <tr><td>배포</td><td>Vercel 대신 기존 <code>wordpress-hongsik-blog</code> EC2, <code>i-0e587c84b3642e794</code>, <code>3.35.8.24</code>를 사용한다. 기존 WordPress와 Vertex worker는 계속 운영한다.</td></tr>
 </tbody></table></div>
 <p><span class="check">현재 완료:</span> 화면 13개, 메뉴 이동 12개, 화면 조작 19개, 자동 테스트 82개 통과. 일반 에디터 실제 WIF 생성과 결과 표시를 확인했다. 409·검색·관리 탭·글꼴·벤치마킹 새로고침 오류 5개를 수정했다. H 로고와 하단 이름·아바타 제거도 PC 3개 화면 및 모바일 메뉴에서 확인했다.</p>
-<p><span class="check">아직 구현할 부분:</span> 독립적인 Next.js App Router 소스, 전체 기능의 Supabase 저장 계층, 사용자별 세션 분리, Linux 실행 어댑터, 공개 HTTPS 배포, 저장·업로드·실제 외부 업무까지 이어지는 종단 검증.</p>
+<p><span class="check">추가 구현:</span> Next.js App Router 자료 관리, Supabase Database·Storage, 사용자별 세션, 원본 API 동기화, 클라우드 확장 및 Linux WIF 어댑터를 작성했다. 실제 Supabase CRUD·파일·WIF와 원본 화면을 로컬에서 검증했다. 최초 HTTPS 배포본은 존재하며, 이후 수정본은 사용자 승인 전까지 서버에 반영하지 않는다. 실제 게시·예약·결제·외부 계정 변경은 미실행이다.</p>
 <div class="note pending">원본 배포 JavaScript와 API 응답을 확보한 상태이며, 원본 서버 소스·DB·서비스 권한을 복제한 상태는 아니다. 네트워크 응답은 요청·응답 계약을 확인하는 근거로 사용한다. 파싱만으로 Threads 게시 서버, 상품 공급 API 또는 원본 권한을 독립 재구현할 수 있다고 가정하지 않는다.</div>
 </section>
 
@@ -147,7 +147,7 @@ th:first-child,td:first-child{min-width:132px;width:18%}
 <li>README: 서비스 소개, 전체 기능별 저장 위치·외부 의존성, 데이터 관계, 로컬 실행, 환경변수 이름, AWS URL, CRUD·파일 시연 절차, 검증 결과와 제한사항을 포함한다.</li>
 <li>제출 링크: GitHub 저장소 URL과 AWS HTTPS 배포 URL. 첨부 미션의 Vercel 항목을 AWS로 대체한다는 요청은 반영하지만, 교육기관의 배포 방식 인정 여부까지 확인된 것으로 쓰지 않는다.</li>
 </ul>
-<div class="note pending"><strong>구현 시작 시 필요한 외부 준비:</strong> 전용 Supabase 프로젝트와 서버용 키, hongthreads.hongsik.blog DNS 설정 권한, GitHub 저장소 접근. 현재 대화에서는 실제 Supabase 프로젝트 연결이 확인되지 않았으므로 이를 완료된 설정으로 간주하지 않는다. 로고·프로필 표시 변경과 기존 오류 수정은 완료됐고, 이 계획의 DB 생성·데이터 이전·공개 배포는 아직 실행하지 않았다.</div>
+<div class="note pending"><strong>현재 외부 준비:</strong> 전용 Supabase 프로젝트·migration·서버 키, GitHub 저장소, DNS A 레코드와 HTTPS가 연결됐다. 사용자 배포 승인 지시 이전의 최초 배포본과 현재 로컬 수정본은 서로 다른 버전이다. 승인 후 수정본을 CI 검사·배포하고 공개 HTTPS에서 최종 QA한다. 기존 로컬 벤치마킹은 확인 당시 폴더·스크랩 모두 0개여서 옮길 사용자 자료가 없었다.</div>
 </section>
 
 <footer>

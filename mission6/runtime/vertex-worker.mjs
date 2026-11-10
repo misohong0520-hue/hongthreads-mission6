@@ -7,7 +7,7 @@ const quote=value=>"'"+value.replace(/'/g,"'\\''")+"'";
 
 /** Run the existing WIF worker protocol without putting credentials in arguments. */
 export function createVertexWorkerRunner({settings,transport=process.platform==='win32'?'ssh':'local',
-  spawnImpl=spawn,timeoutMs=180000,maxBytes=VERTEX_WORKER_LIMIT,platform=process.platform}={}){
+  spawnImpl=spawn,timeoutMs=180000,maxBytes=VERTEX_WORKER_LIMIT,platform=process.platform,environment=process.env}={}){
   if(!settings||!['ssh','local'].includes(transport)||typeof settings.worker!=='string'||!isAbsolute(settings.worker))
     throw failure('VERTEX_CONFIG');
   return (operation,payload)=>new Promise((resolve,reject)=>{
@@ -21,7 +21,11 @@ export function createVertexWorkerRunner({settings,transport=process.platform===
       '-o','ConnectTimeout=15','-i',settings.identityFile,settings.user+'@'+settings.host,
       quote(settings.remoteNodePath||'node')+' '+quote(settings.worker)];
     let child;
-    try{child=spawnImpl(command,args,{windowsHide:true,shell:false,stdio:['pipe','pipe','ignore']})}
+    // VERTEX_TRANSPORT means local/SSH in this adapter but WIF/direct in the
+    // existing worker. Also keep application database/session secrets out of it.
+    const workerEnv=transport==='local'?Object.fromEntries(Object.entries(environment).filter(([name])=>
+      !/^(?:SUPABASE_|SESSION_SIGNING_SECRET$|INTERNAL_BRIDGE_SECRET$|PUBLIC_ORIGIN$|DRT_|HONGTHREADS_|VERTEX_TRANSPORT$|PORT$|HOSTNAME$)/.test(name))):undefined;
+    try{child=spawnImpl(command,args,{windowsHide:true,shell:false,stdio:['pipe','pipe','ignore'],...(workerEnv?{env:workerEnv}:{})})}
     catch{reject(failure(transport==='local'?'VERTEX_WORKER':'VERTEX_SSH'));return}
     const chunks=[];let size=0,settled=false;
     const finish=(error,value)=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):resolve(value)};

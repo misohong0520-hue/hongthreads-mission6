@@ -5,3 +5,4 @@ replay/**/objects/* -text
 *.jpeg -text
 *.webp -text
 *.ttf -text
+*.zip -text

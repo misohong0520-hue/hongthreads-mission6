@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HongThreads Settings</title>
+    <style>
+        body { width: 280px; padding: 15px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; color: #111827; margin: 0; }
+        h3 { margin-top: 0; font-size: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 15px; font-weight: 800; tracking-wide: 0.05em; text-transform: uppercase; color: #111827; }
+        label { font-size: 11px; font-weight: 700; display: block; margin-bottom: 6px; color: #4b5563; text-transform: uppercase; tracking-wide: 0.03em; }
+        input[type="text"] { width: 100%; padding: 10px; box-sizing: border-box; margin-bottom: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 12px; transition: border-color 0.2s ease; background-color: #fff; }
+        input[type="text"]:focus { border-color: #4f46e5; outline: none; }
+        .btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #fff; border: none; padding: 10px 12px; cursor: pointer; width: 100%; border-radius: 8px; font-weight: 700; font-size: 12px; margin-bottom: 15px; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15); }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-secondary { background-color: #1f2937; color: #fff; border: none; padding: 10px 12px; cursor: pointer; width: 100%; border-radius: 8px; font-weight: 700; font-size: 12px; transition: background-color 0.2s ease; }
+        .btn-secondary:hover { background-color: #111827; }
+        #status { font-size: 11px; margin-top: 10px; color: #059669; text-align: center; font-weight: 600; }
+        /* Switch CSS */
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
+        input:checked + .slider { background-color: #4f46e5; }
+        input:checked + .slider:before { transform: translateX(14px); }
+        .slider.round { border-radius: 20px; }
+        .slider.round:before { border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <h3>HongThreads Scraper</h3>
+    <button id="getKeyBtn" class="btn-primary">🔑 키 발급하러 가기</button>
+
+    <div id="accountBadge" style="background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 11px; font-weight: 700; color: #3730a3;">연동 계정</span>
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <span id="accountText" style="font-size: 11px; font-weight: 800; color: #4f46e5; font-family: monospace;">미연동</span>
+            <button id="clearKeyBtn" type="button" style="display: none; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; border-radius: 5px; padding: 2px 6px; font-size: 10px; font-weight: 700; cursor: pointer;">변경/해제</button>
+        </div>
+    </div>
+    
+    <label for="jwtInput" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>JWT Access Token</span>
+        <span style="font-size: 10px; color: #4f46e5; text-transform: none; font-weight: 600;">이 PC에 저장</span>
+    </label>
+    <input type="text" id="jwtInput" placeholder="eyJ... (발급받은 키를 붙여넣으세요)">
+
+    <div id="quotaContainer" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; margin-bottom: 12px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: 700; color: #374151;">오늘 수집량</span>
+            <span id="quotaText" style="font-size: 11px; font-weight: 800; color: #4f46e5;">0 / 100개</span>
+        </div>
+        <div style="width: 100%; height: 6px; background-color: #e5e7eb; border-radius: 3px; overflow: hidden;">
+            <div id="quotaBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #4f46e5, #7c3aed); border-radius: 3px; transition: width 0.3s ease;"></div>
+        </div>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; margin-top: 5px;">
+        <label for="engagementToggle" style="margin-bottom: 0; cursor: pointer;">반응도 보기</label>
+        <label class="switch">
+            <input type="checkbox" id="engagementToggle" checked>
+            <span class="slider round"></span>
+        </label>
+    </div>
+
+    <button id="saveBtn" class="btn-secondary">Save Settings</button>
+    <div id="status"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
