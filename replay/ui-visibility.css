@@ -19,3 +19,9 @@ section:has(h2):has(a[href^="https://open.kakao.com/"]),
 [data-hongthreads-archive="true"] {
   text-transform: none !important;
 }
+
+aside img[alt="H 로고"] + span {
+  font-family: inherit;
+  font-weight: 900;
+  letter-spacing: normal;
+}
