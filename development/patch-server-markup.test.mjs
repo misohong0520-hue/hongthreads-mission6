@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {runInNewContext} from 'node:vm';
 import {patchDevelopmentMarkup,patchDevelopmentScript} from './patch-server-markup.mjs';
+import {parse} from 'parse5';
+import {loadRuntimeAssets,rewriteDocument,ORIGINAL_PAGES} from '../mission6/render.mjs';
 
 const button='<button class="mr-1.5 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-white bg-indigo-600 hover:bg-indigo-700 transition-all rounded-sm shadow-sm">구독</button>';
 const expiry='<span class="text-[9px] font-bold text-rose-600 mt-0.5 truncate w-full">사용기한 만료</span>';
@@ -89,4 +91,22 @@ test('captured dashboard applies the archive case marker only on the videos page
   assert.equal(insightsHeading?.props['data-hongthreads-archive'],undefined);
   assert.ok(insightsHeading.props.children.includes('트렌드 & 인사이트'));
   assert.deepEqual(patchDevelopmentScript(output),output,'branding must be idempotent');
+});
+
+test('every public original page resolves its styles without an original account session',async()=>{
+  const runtime=await loadRuntimeAssets();
+  const ctx={csrfToken:'test-browser-token',bridge:{status:()=>({configured:false})}};
+  for(const path of ORIGINAL_PAGES){
+    const document=runtime.documents.get(path);
+    assert.ok(document,'retained document missing: '+path);
+    const tree=parse(rewriteDocument(document.bytes,{ctx,profile:null,vertex:{}}).toString());
+    const links=[];
+    const walk=node=>{if(node.tagName==='link'&&node.attrs?.some(a=>a.name==='rel'&&a.value==='stylesheet'))links.push(node.attrs.find(a=>a.name==='href')?.value);for(const child of node.childNodes??[])walk(child)};
+    walk(tree);
+    assert.ok(links.length,'styles missing: '+path);
+    for(const href of links){
+      const asset=runtime.assets.get(new URL(href,'https://drt.agczero.com').pathname);
+      assert.ok(asset&&/text\/css/.test(asset.type)&&asset.bytes.length,path+' cannot load '+href+' before account connection');
+    }
+  }
 });

@@ -3,7 +3,7 @@ import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 
 const paths=new Set(['/font/lexend/Lexend-Black.ttf','/font/lexend/Lexend-SemiBold.ttf',
-  '/font/lexend/Lexend-Regular.ttf','/font/pretendard/Pretendard-SemiBold.ttf']);
+  '/font/lexend/Lexend-Regular.ttf','/font/pretendard/Pretendard-SemiBold.ttf','/font/notosans/NotoSansKR-VariableFont.ttf']);
 export async function loadWorkflowFonts(root=join(import.meta.dirname,'font-assets')){
   const manifest=JSON.parse(await readFile(join(root,'manifest.json')));
   if(manifest.schema!=='rea-original-fonts-v1'||manifest.origin!=='https://drt.agczero.com'||manifest.records?.length!==paths.size)

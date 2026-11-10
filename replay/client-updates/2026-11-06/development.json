@@ -1,7 +1,7 @@
 {
   "schema": "rea-client-update-overlay-v1",
   "release": "2026-11-06",
-  "source_manifest_sha256": "a315618050224c829c5bbcedf7250c0c438c873ba7de59d45ffb93728a636ade",
+  "source_manifest_sha256": "fdf2a535d24d844f6e3ccb4b2b876877d02eb99bce89d7b2fe93dda4ede708ff",
   "provider": "VERTEX_WIF",
   "patch_count": 16,
   "editor_patch_count": 3,

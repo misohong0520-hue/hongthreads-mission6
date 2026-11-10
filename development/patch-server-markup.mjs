@@ -30,7 +30,10 @@ export const patchDevelopmentScript = bytes => {
 // Match the same SSR nodes changed in the captured sidebar client module.
 // Slice source ranges so unrelated markup and Next.js bootstrap scripts stay intact.
 export const patchDevelopmentMarkup = bytes => {
-  let source = renameLabels(bytes.toString('utf8')).replaceAll(originalCopyright,copyright);
+  // Some retained pages reference a stylesheet removed by the upstream build.
+  // Use the retained, verified current theme instead of a session-only fallback.
+  let source = renameLabels(bytes.toString('utf8')).replaceAll(originalCopyright,copyright)
+    .replaceAll('d4dd19e25a332040.css','8efd17712e15569c.css');
   const tree = parse(source, { sourceCodeLocationInfo: true });
   const asides = descendants(tree).filter(node => node.tagName === 'aside');
   // An unrecognised or absent sidebar must remain usable after an upstream

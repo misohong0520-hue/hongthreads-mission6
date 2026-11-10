@@ -1,6 +1,6 @@
 {
   "schema": "rea-client-update-overlay-v1",
-  "source_manifest_sha256": "d71d43b96152c300d6eb93d56f87184a041298a7c07f6c5641cc13f3f7722476",
+  "source_manifest_sha256": "10fe322fb2d7b077c8dcdd7742b77fb8994ebe7bb74d8bacaa0e9033861cae34",
   "records": [
     {
       "path": "/_next/static/chunks/app/onboarding/coupang/page-102d09ef944a038e.js",
