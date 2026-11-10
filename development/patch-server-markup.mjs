@@ -7,20 +7,25 @@ const copyright = '© 2026 HongThreads· ALL RIGHTS RESERVED';
 const logoImage = '<img src="/__replay/brand.png" alt="H 로고" width="64" height="64" class="h-16 w-16 object-contain shrink-0"/>';
 const logoMarkup = '<span class="flex items-center gap-2 min-w-0">'+logoImage+'<span class="text-xl font-bold tracking-tight text-black whitespace-nowrap">HongThreads</span></span>';
 const logoScript = '(0,n.jsx)("img",{src:"/__replay/brand.png",alt:"H 로고",width:64,height:64,className:"h-16 w-16 object-contain shrink-0"})';
+const renameArchive = source => source.replaceAll('DREATHS 아카이브','Threads Archive').replaceAll('DreaThs Archive','Threads Archive');
 
 // Apply only the known branding literals after captured assets pass their digest
 // checks. Keep retained files and their source-bound manifests unchanged.
 export const patchDevelopmentScript = bytes => {
   const source=bytes.toString('utf8');
-  if(!source.includes(originalCopyright)&&!source.includes('children:'+logoScript))return bytes;
-  return Buffer.from(source.replaceAll(originalCopyright,copyright).replaceAll('children:'+logoScript,
-    'children:(0,n.jsxs)("span",{className:"flex items-center gap-2 min-w-0",children:['+logoScript+',(0,n.jsx)("span",{className:"text-xl font-bold tracking-tight text-black whitespace-nowrap",children:"HongThreads"})]})'));
+  if(!source.includes(originalCopyright)&&!source.includes('children:'+logoScript)&&!source.includes('DREATHS 아카이브')&&!source.includes('DreaThs Archive')&&!source.includes('onClick:()=>$("revenue")'))return bytes;
+  return Buffer.from(renameArchive(source).replaceAll(originalCopyright,copyright).replaceAll('children:'+logoScript,
+    'children:(0,n.jsxs)("span",{className:"flex items-center gap-2 min-w-0",children:['+logoScript+',(0,n.jsx)("span",{className:"text-xl font-bold tracking-tight text-black whitespace-nowrap",children:"HongThreads"})]})')
+    .replaceAll('("button",{onClick:()=>$("revenue"),','("button",{"data-hongthreads-hidden":"revenue-menu",onClick:()=>$("revenue"),')
+    .replaceAll('("button",{onClick:()=>$("videos"),','("button",{"data-hongthreads-archive":"true",onClick:()=>$("videos"),')
+    .replaceAll('("h2",{className:"text-lg md:text-2xl font-black uppercase tracking-widest text-black flex items-center gap-2 md:gap-3",children:',
+      '("h2",{"data-hongthreads-archive":"videos"===x?"true":undefined,className:"text-lg md:text-2xl font-black uppercase tracking-widest text-black flex items-center gap-2 md:gap-3",children:'));
 };
 
 // Match the same SSR nodes changed in the captured sidebar client module.
 // Slice source ranges so unrelated markup and Next.js bootstrap scripts stay intact.
 export const patchDevelopmentMarkup = bytes => {
-  let source = bytes.toString('utf8').replaceAll(originalCopyright,copyright);
+  let source = renameArchive(bytes.toString('utf8')).replaceAll(originalCopyright,copyright);
   const tree = parse(source, { sourceCodeLocationInfo: true });
   const asides = descendants(tree).filter(node => node.tagName === 'aside');
   // An unrecognised or absent sidebar must remain usable after an upstream
@@ -48,6 +53,14 @@ export const patchDevelopmentMarkup = bytes => {
   const logos=nodes.filter(node=>node.tagName==='img'&&node.attrs?.some(attr=>attr.name==='alt'&&attr.value==='DReaThs Logo'));
   const replaced=logos.length===1&&logos[0].sourceCodeLocation?[{id:'sidebar-h-logo',start_utf16:logos[0].sourceCodeLocation.startOffset,end_utf16:logos[0].sourceCodeLocation.endOffset,
     replacement:logoMarkup}]:[];
+  for(const node of descendants(tree)){
+    const archive=(node.tagName==='h2'||nodes.includes(node)&&node.tagName==='button')&&text(node).trim()==='Threads Archive';
+    const revenue=nodes.includes(node)&&node.tagName==='button'&&['수익 인증 라운지','Revenue Certification'].includes(text(node).trim());
+    const attribute=archive?'data-hongthreads-archive':revenue?'data-hongthreads-hidden':null;
+    if(!attribute||node.attrs?.some(attr=>attr.name===attribute)||!node.sourceCodeLocation?.startTag)continue;
+    const offset=node.sourceCodeLocation.startTag.startOffset+node.tagName.length+1;
+    replaced.push({id:archive?'threads-archive-label':'hidden-revenue-menu',start_utf16:offset,end_utf16:offset,replacement:' '+attribute+'="'+(archive?'true':'revenue-menu')+'"'});
+  }
   for (const node of [...removed,...replaced].sort((a,b) => b.start_utf16 - a.start_utf16))
     source = source.slice(0,node.start_utf16) + (node.replacement??'') + source.slice(node.end_utf16);
   return { bytes: Buffer.from(source, 'utf8'), removed_nodes: removed, replaced_nodes: replaced };

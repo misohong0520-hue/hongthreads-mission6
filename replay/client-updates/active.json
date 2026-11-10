@@ -4,14 +4,14 @@
     {
       "schema": "rea-client-update-pointer-v1",
       "release": "2026-11-06",
-      "source_manifest_sha256": "4a542ced5378b27467aff154e4a807e7bf71eb8f941a6289d5e42cabf6b6545c",
-      "development_manifest_sha256": "528540e240f34b6969bbc12d6eba975a267ac9ca05b74785ab6798285985fab4"
+      "source_manifest_sha256": "4a4f79ef983dd49e4b00c2b4a6342a05e140307a6c7672b2f90fdb6931795cd8",
+      "development_manifest_sha256": "01aff4c910ae5c916ddf9a0123788a12c076702d4931936dd6594dc84804e706"
     },
     {
       "schema": "rea-client-update-pointer-v1",
       "release": "2026-11-06-settings",
-      "source_manifest_sha256": "97304343fdeffd9064b95d3cb2856874f78a5c4ea70119b2c2bdb9546c2ab86d",
-      "development_manifest_sha256": "6babefb36923d93c28ac1dccf4d013a16812898e8454c2d3280a214f72a65ddb"
+      "source_manifest_sha256": "7953fd5199dd4bae2045312d78e32921225fc09c16d846c690032ca54a493c28",
+      "development_manifest_sha256": "37501e2d34a75ba0c3e896fd1c2198652a69459ae36d087821cf4825dea8037b"
     },
     {
       "schema": "rea-client-update-pointer-v1",
@@ -28,8 +28,8 @@
     {
       "schema": "rea-client-update-pointer-v1",
       "release": "2026-11-10",
-      "source_manifest_sha256": "53981e04bd1637eec21a63b6a622cab691b093e4f75821148f233c0ae804c711",
-      "development_manifest_sha256": "a1d4c65510512a05895ce37d8a4abbaa66b3f59b8a34de9bfc277166a044347f"
+      "source_manifest_sha256": "2b96c0416785e4f18a186db2252f15fdb5cf680b0f3ec1b8c2c5a46ac4c8d78a",
+      "development_manifest_sha256": "271ae0ea06bcc7cad59b919dafd54f8360f726f6d30bb927db2f1699cd23dd5d"
     }
   ]
 }

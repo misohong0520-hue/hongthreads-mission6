@@ -15,6 +15,8 @@
 
 ## 구성
 
+사이드바 스마트 멀티에디터의 NEW 배지와 수익 인증 라운지 메뉴를 숨기고, 아카이브 메뉴·페이지 제목을 `Threads Archive`로 표시합니다. 스마트 에디터 버튼과 `/dashboard/videos` 경로·아카이브 기능은 유지합니다. PC·모바일 확인 기록은 `mission6/verification/archive-label-ui.json`입니다. 로컬 수정이며 공개 배포는 승인 대기입니다.
+
 추가 표시 변경: 마이페이지 AI·쓰레드·쿠팡·토스의 ‘연동 방법 보기’(접힌 상태의 ‘사용법 보기’ 포함)를 숨깁니다. H 로고 옆 HongThreads 이름과 `© 2026 HongThreads· ALL RIGHTS RESERVED` 저작권 문구는 서버 HTML과 클라이언트 렌더링에 함께 적용합니다. 원본 캡처 파일은 변경하지 않습니다. 로그인 전에도 원본 디자인을 표시하도록 누락된 원본 공통 CSS를 해시 검증 후 제공합니다. 로컬9248·9251의 PC·모바일 확인 결과와 화면은 `mission6/verification/branding-ui.json` 및 `branding-*.png`, 관련 테스트44개 통과 기록은 `branding-regression.tap`에 있습니다.
 
 Next.js 16.4.6와 React 19.3.1, Node.js 24, 서버 REST 접근의 Supabase 저장 계층을 사용합니다. Next.js는 `/workspace` basePath와 9250 포트, 연결 서버는 9251 포트입니다. 모든 DB 작업은 서버에서 workspace 소유권을 검사합니다. DB·Storage의 익명 직접 접근은 닫혀 있습니다.

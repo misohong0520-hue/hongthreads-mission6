@@ -7,9 +7,15 @@ button[title*="연동방법"],
 button[aria-label*="연동방법"],
 button[title*="how to use" i],
 button[title*="tutorial" i],
+aside button > span[class~="-top-2.5"][class~="pointer-events-none"],
+[data-hongthreads-hidden="revenue-menu"],
 aside div[class~="absolute"]:has(> div[class~="animate-bounce"][class~="cursor-pointer"]),
 [aria-label="원본 데이터 연결 상태"],
 section:has(h2):has(a[href^="https://open.kakao.com/"]),
 .fixed:has(iframe[title="DReaThs Guide Video"]) {
   display: none !important;
+}
+
+[data-hongthreads-archive="true"] {
+  text-transform: none !important;
 }
